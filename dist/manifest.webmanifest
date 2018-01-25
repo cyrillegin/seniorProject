@@ -1,0 +1,6 @@
+{
+  "name": "test page",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone"
+}

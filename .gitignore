@@ -1,0 +1,13 @@
+# Node
+node_modules/
+.env
+*.pid
+
+# Build files
+bundle.js
+vendor.bundle.js
+*.map
+dist/server/index.js
+
+# OSX
+.DS_Store
