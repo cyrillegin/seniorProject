@@ -1,4 +1,4 @@
-#NMSU Senior Project Spring 2018
+# NMSU Senior Project Spring 2018
 
 ### Authors: 
 Cyrille Gindreau  
