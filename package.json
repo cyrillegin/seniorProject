@@ -1,0 +1,60 @@
+{
+    "name": "senior-project",
+    "private": true,
+    "version": "1.0.0",
+    "description": "3d-boats",
+    "repository": "https://github.com/cyrillegin/seniorProject",
+    "license": "MIT",
+    "author": "Cyrille Gindreau",
+    "engines": {
+        "node": "8.6.2"
+    },
+    "scripts": {
+        "assess": "babel-node node_modules/.bin/code-assess src",
+        "start": "npm run build-server && concurrently --kill-others 'npm run build-client' 'npm run start-server'",
+        "build-server": "babel src --out-dir dist --copy-files --ignore src/client/",
+        "build-client": "webpack --progress --watch --config ./webpack.dev.config.js",
+        "start-server": "nodemon --ignore /client/ --exec babel-node src/server",
+        "startProd": "npm run build-prod && npm run start-server",
+        "build-prod": "webpack --progress --config ./webpack.prod.config.js",
+        "postinstall": "npm --prefix ./node_modules/node-sass/ run install && npm prune"
+    },
+    "dependencies": {
+        "jquery": "3.3.1",
+        "three": "0.89.0"
+    },
+    "devDependencies": {
+        "autoprefixer": "7.2.5",
+        "babel-cli": "6.26.0",
+        "babel-core": "6.26.0",
+        "babel-loader": "7.1.2",
+        "babel-preset-env": "1.6.1",
+        "body-parser": "1.18.2",
+        "code-assess": "0.2.7",
+        "concurrently": "3.5.1",
+        "css-loader": "0.28.9",
+        "dotenv": "4.0.0",
+        "eslint-plugin-import": "2.8.0",
+        "exports-loader": "0.6.4",
+        "express": "4.16.2",
+        "express-session": "1.15.6",
+        "extract-text-webpack-plugin": "3.0.2",
+        "file-loader": "1.1.6",
+        "helmet": "3.10.0",
+        "html-loader": "0.5.5",
+        "imports-loader": "0.7.1",
+        "less": "2.7.3",
+        "less-loader": "4.0.5",
+        "node-sass": "4.7.2",
+        "nodemon": "1.14.11",
+        "postcss-loader": "2.0.10",
+        "precss": "3.1.0",
+        "sass-loader": "6.0.6",
+        "style-loader": "0.19.1",
+        "uglifyjs-webpack-plugin": "0.4.6",
+        "url-loader": "0.6.2",
+        "webpack": "3.10.0",
+        "webpack-bundle-analyzer": "2.9.2",
+        "webpack-dev-server": "2.11.1"
+    }
+}
