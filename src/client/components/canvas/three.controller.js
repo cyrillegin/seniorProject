@@ -7,6 +7,9 @@ import template from './three.template.html';
 import './three.style.scss';
 // controller imports
 import initScene from './../controllers/scene.controller';
+import initLights from './../controllers/lights.controller';
+import initCamera from './../controllers/camera.controller';
+import initMesh from './../controllers/mesh.controller';
 
 
 class ThreeContainer extends HTMLElement {
@@ -19,7 +22,11 @@ class ThreeContainer extends HTMLElement {
     // lifecycle hook - called when inserted into dom
     createdCallback() {
         this.innerHTML = template;
-        const app = initScene($('#canvas')[0]);
+        console.log($('#canvas'))
+        let app = initScene($('#canvas')[0]);
+        app = initLights(app);
+        app = initCamera(app);
+        app = initMesh(app);
         app.render();
     }
 }

@@ -50,6 +50,7 @@ function initRenderer(app) {
             return;
         }
         console.log('render.');
+        app.renderer.render(app.scene, app.camera);
         requestAnimationFrame(app.render);
     };
     return app;
