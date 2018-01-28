@@ -2,7 +2,7 @@
 
 ### Authors: 
 Cyrille Gindreau  
-Luis Perez
+Luis M  Perez
 
 ### Dependencies
 NodeJS 8.9.4  
