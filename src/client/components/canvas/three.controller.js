@@ -1,3 +1,12 @@
+/*
+    three.controller.js
+    Authors: Cyrille Gindreau
+
+    class ThreeContainer
+    Serves as the base of the scene.
+    Creates the canvas element and the Three app.
+
+*/
 // global imports
 import 'three';
 import 'three/examples/js/loaders/OBJLoader';

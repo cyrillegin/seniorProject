@@ -1,5 +1,5 @@
 /*
-    Scene.controller.js
+    scene.controller.js
     Authors: Cyrille Gindreau
 
     initScene()
@@ -12,7 +12,6 @@
 import 'three';
 
 function initScene(container) {
-    console.log('building scene');
     const app = {
         scene: new THREE.Scene(),
         camera: null,

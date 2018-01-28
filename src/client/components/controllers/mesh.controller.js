@@ -1,3 +1,24 @@
+/*
+    mesh.controller.js
+    Authors: Cyrille Gindreau
+
+    initMesh()
+    returns a promise of a loaded mesh with materials.
+
+    loadMesh()
+    returns a promise of a loaded obj file.
+
+    loadMaterial()
+    returns a promise of a loaded material and any assoiated textures.
+
+    NOTE: Materials need to be loaded before meshes
+
+    TODO: We should add the babel polyfill and use async/await
+    TODO: Right now, this function assumes that there are associated mtl files.
+          We should do a search instead and check if there is a mtl, then if
+          there is, load it, and any textures it may have.
+
+*/
 import 'three';
 import 'three/examples/js/loaders/OBJLoader';
 import 'three/examples/js/loaders/MTLLoader';
@@ -29,7 +50,7 @@ function loadMesh(file, material) {
             },
             // called when loading is in progresses
             (xhr) => {
-                console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
+                // console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
             },
             // called when loading has errors
             (error) => {
