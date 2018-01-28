@@ -49,7 +49,6 @@ function initRenderer(app) {
         if (app.loaded = false) {
             return;
         }
-        console.log('render.');
         app.renderer.render(app.scene, app.camera);
         requestAnimationFrame(app.render);
     };

@@ -3,8 +3,8 @@ import 'three';
 function initLights(app) {
     // Create main light.
     const sun = new THREE.SpotLight(0xffffff, 1);
-    sun.position.set(40, 20, 40);
-    sun.angle = 1.1;
+    sun.position.set(0, 20, 0);
+    sun.angle = 45;
     sun.decay = 0;
     sun.castShadow = true;
     sun.shadow.mapSize.width = 2048;

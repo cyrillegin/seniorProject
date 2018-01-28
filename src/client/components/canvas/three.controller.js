@@ -22,12 +22,12 @@ class ThreeContainer extends HTMLElement {
     // lifecycle hook - called when inserted into dom
     createdCallback() {
         this.innerHTML = template;
-        console.log($('#canvas'))
         let app = initScene($('#canvas')[0]);
         app = initLights(app);
         app = initCamera(app);
-        app = initMesh(app);
-        app.render();
+        initMesh(app).then((app) => {
+            app.render();
+        });
     }
 }
 
