@@ -1,6 +1,20 @@
+@import './../../constants';
+
+.container {
+  margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    // grid-auto-rows: minmax(100px, auto);
+}
+
+.side-bar {
+  grid-column: 1 / 2;
+  
+}
+
 .canvas {
-    display: inline-flex;
     height: 600px;
-    margin-top: 30px;
     width: 1000px;
+    grid-column: 2 / 2;
 }
