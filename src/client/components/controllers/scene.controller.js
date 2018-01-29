@@ -37,7 +37,6 @@ function initRenderer(app) {
     app.renderer.gammaOutput = true;
     app.renderer.autoClear = false;
     app.renderer.sortObjects = false;
-    console.log($('#canvas'))
     app.renderer.setSize(app.container.offsetWidth, app.container.offsetHeight);
 
     app.renderer.setClearColor(0xffffff, 0);

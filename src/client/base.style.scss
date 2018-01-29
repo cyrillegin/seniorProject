@@ -9,3 +9,14 @@ html {
 .card {
     box-shadow: 0 1px 3px $shadow-one, 0 1px 2px $shadow-two;
 }
+
+
+.nav-bar {
+  width: 105%;
+  text-align: left;
+  border-bottom: 1px solid $shadow-one;
+  margin-bottom: 6px;
+  padding-left: 16px; 
+  margin-left: -8px;
+  color: #333;
+}
