@@ -37,7 +37,6 @@
         "babel-loader": "7.1.2",
         "babel-preset-env": "1.6.1",
         "body-parser": "1.18.2",
-        "code-assess": "0.2.7",
         "concurrently": "3.5.1",
         "css-loader": "0.28.9",
         "dotenv": "4.0.0",
