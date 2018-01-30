@@ -4,6 +4,7 @@
 Cyrille Gindreau  
 Luis M  Perez  
 Tim Kraus
+Alec Gonzales
 
 ### Dependencies
 NodeJS 8.9.4  
