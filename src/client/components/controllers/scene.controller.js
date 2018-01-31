@@ -42,7 +42,6 @@ function initRenderer(app) {
     app.renderer.setClearColor(0xffffff, 0);
 
     app.container.appendChild(app.renderer.domElement);
-    $(app.renderer.domElement).css('position', 'absolute');
 
     app.render = () => {
         if (app.loaded = false) {
