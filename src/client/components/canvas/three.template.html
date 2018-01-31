@@ -1,19 +1,20 @@
-
 <div class="container">
     <div class="side-bar card">
-      <table>
-        <tr>
-          <td>
-        Hull Width
-      </td>
-      <td>
-       <input type="range" min="1" max="100" value="50" class="slider" id="myRange" />
-     </td>
-     <td>
-       10
-     </td>
-   </tr>
- </table>
+        <table>
+            <tr>
+                <td class="table-label">
+                    Hull Width
+                </td>
+                <td class="table-input">
+                    <input type="range" min="1" max="100" value="50" class="slider" id="hull-width-slider" />
+                </td>
+                <td class="table-number">
+                    <div id="hull-width-slider-value">
+                        50
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div id="canvas" class="canvas card" />
