@@ -1,41 +1,40 @@
 @import './../../constants';
 
 .container {
-  margin-top: 30px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
-    // grid-auto-rows: minmax(100px, auto);
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 30px;
 }
 
 .side-bar {
-  grid-column: 1 / 2;
-  color: #333;  
+    color: $dark-grey;
+    grid-column: 1 / 2;
 }
 
 table {
-  padding: 5px;
-  width: 100%;
+    padding: 5px;
+    width: 100%;
 }
 
 input {
-  width: 100%;
+    width: 100%;
 }
 
 .table-label {
-  width: 20%;
+    width: 20%;
 }
 
 .table-input {
-  width: 60%;
+    width: 60%;
 }
 
 .table-number {
-  width: 8%;
+    width: 8%;
 }
 
 .canvas {
+    grid-column: 2 / 2;
     height: 600px;
     width: 1000px;
-    grid-column: 2 / 2;
 }

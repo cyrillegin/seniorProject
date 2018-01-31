@@ -73,7 +73,7 @@ rules:
   no-invalid-hex: 1
   no-mergeable-selectors: 1
   no-misspelled-properties:
-    - 1
+    - 0
     - extra-properties: []
   no-qualifying-elements:
     - 1

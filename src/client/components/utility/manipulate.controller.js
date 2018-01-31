@@ -1,6 +1,5 @@
 class Manipulate {
     constructor(mesh) {
-        console.log(mesh)
         this.mesh = mesh.main.children[0];
     }
     adjustWidth(value) {

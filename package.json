@@ -22,7 +22,7 @@
         "postinstall": "npm --prefix ./node_modules/node-sass/ run install && npm prune",
         "test": "npm run lint",
         "lint": "npm run htmllint & npm run scsslint & npm run eslint",
-        "htmllint": "./node_modules/.bin/htmlhint --config .htmlhintrc src",
+        "htmllint": "./node_modules/.bin/htmlhint --config .htmlhintrc.json src",
         "scsslint": "./node_modules/.bin/sass-lint src '**/*.scss' -v -q",
         "eslint": "./node_modules/.bin/eslint src"
     },
