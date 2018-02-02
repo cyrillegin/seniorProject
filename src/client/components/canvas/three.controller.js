@@ -18,9 +18,10 @@ import './three.style.scss';
 import initScene from './../controllers/scene.controller';
 import initLights from './../controllers/lights.controller';
 import initCamera from './../controllers/camera.controller';
-import initMesh from './../controllers/mesh.controller';
+// import initMesh from './../controllers/mesh.controller';
+import initCurves from './../controllers/curves.controller';
 // Utility imports
-import Manipulate from './../utility/manipulate.controller';
+// import Manipulate from './../utility/manipulate.controller';
 
 
 class ThreeContainer extends HTMLElement {
@@ -36,11 +37,14 @@ class ThreeContainer extends HTMLElement {
         let app = initScene($('#canvas')[0]);
         app = initLights(app);
         app = initCamera(app);
-        initMesh(app).then((app) => {
-            app.render();
-            this.manipulator = new Manipulate(app.meshes);
-            this.setupSliders();
-        });
+        // initMesh(app).then((app) => {
+        //     app.render();
+        //     this.manipulator = new Manipulate(app.meshes);
+        //     this.setupSliders();
+        // });
+
+        app = initCurves(app);
+        app.render();
     }
 
     setupSliders() {
