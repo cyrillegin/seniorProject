@@ -1,10 +1,11 @@
-const splineHelperObjects = [];
-let positions = [];
-const geometry = new THREE.BoxGeometry(20, 20, 20);
-let splinePointsLength = 4;
-const ARC_SEGMENTS = 200;
-let splineMesh;
-const splines = {};
+
+const curveAttributes = {
+    positions: [],
+    splines: {},
+    splineHelperObjects: [],
+    splineMesh: null,
+    geometry: new THREE.BoxGeometry(3, 3, 3),
+};
 
 const curves = [{
     label: 'AF',
@@ -19,21 +20,23 @@ function initCurves(app) {
 
 function buildCurve(app) {
 
-    for (let i = 0; i < splinePointsLength; i ++) {
-        addSplineObject(app, positions[ i ]);
+    for (let i = 0; i < 3; i ++) {
+        addSplineObject(app, curveAttributes.positions[ i ]);
     }
 
-    positions = [];
-    for (let i = 0; i < splinePointsLength; i ++) {
-        positions.push(splineHelperObjects[ i ].position);
+    // Add the blocks
+    curveAttributes.positions = [];
+    for (let i = 0; i < 3; i ++) {
+        curveAttributes.positions.push(curveAttributes.splineHelperObjects[i].position);
     }
 
+    // Curve geometry.
     const geometry = new THREE.Geometry();
-    for (let i = 0; i < ARC_SEGMENTS; i ++) {
+    for (let i = 0; i < 200; i ++) {
         geometry.vertices.push(new THREE.Vector3());
     }
     // Create a curve
-    const curve = new THREE.CatmullRomCurve3(positions);
+    const curve = new THREE.CatmullRomCurve3(curveAttributes.positions);
     curve.curveType = 'catmullrom';
     curve.mesh = new THREE.Line(geometry.clone(), new THREE.LineBasicMaterial({
         color: 0x0000ff,
@@ -41,25 +44,44 @@ function buildCurve(app) {
         linewidth: 2,
     }));
     curve.mesh.castShadow = true;
-    splines.uniform = curve;
-
+    curveAttributes.splines.uniform = curve;
     curve.mesh.castShadow = true;
 
-    splines.chordal = curve;
-    for (const k in splines) {
-        const spline = splines[ k ];
+    curveAttributes.splines.chordal = curve;
+    for (const k in curveAttributes.splines) {
+        const spline = curveAttributes.splines[k];
         app.scene.add(spline.mesh);
     }
-    load([new THREE.Vector3(200, 460, 0),
-        new THREE.Vector3(70, 170, 0),
-        new THREE.Vector3(-70, 170, 0),
-        new THREE.Vector3(-200, 460, 0)]);
+    const toLoad = [];
+    curves[0].points.forEach((curve) => {
+        toLoad.push(new THREE.Vector3(curve[0], curve[1], curve[2]));
+    });
+
+    while (toLoad.length > curveAttributes.positions.length) {
+        curveAttributes.positions.push(addSplineObject().position);
+    }
+
+    for (let i = 0; i < curveAttributes.positions.length; i ++) {
+        curveAttributes.positions[i].copy(toLoad[i]);
+    }
+    for (const k in curveAttributes.splines) {
+        const spline = curveAttributes.splines[k];
+        curveAttributes.splineMesh = spline.mesh;
+        for (let i = 0; i < 200; i ++) {
+            const p = curveAttributes.splineMesh.geometry.vertices[i];
+            const t = i / (200 - 1);
+            spline.getPoint(t, p);
+        }
+        curveAttributes.splineMesh.geometry.verticesNeedUpdate = true;
+    }
+
     return app;
 }
 
+// This function shows the control points.
 function addSplineObject(app, position) {
     const material = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-    const object = new THREE.Mesh(geometry, material);
+    const object = new THREE.Mesh(curveAttributes.geometry, material);
     if (position) {
         object.position.copy(position);
     } else {
@@ -70,50 +92,8 @@ function addSplineObject(app, position) {
     object.castShadow = true;
     object.receiveShadow = true;
     app.scene.add(object);
-    splineHelperObjects.push(object);
+    curveAttributes.splineHelperObjects.push(object);
     return object;
-}
-
-function load(newPositions) {
-    while (newPositions.length > positions.length) {
-        addPoint();
-    }
-    while (newPositions.length < positions.length) {
-        removePoint();
-    }
-    for (let i = 0; i < positions.length; i ++) {
-        positions[ i ].copy(newPositions[ i ]);
-    }
-    updateSplineOutline();
-}
-
-function addPoint() {
-    splinePointsLength ++;
-    positions.push(addSplineObject().position);
-    updateSplineOutline();
-}
-
-function removePoint() {
-    if (splinePointsLength <= 4) {
-        return;
-    }
-    splinePointsLength --;
-    positions.pop();
-    scene.remove(splineHelperObjects.pop());
-    updateSplineOutline();
-}
-
-function updateSplineOutline() {
-    for (const k in splines) {
-        const spline = splines[ k ];
-        splineMesh = spline.mesh;
-        for (let i = 0; i < ARC_SEGMENTS; i ++) {
-            const p = splineMesh.geometry.vertices[ i ];
-            const t = i / (ARC_SEGMENTS - 1);
-            spline.getPoint(t, p);
-        }
-        splineMesh.geometry.verticesNeedUpdate = true;
-    }
 }
 
 export default initCurves;
