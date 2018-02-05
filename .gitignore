@@ -11,3 +11,6 @@ dist/server/index.js
 
 # OSX
 .DS_Store
+
+# Maya
+.mayaSwatches/
