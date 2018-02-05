@@ -1,14 +1,15 @@
-const A = [25, 0, 300];
-const B = [25, 0, 290];
-const C = [0, 0, 150];
-const D = [5, 0, 150];
-const E = [45, 0, 150];
-const F = [50, 0, 150];
-const G = [10, 0, 10];
+const A = [25, 20, 200];
+const B = [25, 10, 190];
+const C = [0, 20, 100];
+const D = [5, 5, 100];
+const E = [45, 5, 100];
+const F = [50, 20, 100];
+const G = [15, 5, 10];
 const H = [25, 0, 10];
-const I = [45, 0, 10];
-const J = [5, 0, 0];
-const K = [45, 0, 0];
+const I = [35, 5, 10];
+const J = [10, 20, 10];
+const K = [40, 20, 10];
+const L = [25, 0, 150];
 
 
 const curves = [{
@@ -20,6 +21,30 @@ const curves = [{
 }, {
     label: 'AFK',
     points: [A, F, K],
+}, {
+    label: 'BDG',
+    points: [B, D, G],
+}, {
+    label: 'BLH',
+    points: [B, L, H],
+}, {
+    label: 'BEI',
+    points: [B, E, I],
+}, {
+    label: 'GH',
+    points: [G, H],
+}, {
+    label: 'GJ',
+    points: [G, J],
+}, {
+    label: 'HI',
+    points: [H, I],
+}, {
+    label: 'IK',
+    points: [I, K],
+}, {
+    label: 'JK',
+    points: [J, K],
 }];
 
 function initCurves(app) {
@@ -60,7 +85,7 @@ function buildCurve(app, a) {
     curve.curveType = 'catmullrom';
     curve.mesh = new THREE.Line(geometry.clone(), new THREE.LineBasicMaterial({
         color: 0x0000ff,
-        opacity: 0.35,
+        opacity: 0.85,
         linewidth: 2,
     }));
     curve.mesh.castShadow = true;
