@@ -8,6 +8,7 @@ module.exports = {
         vendor: [
             'three',
             'jquery',
+            'd3'
         ],
     },
     output: {

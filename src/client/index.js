@@ -8,3 +8,4 @@
 */
 import './base.style.scss';
 import three from './components/canvas/three.controller'; // eslint-disable-line
+import blueprint from './components/blueprintEditor/blueprint.controller'; //eslint-disable-line
