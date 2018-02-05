@@ -12,7 +12,7 @@
     returns a promise of a loaded material and any assoiated textures.
 
     NOTE: Materials need to be loaded before meshes
-    
+
     NOTE: This may become DEPRECATED with preference made to curves or nurbs
 
     TODO: We should add the babel polyfill and use async/await
