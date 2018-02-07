@@ -20,11 +20,12 @@
         "startProd": "npm run build-prod && npm run start-server",
         "build-prod": "webpack --progress --config ./webpack.prod.config.js",
         "postinstall": "npm --prefix ./node_modules/node-sass/ run install && npm prune",
-        "test": "npm run lint",
+        "test": "npm run lint & npm run tests",
         "lint": "npm run htmllint & npm run scsslint & npm run eslint",
         "htmllint": "./node_modules/.bin/htmlhint --config .htmlhintrc.json src",
         "scsslint": "./node_modules/.bin/sass-lint src '**/*.scss' -v -q",
-        "eslint": "./node_modules/.bin/eslint src"
+        "eslint": "./node_modules/.bin/eslint src",
+        "tests": "mocha --require babel-register tests/test.js"
     },
     "dependencies": {
         "d3": "4.13.0",
