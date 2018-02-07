@@ -15,13 +15,14 @@ import 'three/examples/js/controls/OrbitControls';
 import template from './three.template.html';
 import './three.style.scss';
 // controller imports
-import initScene from './../controllers/scene.controller';
-import initLights from './../controllers/lights.controller';
-import initCamera from './../controllers/camera.controller';
-// import initMesh from './../controllers/mesh.controller';
-import initCurves from './../controllers/curves.controller';
+import initScene from './controllers/scene.controller';
+import initLights from './controllers/lights.controller';
+import initCamera from './controllers/camera.controller';
+// import initMesh from './controllers/mesh.controller';
+import initCurves from './controllers/curves.controller';
 // Utility imports
 // import Manipulate from './../utility/manipulate.controller';
+import Panel from './../../classes/panel.class';
 
 
 class ThreeContainer extends HTMLElement {
@@ -37,6 +38,8 @@ class ThreeContainer extends HTMLElement {
         let app = initScene($('#canvas')[0]);
         app = initLights(app);
         app = initCamera(app);
+        const c = new Panel();
+        console.log(c);
         // initMesh(app).then((app) => {
         //     app.render();
         //     this.manipulator = new Manipulate(app.meshes);
