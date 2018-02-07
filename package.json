@@ -25,17 +25,18 @@
         "htmllint": "./node_modules/.bin/htmlhint --config .htmlhintrc.json src",
         "scsslint": "./node_modules/.bin/sass-lint src '**/*.scss' -v -q",
         "eslint": "./node_modules/.bin/eslint src",
-        "tests": "mocha --require babel-register tests/test.js"
+        "tests": "mocha --require babel-register tests/test.js",
+        "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js"
     },
     "dependencies": {
         "d3": "4.13.0",
         "jquery": "3.3.1",
-        "three": "0.89.0",
-        "nodemon": "1.14.12"
+        "nodemon": "1.14.12",
+        "three": "0.89.0"
     },
     "devDependencies": {
+        "babel-istanbul": "0.12.2",
         "chai": "4.1.2",
-        "istanbul": "0.4.5",
         "mocha": "5.0.0",
         "babel-eslint": "8.2.1",
         "eslint": "4.17.0",

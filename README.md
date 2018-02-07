@@ -20,3 +20,7 @@ Start dev server: `npm run start`
 
 ##### Misc
 Stand in canoe taken from https://www.turbosquid.com/FullPreview/Index.cfm/ID/622136
+
+##### Testing
+`npm run test` Will run all of the linters and tests that are in the test folder.  
+If you want to see coverage, run `npm run cover`. A coverage folder will be created with insights to how well your tests are preforming.
