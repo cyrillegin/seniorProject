@@ -7,5 +7,5 @@
 
 */
 import './base.style.scss';
-import three from './components/canvas/three.controller'; // eslint-disable-line
-import blueprint from './components/blueprintEditor/blueprint.controller'; //eslint-disable-line
+import threeDContainer from './components/3dContainer/three.component'; // eslint-disable-line
+import twoDContainer from './components/2dContainer/blueprint.component'; //eslint-disable-line
