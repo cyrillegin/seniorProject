@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import Manipulate from '../src/client/components/utility/manipulate.controller';
+import Manipulate from '../src/client/utility/calculations.controller';
 
 describe('manipulateTest', () => {
     const mesh = {
