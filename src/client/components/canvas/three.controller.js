@@ -39,7 +39,7 @@ class ThreeContainer extends HTMLElement {
         app = initLights(app);
         app = initCamera(app);
         const c = new Panel();
-        console.log(c)
+        console.log(c);
         // initMesh(app).then((app) => {
         //     app.render();
         //     this.manipulator = new Manipulate(app.meshes);
