@@ -9,6 +9,8 @@ function initCurves(app, boat) {
             curve: buildCurve(boat[key]),
             mirror: buildCurve(mirrorAttributes(boat[key])),
             points: [],
+            startControlLine: drawControlLine(boat[key].start, boat[key].startControl),
+            endControlLine: drawControlLine(boat[key].end, boat[key].endControl),
         };
         curveMesh.points.push(drawCurvePoint(boat[key].start));
         curveMesh.points.push(drawCurvePoint(boat[key].end));
@@ -16,6 +18,8 @@ function initCurves(app, boat) {
         curveMesh.points.push(drawCurveControlPoint(boat[key].endControl));
         app.scene.add(curveMesh.curve);
         app.scene.add(curveMesh.mirror);
+        app.scene.add(curveMesh.startControlLine);
+        app.scene.add(curveMesh.endControlLine);
         curveMesh.points.forEach((point) => {
             app.scene.add(point);
         });
@@ -53,6 +57,21 @@ function drawCurveControlPoint(location) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(location[0], location[1], location[2]);
     return mesh;
+}
+
+function drawControlLine(start, end) {
+    const material = new THREE.LineBasicMaterial({
+        color: 0x000088,
+    });
+
+    const geometry = new THREE.Geometry();
+    geometry.vertices.push(
+        new THREE.Vector3(start[0], start[1], start[2]),
+        new THREE.Vector3(end[0], end[1], end[2]),
+    );
+
+    const line = new THREE.Line(geometry, material);
+    return line;
 }
 
 export default initCurves;
