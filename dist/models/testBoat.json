@@ -1,0 +1,99 @@
+{
+  "aftBeam": {
+    "start": [15,20,0],
+    "end": [25,20,70],
+    "startControl": [15,20,0],
+    "endControl": [35,20,40]
+  },
+  "foreBeam": {
+    "start": [25,20,70],
+    "end": [15,20,140],
+    "startControl": [25,20,70],
+    "endControl": [15,20,140]
+  },
+  "aftKeel": {
+    "start": [10,0,10],
+    "end": [15,0,70],
+    "startControl": [10,0,10],
+    "endControl": [15,0,70]
+  },
+  "foreKeel": {
+    "start": [15,0,70],
+    "end": [10,0,130],
+    "startControl": [15,0,70],
+    "endControl": [10,0,130]
+  },
+  "aftMid": {
+    "start": [0,0,10],
+    "end": [0,-10,70],
+    "startControl": [0,0,10],
+    "endControl": [0,-10,70]
+  },
+  "foreMid": {
+    "start": [0,-10,70],
+    "end": [0,0,130],
+    "startControl": [0,-10,70],
+    "endControl": [0,0,130]
+  },
+  "sternKeel": {
+    "start": [10,0,10],
+    "end": [0,0,10],
+    "startControl": [10,0,10],
+    "endControl": [0,0,10]
+  },
+  
+  "sternBeam": {
+    "start": [15,20,0],
+    "end": [0,20,0],
+    "startControl": [15,20,0],
+    "endControl": [0,20,0]
+  },
+  "bowKeel": {
+    "start": [10,0,130],
+    "end": [0,0,130],
+    "startControl": [10,0,130],
+    "endControl": [0,0,130]
+  },
+  "bowBeam": {
+    "start": [15,20,140],
+    "end": [0,20,140],
+    "startControl": [15,20,140],
+    "endControl": [0,20,140]
+  },
+  "sternBeamKeel": {
+    "start": [15,20,0],
+    "end": [10,0,10],
+    "startControl": [15,20,0],
+    "endControl": [10,0,10]
+  },
+  "bowBeamKeel": {
+    "start": [15,20,140],
+    "end": [10,0,130],
+    "startControl": [15,20,140],
+    "endControl": [10,0,130]
+  },
+  "beamKeel": {
+    "start": [25,20,70],
+    "end": [15,0,70],
+    "startControl": [25,20,70],
+    "endControl": [15,0,70]
+  },
+  "midKeel": {
+    "start": [15,0,70],
+    "end": [0,-10,70],
+    "startControl": [15,0,70],
+    "endControl": [0,-10,70]
+  },
+  "foreBeamKeel": {
+    "start": [0,20,140],
+    "end": [0,0,130],
+    "startControl": [0,20,140],
+    "endControl": [0,0,130]
+  },
+  "aftBeamKeel": {
+    "start": [0,20,0],
+    "end": [0,0,10],
+    "startControl": [0,20,0],
+    "endControl": [0,0,10]
+  }
+}
