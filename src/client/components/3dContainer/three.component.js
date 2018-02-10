@@ -11,6 +11,7 @@
 import 'three';
 import 'three/examples/js/loaders/OBJLoader';
 import 'three/examples/js/controls/OrbitControls';
+// import request from 'request';
 // local imports
 import template from './three.template.html';
 import './three.style.scss';
@@ -20,9 +21,6 @@ import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
 // import initMesh from './controllers/mesh.controller';
 import initCurves from './controllers/curves.controller';
-// Utility imports
-// import Manipulate from './../utility/manipulate.controller';
-import Panel from './../../classes/panel.class';
 
 
 class ThreeContainer extends HTMLElement {
@@ -38,16 +36,19 @@ class ThreeContainer extends HTMLElement {
         let app = initScene($('#canvas')[0]);
         app = initLights(app);
         app = initCamera(app);
-        const c = new Panel();
-        console.log(c);
         // initMesh(app).then((app) => {
         //     app.render();
         //     this.manipulator = new Manipulate(app.meshes);
         //     this.setupSliders();
         // });
-
-        app = initCurves(app);
-        app.render();
+        $.ajax('/boat')
+            .done((data) => {
+                app = initCurves(app, data);
+                app.render();
+            })
+            .fail((res, error) => {
+                console.log(error);
+            });
     }
 
     setupSliders() {

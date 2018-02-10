@@ -7,7 +7,5 @@ export default class Curve {
         this.startControl = new Vector3();
         this.endControl = new Vector3();
         this.verticies = [];
-        console.log('hello world');
-        console.log(this);
     }
 }
