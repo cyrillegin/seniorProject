@@ -8,7 +8,6 @@
 
 */
 // global imports
-import http from 'http';
 import 'three';
 import 'three/examples/js/loaders/OBJLoader';
 import 'three/examples/js/controls/OrbitControls';
