@@ -52,7 +52,6 @@ function drawCurveControlPoint(location) {
     const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(location[0], location[1], location[2]);
-    console.log(mesh)
     return mesh;
 }
 
