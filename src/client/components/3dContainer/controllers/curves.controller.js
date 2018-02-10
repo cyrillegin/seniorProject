@@ -1,143 +1,77 @@
-const A = [25, 20, 200];
-const B = [25, 10, 190];
-const C = [0, 20, 100];
-const D = [5, 5, 100];
-const E = [45, 5, 100];
-const F = [50, 20, 100];
-const G = [15, 5, 10];
-const H = [25, 0, 10];
-const I = [35, 5, 10];
-const J = [10, 20, 10];
-const K = [40, 20, 10];
-const L = [25, 0, 150];
+import mirrorAttributes from '../../../utility/mirror';
 
 
-const curves = [{
-    label: 'ACJ',
-    points: [A, C, J],
-}, {
-    label: 'AB',
-    points: [A, B],
-}, {
-    label: 'AFK',
-    points: [A, F, K],
-}, {
-    label: 'BDG',
-    points: [B, D, G],
-}, {
-    label: 'BLH',
-    points: [B, L, H],
-}, {
-    label: 'BEI',
-    points: [B, E, I],
-}, {
-    label: 'GH',
-    points: [G, H],
-}, {
-    label: 'GJ',
-    points: [G, J],
-}, {
-    label: 'HI',
-    points: [H, I],
-}, {
-    label: 'IK',
-    points: [I, K],
-}, {
-    label: 'JK',
-    points: [J, K],
-}];
-
-function initCurves(app) {
+function initCurves(app, boat) {
     app.curves = [];
-    for (let i = 0; i < curves.length; i ++) {
-        const curveAttributes = {
-            positions: [],
-            splines: {},
-            splineHelperObjects: [],
-            splineMesh: null,
-            geometry: new THREE.BoxGeometry(3, 3, 3),
+
+    Object.keys(boat).forEach((key) => {
+        const curveMesh = {
+            curve: buildCurve(boat[key]),
+            mirror: buildCurve(mirrorAttributes(boat[key])),
+            points: [],
+            startControlLine: drawControlLine(boat[key].start, boat[key].startControl),
+            endControlLine: drawControlLine(boat[key].end, boat[key].endControl),
         };
-        app.curves.push(curveAttributes);
-        buildCurve(app, i);
-    }
+        curveMesh.points.push(drawCurvePoint(boat[key].start));
+        curveMesh.points.push(drawCurvePoint(boat[key].end));
+        curveMesh.points.push(drawCurveControlPoint(boat[key].startControl));
+        curveMesh.points.push(drawCurveControlPoint(boat[key].endControl));
+        app.scene.add(curveMesh.curve);
+        app.scene.add(curveMesh.mirror);
+        app.scene.add(curveMesh.startControlLine);
+        app.scene.add(curveMesh.endControlLine);
+        curveMesh.points.forEach((point) => {
+            app.scene.add(point);
+        });
+        app.curves.push(curveMesh);
+    });
     return app;
 }
 
-function buildCurve(app, a) {
-    for (let i = 0; i < curves[a].points.length; i ++) {
-        addSplineObject(a, app, app.curves[a].positions[ i ]);
-    }
+function buildCurve(curveAttributes) {
+    const newCurve = new THREE.CubicBezierCurve3(
+        new THREE.Vector3(curveAttributes.start[0], curveAttributes.start[1], curveAttributes.start[2]),
+        new THREE.Vector3(curveAttributes.startControl[0], curveAttributes.startControl[1], curveAttributes.startControl[2]),
+        new THREE.Vector3(curveAttributes.endControl[0], curveAttributes.endControl[1], curveAttributes.endControl[2]),
+        new THREE.Vector3(curveAttributes.end[0], curveAttributes.end[1], curveAttributes.end[2]),
+    );
+    const points = newCurve.getPoints(50);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-    // Add the blocks
-    app.curves[a].positions = [];
-    for (let i = 0; i < curves[a].points.length; i ++) {
-        app.curves[a].positions.push(app.curves[a].splineHelperObjects[i].position);
-    }
+    const material = new THREE.LineBasicMaterial({color: 0xff0000});
+    const curveObject = new THREE.Line(geometry, material);
+    return curveObject;
+}
 
-    // Curve geometry.
-    const geometry = new THREE.Geometry();
-    for (let i = 0; i < 200; i ++) {
-        geometry.vertices.push(new THREE.Vector3());
-    }
+function drawCurvePoint(location) {
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(location[0], location[1], location[2]);
+    return mesh;
+}
 
-    // Create a curve
-    const curve = new THREE.CatmullRomCurve3(app.curves[a].positions);
-    curve.curveType = 'catmullrom';
-    curve.mesh = new THREE.Line(geometry.clone(), new THREE.LineBasicMaterial({
-        color: 0x0000ff,
-        opacity: 0.85,
-        linewidth: 2,
-    }));
-    curve.mesh.castShadow = true;
-    app.curves[a].splines.uniform = curve;
-    app.curves[a].splines.chordal = curve;
+function drawCurveControlPoint(location) {
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(location[0], location[1], location[2]);
+    return mesh;
+}
 
-    for (const k in app.curves[a].splines) {
-        const spline = app.curves[a].splines[k];
-        app.scene.add(spline.mesh);
-    }
-    const toLoad = [];
-    curves[a].points.forEach((curve) => {
-        toLoad.push(new THREE.Vector3(curve[0], curve[1], curve[2]));
+function drawControlLine(start, end) {
+    const material = new THREE.LineBasicMaterial({
+        color: 0x000088,
     });
 
-    while (toLoad.length > app.curves[a].positions.length) {
-        app.curves[a].positions.push(addSplineObject(a).position);
-    }
+    const geometry = new THREE.Geometry();
+    geometry.vertices.push(
+        new THREE.Vector3(start[0], start[1], start[2]),
+        new THREE.Vector3(end[0], end[1], end[2]),
+    );
 
-    for (let i = 0; i < app.curves[a].positions.length; i ++) {
-        app.curves[a].positions[i].copy(toLoad[i]);
-    }
-    for (const k in app.curves[a].splines) {
-        const spline = app.curves[a].splines[k];
-        app.curves[a].splineMesh = spline.mesh;
-        for (let i = 0; i < 200; i ++) {
-            const p = app.curves[a].splineMesh.geometry.vertices[i];
-            const t = i / (200 - 1);
-            spline.getPoint(t, p);
-        }
-        app.curves[a].splineMesh.geometry.verticesNeedUpdate = true;
-    }
-
-    return app;
-}
-
-// This function shows the control points.
-function addSplineObject(a, app, position) {
-    const material = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-    const object = new THREE.Mesh(app.curves[a].geometry, material);
-    if (position) {
-        object.position.copy(position);
-    } else {
-        object.position.x = Math.random() * 1000 - 500;
-        object.position.y = Math.random() * 600;
-        object.position.z = Math.random() * 800 - 400;
-    }
-    object.castShadow = true;
-    object.receiveShadow = true;
-    app.scene.add(object);
-    app.curves[a].splineHelperObjects.push(object);
-    return object;
+    const line = new THREE.Line(geometry, material);
+    return line;
 }
 
 export default initCurves;

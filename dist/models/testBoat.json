@@ -1,0 +1,99 @@
+{
+  "aftBeam": {
+    "start": [15,20,0],
+    "end": [25,20,70],
+    "startControl": [20,20,10],
+    "endControl": [25,20,40]
+  },
+  "foreBeam": {
+    "start": [25,20,70],
+    "end": [5,20,140],
+    "startControl": [25,20,90],
+    "endControl": [10,20,130]
+  },
+  "aftKeel": {
+    "start": [10,0,10],
+    "end": [15,0,70],
+    "startControl": [15,0,20],
+    "endControl": [15,0,40]
+  },
+  "foreKeel": {
+    "start": [15,0,70],
+    "end": [3,5,130],
+    "startControl": [15,0,90],
+    "endControl": [5,0,120]
+  },
+  "aftMid": {
+    "start": [0,0,10],
+    "end": [0,0,70],
+    "startControl": [0,0,20],
+    "endControl": [0,0,60]
+  },
+  "foreMid": {
+    "start": [0,0,70],
+    "end": [0,5,130],
+    "startControl": [0,0,90],
+    "endControl": [0,0,120]
+  },
+  "sternKeel": {
+    "start": [10,0,10],
+    "end": [0,0,10],
+    "startControl": [10,0,10],
+    "endControl": [0,0,10]
+  },
+  
+  "sternBeam": {
+    "start": [15,20,0],
+    "end": [0,20,0],
+    "startControl": [15,20,0],
+    "endControl": [0,20,0]
+  },
+  "bowKeel": {
+    "start": [3,5,130],
+    "end": [0,5,130],
+    "startControl": [3,5,130],
+    "endControl": [0,5,130]
+  },
+  "bowBeam": {
+    "start": [5,20,140],
+    "end": [0,20,140],
+    "startControl": [5,20,140],
+    "endControl": [0,20,140]
+  },
+  "sternBeamKeel": {
+    "start": [15,20,0],
+    "end": [10,0,10],
+    "startControl": [15,15,0],
+    "endControl": [13,5,0]
+  },
+  "bowBeamKeel": {
+    "start": [5,20,140],
+    "end": [3,5,130],
+    "startControl": [5,15,140],
+    "endControl": [3,7,134]
+  },
+  "beamKeel": {
+    "start": [25,20,70],
+    "end": [15,0,70],
+    "startControl": [25,20,70],
+    "endControl": [15,0,70]
+  },
+  "midKeel": {
+    "start": [15,0,70],
+    "end": [0,0,70],
+    "startControl": [15,0,70],
+    "endControl": [0,0,70]
+  },
+  "foreBeamKeel": {
+    "start": [0,20,140],
+    "end": [0,5,130],
+    "startControl": [0,15,140],
+    "endControl": [0,7,134]
+  },
+  "aftBeamKeel": {
+    "start": [0,20,0],
+    "end": [0,0,10],
+    "startControl": [0,15,0],
+    "endControl": [0,5,0]
+  }
+}
