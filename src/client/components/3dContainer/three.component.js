@@ -39,37 +39,16 @@ class ThreeContainer extends HTMLElement {
         // initMesh(app).then((app) => {
         //     app.render();
         //     this.manipulator = new Manipulate(app.meshes);
-        //     this.setupSliders();
         // });
         $.ajax('/boat')
             .done((data) => {
                 app = initCurves(app, data);
                 app.render();
+                this.setupMenu();
             })
             .fail((res, error) => {
                 console.log(error);
             });
-    }
-
-    setupSliders() {
-        const slider1 = document.getElementById('hull-width-slider');
-        const value1 = document.getElementById('hull-width-slider-value');
-        slider1.oninput = (value) => {
-            value1.innerHTML = `${value.target.value}in.`;
-            this.manipulator.adjustWidth(value.target.value);
-        };
-        const slider2 = document.getElementById('hull-height-slider');
-        const value2 = document.getElementById('hull-height-slider-value');
-        slider2.oninput = (value) => {
-            value2.innerHTML = `${value.target.value}in.`;
-            this.manipulator.adjustHeight(value.target.value);
-        };
-        const slider3 = document.getElementById('hull-length-slider');
-        const value3 = document.getElementById('hull-length-slider-value');
-        slider3.oninput = (value) => {
-            value3.innerHTML = `${value.target.value}in.`;
-            this.manipulator.adjustLength(value.target.value);
-        };
     }
 }
 
