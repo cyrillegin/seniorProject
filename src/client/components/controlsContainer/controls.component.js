@@ -1,4 +1,5 @@
 import template from './controls.template.html';
+import './controls.style.scss';
 
 export default class controlsContainer extends HTMLElement {
     constructor() {
