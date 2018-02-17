@@ -44,7 +44,7 @@ class ThreeContainer extends HTMLElement {
             .done((data) => {
                 app = initCurves(app, data);
                 app.render();
-                this.setupMenu();
+                // this.setupMenu();
             })
             .fail((res, error) => {
                 console.log(error);
