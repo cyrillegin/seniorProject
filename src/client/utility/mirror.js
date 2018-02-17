@@ -1,5 +1,4 @@
 function mirrorX(start) {
-    console.log(start);
     const end = {
         start: [-start.start[0], start.start[1], start.start[2]],
         end: [-start.end[0], start.end[1], start.end[2]],
