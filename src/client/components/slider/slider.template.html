@@ -1,16 +1,21 @@
 <div class="slider-container">
   <div id="single-slider" class="hidden">
-    <div class="slider-label">{{title}}</div>
 
     <!-- Single slider -->
     <div ng-if="type=='singleSlider'">
+      <div class="slider-label">{{title}}</div>
+      <br />
       <input type="number" class="slider-number-input" /> in.
       <input type="range" class="slider-slide-input" />
     </div>
 
     <!-- Curve slider -->
     <div ng-if="type=='curveSlider'">
-      <div class="curve-slider">
+      
+      <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="{{selector}}-icon"/>
+      <div class="slider-label">{{title}}</div>
+      
+      <div class="curve-slider curve-slider-hidden" id="{{selector}}">
         <table>
           <tbody>
             <tr>

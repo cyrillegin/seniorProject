@@ -4,7 +4,6 @@ export default class controlsContainer {
     }
 
     $onInit() {
-        console.log('controls');
         this.$scope.frames = [{
             title: 'Frame 1',
         }, {
