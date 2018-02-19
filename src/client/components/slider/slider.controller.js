@@ -1,10 +1,10 @@
 export default class sliderContainer {
     constructor($scope) {
         this.$scope = $scope;
+        console.log(this);
     }
 
-    createdCallback(param) {
-        // this.querySelector('#title').innerHTML = $(this)[0].title;
-        // console.log($(this)[0].type);
+    $onInit() {
+        this.$scope.title = this.data.title;
     }
 }

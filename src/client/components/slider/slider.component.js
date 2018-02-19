@@ -5,6 +5,9 @@ import './slider.style.scss';
 const slidercomponent = {
     template: sliderBody,
     controller: sliderController,
+    bindings: {
+        data: '<',
+    },
 };
 
 export default slidercomponent;
