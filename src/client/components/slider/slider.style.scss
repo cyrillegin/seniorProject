@@ -5,7 +5,8 @@
 
 .slider-label {
     margin-bottom: 8px;
-    width: 100%;
+    width: auto;
+    display: inline-block;
 }
 
 .slider-number-input {
@@ -28,4 +29,17 @@
 
 .curve-slider {
     padding-left: 15px;
+    transition: 1s;
+}
+
+.curve-slider-hidden {
+    display: none;
+}
+
+.carrot-icon {
+  transition: 0.2s;
+}
+
+.carrot-icon-rotated {
+  transform: rotate(90deg);
 }

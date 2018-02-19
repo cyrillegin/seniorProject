@@ -10,7 +10,6 @@ import './base.style.scss';
 
 import angular from 'angular';
 import angularRoute from 'angular-route'; // eslint-disable-line
-// import 'jquery';
 
 import threecomponent from './components/3dContainer/three.component';
 import blueprintcomponent from './components/2dContainer/blueprint.component';
