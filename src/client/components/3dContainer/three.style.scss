@@ -1,6 +1,7 @@
 @import './../../constants';
 
 .container {
+    background-color: $light-grey;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(2, 1fr);

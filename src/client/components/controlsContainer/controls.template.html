@@ -1,3 +1,49 @@
-<div>
-    hello world
+<!-- <slidercomponent title="Hull Width" type="singleSlider"></slidercomponent> -->
+
+
+<div class="controls-heading">
+  <h2>Controls</h2>
+</div>
+<hr />
+
+<h3 class="controls-section-heading"> Base controls </h3>
+<div class="controls-input">
+  <slidercomponent data="{title: 'Hull Width', type:'singleSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Hull Height', type:'singleSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Hull Length', type:'singleSlider'}"></slidercomponent>
+</div>
+<hr />
+
+<h3 class="controls-section-heading"> Frames </h3>
+<div class="controls-input">
+  <slidercomponent data="{title: 'Number of Frames', type:'singleSlider'}"></slidercomponent>
+  <h4>Distance from back</h4>
+  <div ng-repeat="frame in frames">
+    <slidercomponent data="{title: frame.title, type:'singleSlider'}"></slidercomponent>
+  </div>
+</div>
+<hr />
+
+<h3 class="controls-section-heading"> Aft Controls </h3>
+<div class="controls-input">
+  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Stern Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Stern-Keel Curve', type:'curveSlider'}"></slidercomponent>
+</div>
+<hr />
+
+
+<h3 class="controls-section-heading"> Fore Controls </h3>
+<div class="controls-input">
+  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Bow Curve', type:'curveSlider'}"></slidercomponent>
+  <slidercomponent data="{title: 'Bow-Keel Curve', type:'curveSlider'}"></slidercomponent>
 </div>
