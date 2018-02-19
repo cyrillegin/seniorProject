@@ -1,43 +1,45 @@
 @import './constants';
 
 html {
-  font-family: monospace;
+    font-family: monospace;
 }
+
 .nav-bar {
-    position: absolute;
-    top:0;
-    left: 0;
-    right: 0;
+    background-color: $dark-grey;
+    color: $white;
     height: 64px;
-    background-color: #212121;
-    color: white;
+    left: 0;
     padding-left: 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .left {
-  top: 0;
-  left: 0;
-  position: absolute;
-  right: 360px;
-  z-index: 0;
+    left: 0;
+    position: absolute;
+    right: 360px;
+    top: 0;
+    z-index: 0;
 }
 
 .right {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 360px;
-  background-color: white;
-  z-index: 500;
+    background-color: $white;
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 360px;
+    z-index: 500;
 }
 
 .canvas-container {
-  position: absolute;
-  top: 64px;
-  width: 100%;
-  background-color: #666
+    background-color: $grey;
+    position: absolute;
+    top: 64px;
+    width: 100%;
 }
+
 .three-container {
-  margin: 40px;
+    margin: 40px;
 }

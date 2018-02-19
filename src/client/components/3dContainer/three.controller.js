@@ -25,7 +25,6 @@ export default class ThreeContainer {
         this.$scope = $scope;
     }
     $onInit() {
-      console.log('init')
         let app = initScene($('#canvas')[0]);
         app = initLights(app);
         app = initCamera(app);

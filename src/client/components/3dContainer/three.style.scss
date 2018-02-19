@@ -1,11 +1,11 @@
 @import './../../constants';
 
 .container {
+    background-color: $light-grey;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(2, 1fr);
     margin-top: 30px;
-    background-color: #cfcfcf;
 }
 
 .side-bar {
