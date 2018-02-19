@@ -12,15 +12,17 @@ import angular from 'angular';
 import angularRoute from 'angular-route'; // eslint-disable-line
 // import 'jquery';
 
-import boatContainer from './components/3dContainer/three.component';
-import blueprintContainer from './components/2dContainer/blueprint.component';
-import controlsContainer from './components/controlsContainer/controls.component';
+import threecomponent from './components/3dContainer/three.component';
+import blueprintcomponent from './components/2dContainer/blueprint.component';
+import controlscomponent from './components/controlsContainer/controls.component';
+import slidercomponent from './components/slider/slider.component';
 import mainPage from './pages/home.template.html';
 
 angular.module('boat_builder', ['ngRoute'])
-    .component('three-container', boatContainer)
-    .component('blueprint-container', blueprintContainer)
-    .component('controls-container', controlsContainer)
+    .component('threecomponent', threecomponent)
+    .component('blueprintcomponent', blueprintcomponent)
+    .component('controlscomponent', controlscomponent)
+    .component('slidercomponent', slidercomponent)
     .config(
         ['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
             $locationProvider.hashPrefix('');

@@ -1,18 +1,10 @@
-import template from './controls.template.html';
+import controlsController from './controls.controller';
+import controlsBody from './controls.template.html';
 import './controls.style.scss';
 
-export default class controlsContainer extends HTMLElement {
-    constructor() {
-        super();
-        console.log('constructing controls');
-        this.bar = 'foo';
-    }
+const controlscomponent = {
+    template: controlsBody,
+    controller: controlsController,
+};
 
-    createdCallback() {
-        this.innerHTML = template;
-    }
-}
-
-// Register the element.
-document.registerElement('controls-container', controlsContainer);
-// customElements.define('controls-container', controlsContainer);
+export default controlscomponent;
