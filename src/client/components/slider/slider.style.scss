@@ -4,9 +4,9 @@
 }
 
 .slider-label {
+    display: inline-block;
     margin-bottom: 8px;
     width: auto;
-    display: inline-block;
 }
 
 .slider-number-input {
@@ -37,9 +37,9 @@
 }
 
 .carrot-icon {
-  transition: 0.2s;
+    transition: .2s;
 }
 
 .carrot-icon-rotated {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
