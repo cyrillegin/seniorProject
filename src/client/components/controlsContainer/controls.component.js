@@ -5,6 +5,7 @@ export default class controlsContainer extends HTMLElement {
     constructor() {
         super();
         console.log('constructing controls');
+        this.bar = 'foo';
     }
 
     createdCallback() {
@@ -14,3 +15,4 @@ export default class controlsContainer extends HTMLElement {
 
 // Register the element.
 document.registerElement('controls-container', controlsContainer);
+// customElements.define('controls-container', controlsContainer);

@@ -2,24 +2,25 @@ import template from './slider.template.html';
 import './slider.style.scss';
 
 export default class sliderContainer extends HTMLElement {
-    constructor(param) {
+    constructor() {
         super();
         console.log('constructing slider');
     }
 
     createdCallback(param) {
         this.innerHTML = template;
+        // this.querySelector('#type').innerHTML = 'hello'
         this.querySelector('#title').innerHTML = $(this)[0].title;
+        // this.querySelector('#type').innerHTML = $(this)[0].type;
+        // console.log($(this)[0].title);
+        // console.log($(this));
+        // this.querySelector($(this)[0].type).toggleClass('hidden');
+        console.log($(this)[0].type);
     }
-
-    attributeChangedCallback(attrName, oldValue, newValue) {
-      console.log('change')
-      console.log(attrName)
-      console.log(oldValue, newValue)
-    }
-
 }
 
 // Register the element.
-Object.defineProperty(sliderContainer, "title", {'asdf': 5});
+// Object.defineProperty(sliderContainer, 'title', {default: null});
+// Object.defineProperty(sliderContainer, 'type', {default: null});
 document.registerElement('slider-container', sliderContainer);
+// customElements.define('slider-container', sliderContainer);

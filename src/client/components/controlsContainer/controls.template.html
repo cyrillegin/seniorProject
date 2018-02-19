@@ -1,29 +1,45 @@
+<!-- <slider-container title="Hull Width" type="#single-slider"></slider-container> -->
+
+
 <div class="controls-heading">
   <h2>Controls</h2>
 </div>
-
 <hr />
 
 <h3 class="controls-section-heading"> Base controls </h3>
 <div class="controls-input">
-  <slider-container title="Hull Width"></slider-container>
-  <slider-container title="Hull Height"></slider-container>
-  <slider-container title="Hull Length"></slider-container>
+  <slider-container title="Hull Width" type="#single-slider"></slider-container>
+  <slider-container title="Hull Height" type="#single-slider"></slider-container>
+  <slider-container title="Hull Length" type="#single-slider"></slider-container>
+</div>
+<hr />
+
+<h3 class="controls-section-heading"> Frames </h3>
+<div class="controls-input">
   <slider-container title="Number of Frames"></slider-container>
+  <h4>Distance from back</h4>
+  <slider-container title="Frame 1" type="#single-slider"></slider-container>
+  <slider-container title="Frame 2" type="#single-slider"></slider-container>
+  <slider-container title="Frame 3" type="#single-slider"></slider-container>
+  <slider-container title="Frame 4" type="#single-slider"></slider-container>
 </div>
-
 <hr />
+
 <h3 class="controls-section-heading"> Aft Controls </h3>
-
 <div class="controls-input">
-  <slider-container title="Aft Beam"></slider-container>
-  <slider-container title="Fore Beam"></slider-container>
+  <slider-container title="Beam Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Chine Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Keel Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Beam-Chine Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Chine-Keel Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Stern Curve" type="#curve-slider"></slider-container>
+  <slider-container title="Stern-Keel Curve" type="#curve-slider"></slider-container>
 </div>
-
 <hr />
-<h3 class="controls-section-heading"> Fore Controls </h3>
 
+
+<h3 class="controls-section-heading"> Fore Controls </h3>
 <div class="controls-input">
-  <slider-container title="Aft Beam"></slider-container>
-  <slider-container title="Fore Beam"></slider-container>
+  <slider-container title="Aft Beam" type="thing"></slider-container>
+  <slider-container title="Fore Beam" type="thing"></slider-container>
 </div>
