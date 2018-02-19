@@ -7,7 +7,28 @@
 
 */
 import './base.style.scss';
-import threeDContainer from './components/3dContainer/three.component'; // eslint-disable-line
-import twoDContainer from './components/2dContainer/blueprint.component'; //eslint-disable-line
-import controlsContainer from './components/controlsContainer/controls.component';  //eslint-disable-line
-import slidercontainer from './components/slider/slider.component'; //eslint-disable-line
+
+import angular from 'angular';
+import angularRoute from 'angular-route'; // eslint-disable-line
+// import 'jquery';
+
+import boatContainer from './components/3dContainer/three.component';
+import blueprintContainer from './components/2dContainer/blueprint.component';
+import controlsContainer from './components/controlsContainer/controls.component';
+import mainPage from './pages/home.template.html';
+
+angular.module('boat_builder', ['ngRoute'])
+    .component('three-container', boatContainer)
+    .component('blueprint-container', blueprintContainer)
+    .component('controls-container', controlsContainer)
+    .config(
+        ['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
+            $locationProvider.hashPrefix('');
+            $routeProvider
+                .when('/', {
+                    template: mainPage,
+                })
+                .otherwise({
+                    redirectTo: '/',
+                });
+        }]);
