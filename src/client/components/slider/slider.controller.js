@@ -6,5 +6,6 @@ export default class sliderContainer {
 
     $onInit() {
         this.$scope.title = this.data.title;
+        this.$scope.type = this.data.type;
     }
 }
