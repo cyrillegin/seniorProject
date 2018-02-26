@@ -12,5 +12,10 @@ export default class sliderContainer {
             $(`#${this.$scope.selector}-icon`).toggleClass('carrot-icon-rotated');
             $(`#${this.$scope.selector}`).toggleClass('curve-slider-hidden');
         };
+
+        this.$scope.valueChange = (val) => {
+            console.log('change')
+            console.log(this.$scope)
+        };
     }
 }
