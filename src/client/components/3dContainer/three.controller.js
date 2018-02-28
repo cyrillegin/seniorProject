@@ -17,12 +17,13 @@ import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
 // import initMesh from './controllers/mesh.controller';
-import initCurves from './controllers/curves.controller';
+import curvesController from './controllers/curves.controller';
 
 
 export default class ThreeContainer {
-    constructor($scope) {
+    constructor($scope, boatParametersService) {
         this.$scope = $scope;
+        this.boatParametersService = boatParametersService;
     }
     $onInit() {
         this.app = initScene($('#canvas')[0]);
@@ -34,12 +35,19 @@ export default class ThreeContainer {
         // });
         $.ajax('/boat')
             .done((data) => {
-                this.app = initCurves(this.app, data);
+                const cController = new curvesController();
+                this.app = cController.initCurves(this.app, data);
                 this.app.render();
             })
             .fail((res, error) => {
                 console.log(error);
             });
+
+        this.$scope.$watch(
+            () => this.boatParametersService.getBoat(),
+            (newVal, oldVal, scope) => {
+                console.log('thing happened');
+            }, true);
     }
     manipulateCurve() {
         console.log(this.app);

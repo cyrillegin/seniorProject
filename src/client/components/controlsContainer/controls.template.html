@@ -8,18 +8,18 @@
 
         <div class="controls-group">
             <div class="slider-label">Width</div>
-            <input type="number" class="slider-number-input" ng-model="width" /> in.
-            <input type="range" class="slider-slide-input" ng-model="width" />
+            <input type="number" class="slider-number-input" ng-model="data.width" ng-change="changeValue()" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.width" ng-change="changeValue()" />
         </div>
         <div class="controls-group">
             <div class="slider-label">Length</div>
-            <input type="number" class="slider-number-input" ng-model="length" /> in.
-            <input type="range" class="slider-slide-input" ng-model="length" />
+            <input type="number" class="slider-number-input" ng-model="data.length" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.length" />
         </div>
         <div class="controls-group">
             <div class="slider-label">Height</div>
-            <input type="number" class="slider-number-input" ng-model="height" /> in.
-            <input type="range" class="slider-slide-input" ng-model="height" />
+            <input type="number" class="slider-number-input" ng-model="data.height" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.height" />
         </div>
     </div>
 
@@ -31,15 +31,15 @@
         <div class="controls-group">
             <div class="controls-group">
                 <div class="slider-label">Number of Frames</div>
-                <input type="number" class="slider-number-input" ng-model="frameCount" /> in.
+                <input type="number" class="slider-number-input" ng-model="frameCount" />
                 <input type="range" class="slider-slide-input" ng-model="frameCount" />
             </div>
             <h4>Distance from back</h4>
-            <div ng-repeat="frame in frames">
+            <div ng-repeat="frame in data.frames">
                 <div class="controls-group">
-                    <div class="slider-label">{{frame.title}}</div>
-                    <input type="number" class="slider-number-input" ng-model="{{frame.title}}" /> in.
-                    <input type="range" class="slider-slide-input" ng-model="{{frame.title}}" />
+                    <div class="slider-label">frame</div>
+                    <input type="number" class="slider-number-input" ng-model="frame.distanceFromBack" /> in.
+                    <input type="range" class="slider-slide-input" ng-model="frame.distanceFromBack" />
                 </div>
             </div>
         </div>
@@ -52,10 +52,10 @@
 
         <div class="controls-input">
             <div class="slider-label">
-              <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="{{selector}}-icon"/>
+              <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="fore-beam-menu-icon"/>
               Beam
             </div>
-            <div class="controls-group">
+            <div class="controls-group" id="fore-beam-menu">
                 <table>
                     <thead>
                         <tr>
@@ -79,13 +79,13 @@
                                 Start
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.z" />
                             </td>
                         </tr>
                         <tr>
@@ -93,13 +93,13 @@
                                 Control
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.z" />
                             </td>
                         </tr>
                         <tr>
@@ -107,13 +107,13 @@
                                 End
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.z" />
                             </td>
                         </tr>
                         <tr>
@@ -121,13 +121,13 @@
                                 Control
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.z" />
                             </td>
                         </tr>
                     </tbody>
@@ -166,13 +166,13 @@
                                 Start
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.z" />
                             </td>
                         </tr>
                         <tr>
@@ -180,13 +180,13 @@
                                 Control
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.z" />
                             </td>
                         </tr>
                         <tr>
@@ -194,13 +194,13 @@
                                 End
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.z" />
                             </td>
                         </tr>
                         <tr>
@@ -208,13 +208,13 @@
                                 Control
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.x" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.y" />
                             </td>
                             <td>
-                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.z" />
                             </td>
                         </tr>
                     </tbody>
