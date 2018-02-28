@@ -25,21 +25,23 @@ export default class ThreeContainer {
         this.$scope = $scope;
     }
     $onInit() {
-        let app = initScene($('#canvas')[0]);
-        app = initLights(app);
-        app = initCamera(app);
-        // initMesh(app).then((app) => {
-        //     app.render();
-        //     this.manipulator = new Manipulate(app.meshes);
+        this.app = initScene($('#canvas')[0]);
+        this.app = initLights(this.app);
+        this.app = initCamera(this.app);
+        // initMesh(this.app).then((this.app) => {
+        //     this.app.render();
+        //     this.manipulator = new Manipulate(this.app.meshes);
         // });
         $.ajax('/boat')
             .done((data) => {
-                app = initCurves(app, data);
-                app.render();
-                // this.setupMenu();
+                this.app = initCurves(this.app, data);
+                this.app.render();
             })
             .fail((res, error) => {
                 console.log(error);
             });
+    }
+    manipulateCurve() {
+        console.log(this.app);
     }
 }

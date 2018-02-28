@@ -1,49 +1,225 @@
-<!-- <slidercomponent title="Hull Width" type="singleSlider"></slidercomponent> -->
-
-
 <div class="controls-heading">
-  <h2>Controls</h2>
+    <h2>Controls</h2>
 </div>
 <hr />
-
-<h3 class="controls-section-heading"> Base controls </h3>
 <div class="controls-input">
-  <slidercomponent data="{title: 'Hull Width', type:'singleSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Hull Height', type:'singleSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Hull Length', type:'singleSlider'}"></slidercomponent>
-</div>
-<hr />
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Base controls </h3>
 
-<h3 class="controls-section-heading"> Frames </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Number of Frames', type:'singleSlider'}"></slidercomponent>
-  <h4>Distance from back</h4>
-  <div ng-repeat="frame in frames">
-    <slidercomponent data="{title: frame.title, type:'singleSlider'}"></slidercomponent>
-  </div>
-</div>
-<hr />
+        <div class="controls-group">
+            <div class="slider-label">Width</div>
+            <input type="number" class="slider-number-input" ng-model="width" /> in.
+            <input type="range" class="slider-slide-input" ng-model="width" />
+        </div>
+        <div class="controls-group">
+            <div class="slider-label">Length</div>
+            <input type="number" class="slider-number-input" ng-model="length" /> in.
+            <input type="range" class="slider-slide-input" ng-model="length" />
+        </div>
+        <div class="controls-group">
+            <div class="slider-label">Height</div>
+            <input type="number" class="slider-number-input" ng-model="height" /> in.
+            <input type="range" class="slider-slide-input" ng-model="height" />
+        </div>
+    </div>
 
-<h3 class="controls-section-heading"> Aft Controls </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Stern Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Stern-Keel Curve', type:'curveSlider'}"></slidercomponent>
-</div>
-<hr />
+    <hr />
 
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Frames </h3>
 
-<h3 class="controls-section-heading"> Fore Controls </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Bow Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Bow-Keel Curve', type:'curveSlider'}"></slidercomponent>
+        <div class="controls-group">
+            <div class="controls-group">
+                <div class="slider-label">Number of Frames</div>
+                <input type="number" class="slider-number-input" ng-model="frameCount" /> in.
+                <input type="range" class="slider-slide-input" ng-model="frameCount" />
+            </div>
+            <h4>Distance from back</h4>
+            <div ng-repeat="frame in frames">
+                <div class="controls-group">
+                    <div class="slider-label">{{frame.title}}</div>
+                    <input type="number" class="slider-number-input" ng-model="{{frame.title}}" /> in.
+                    <input type="range" class="slider-slide-input" ng-model="{{frame.title}}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Aft Controls </h3>
+
+        <div class="controls-input">
+            <div class="slider-label">
+              <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="{{selector}}-icon"/>
+              Beam
+            </div>
+            <div class="controls-group">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Position
+                            </td>
+                            <td>
+                                x
+                            </td>
+                            <td>
+                                y
+                            </td>
+                            <td>
+                                z
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Start
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Control
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                End
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Control
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Fore Controls </h3>
+
+        <div class="controls-input">
+            <div class="controls-group">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                pos
+                            </td>
+                            <td>
+                                x
+                            </td>
+                            <td>
+                                y
+                            </td>
+                            <td>
+                                z
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Start
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Control
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                End
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Control
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                            <td>
+                                <input type="number" class="slider-number-input" ng-model="{{frame.title}}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
