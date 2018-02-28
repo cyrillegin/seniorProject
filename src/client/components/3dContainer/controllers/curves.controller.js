@@ -1,9 +1,6 @@
 import mirrorAttributes from '../../../utility/mirror';
 
-export default class curvesController {
-    constructor() {
-        console.log('constructing');
-    }
+export default class CurvesController {
 
     initCurves(app, boat) {
         app.curves = [];
@@ -49,7 +46,7 @@ export default class curvesController {
         });
         return app;
     }
-    
+
     deleteCurve(app, update) {
         const curve = app.scene.getObjectByName(`curve-${update.key}`);
         app.scene.remove(curve);

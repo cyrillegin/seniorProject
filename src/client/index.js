@@ -17,6 +17,7 @@ import controlscomponent from './components/controlsContainer/controls.component
 import slidercomponent from './components/slider/slider.component';
 import mainPage from './pages/home.template.html';
 import boatParametersService from './services/boatParameters.service';
+
 angular.module('boat_builder', ['ngRoute'])
     .component('threecomponent', threecomponent)
     .component('blueprintcomponent', blueprintcomponent)

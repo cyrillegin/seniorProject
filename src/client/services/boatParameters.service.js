@@ -1,7 +1,6 @@
 export default class boatParametersService {
 
     updatePoint(data) {
-        console.log('updating');
         this.data = data;
         this.updateKey = this.guid();
         return data;

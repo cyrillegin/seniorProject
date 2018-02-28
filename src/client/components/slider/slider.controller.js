@@ -22,7 +22,7 @@ export default class sliderContainer {
     }
 
     initValues(data) {
-        const params = data || {}
+        const params = data || {};
         this.$scope.coordinates = {
             x1: params.x1 || 5,
             y1: params.y1 || 5,
