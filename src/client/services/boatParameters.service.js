@@ -1,12 +1,21 @@
 export default class boatParametersService {
-    constructor() {
-        
-    }
+
     updatePoint(parmas) {
         this.point = 3;
     }
 
     getBoat() {
-        return this.point;
+        return this.data;
+    }
+
+    loadBoat(file) {
+        return $.ajax(file)
+            .done((data) => {
+                this.data = data;
+            })
+            .fail((res, error) => {
+                this.data = {};
+            });
+
     }
 }

@@ -29,6 +29,9 @@ export default class curvesController {
             });
             app.curves.push(curveMesh);
         });
+        // app.scene.children.forEach((child) => {
+        //     child.name = "hey"; 
+        // })
         return app;
     }
 

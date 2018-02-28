@@ -33,10 +33,10 @@ export default class ThreeContainer {
         //     this.app.render();
         //     this.manipulator = new Manipulate(this.app.meshes);
         // });
-        $.ajax('/boat')
+        this.curveController = new curvesController();
+        this.boatParametersService.loadBoat('/boat')
             .done((data) => {
-                const cController = new curvesController();
-                this.app = cController.initCurves(this.app, data);
+                this.app = this.curveController.initCurves(this.app, data);
                 this.app.render();
             })
             .fail((res, error) => {
@@ -44,12 +44,27 @@ export default class ThreeContainer {
             });
 
         this.$scope.$watch(
-            () => this.boatParametersService.getBoat(),
-            (newVal, oldVal, scope) => {
-                console.log('thing happened');
+            () => this.boatParametersService.getBoat(), // what we're watching.
+            (newVal, oldVal, scope) => { // what we do if there's been a change.
+                this.updateCurves(newVal);
             }, true);
     }
-    manipulateCurve() {
-        console.log(this.app);
+    updateCurves(val) {
+        if (val === undefined) {
+            return;
+        }
+        // Remove all of the old curves
+        // TODO: Either parrallelize this or update on a per point basis.
+        this.app.scene.children.forEach((child) => {
+            if (child.type === 'Line' || child.type === 'Mesh') {
+                this.app.scene.remove(child);
+              
+            }
+        });
+        // this.app.render()
+        console.log(this.app.scene.children.length)
+        // const thingToRemove = this.app.scene.getObjectByName('curve');
+        // this.app.scene.remove(thingToRemove);
+        // this.app.curves = [];
     }
 }
