@@ -16,23 +16,58 @@ export default class curvesController {
                 startControlLine: this.drawControlLine(boat[key].start, boat[key].startControl),
                 endControlLine: this.drawControlLine(boat[key].end, boat[key].endControl),
             };
-            curveMesh.points.push(this.drawCurvePoint(boat[key].start));
-            curveMesh.points.push(this.drawCurvePoint(boat[key].end));
-            curveMesh.points.push(this.drawCurveControlPoint(boat[key].startControl));
-            curveMesh.points.push(this.drawCurveControlPoint(boat[key].endControl));
+            curveMesh.curve.name = `curve-${key}`;
+            curveMesh.mirror.name = `curve-mirror-${key}`;
+            curveMesh.startControlLine.name = `curve-start-${key}`;
+            curveMesh.endControlLine.name = `curve-end-${key}`;
+
             app.scene.add(curveMesh.curve);
             app.scene.add(curveMesh.mirror);
             app.scene.add(curveMesh.startControlLine);
             app.scene.add(curveMesh.endControlLine);
+
+            const start = this.drawCurvePoint(boat[key].start);
+            start.name = `start-point-${key}`;
+            curveMesh.points.push(start);
+
+            const end = this.drawCurvePoint(boat[key].end);
+            end.name = `end-point-${key}`;
+            curveMesh.points.push(end);
+
+            const startControl = this.drawCurveControlPoint(boat[key].startControl);
+            startControl.name = `start-control-${key}`;
+            curveMesh.points.push(startControl);
+
+            const endControl = this.drawCurveControlPoint(boat[key].endControl);
+            endControl.name = `end-control-${key}`;
+            curveMesh.points.push(endControl);
+
             curveMesh.points.forEach((point) => {
                 app.scene.add(point);
             });
             app.curves.push(curveMesh);
         });
-        // app.scene.children.forEach((child) => {
-        //     child.name = "hey"; 
-        // })
         return app;
+    }
+    
+    deleteCurve(app, update) {
+        const curve = app.scene.getObjectByName(`curve-${update.key}`);
+        app.scene.remove(curve);
+        const mirror = app.scene.getObjectByName(`curve-mirror-${update.key}`);
+        app.scene.remove(mirror);
+        const startControl = app.scene.getObjectByName(`curve-start-${update.key}`);
+        app.scene.remove(startControl);
+        const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
+        app.scene.remove(endControl);
+
+        const start = app.scene.getObjectByName(`curve-point-${update.key}`);
+        app.scene.remove(start);
+        const end = app.scene.getObjectByName(`curve-point-${update.key}`);
+        app.scene.remove(end);
+        const startPoint = app.scene.getObjectByName(`start-control-${update.key}`);
+        app.scene.remove(startPoint);
+        const endPoint = app.scene.getObjectByName(`end-control-${update.key}`);
+        app.scene.remove(endPoint);
     }
 
     buildCurve(curveAttributes) {

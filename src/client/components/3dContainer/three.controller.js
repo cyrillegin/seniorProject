@@ -36,33 +36,60 @@ export default class ThreeContainer {
         this.curveController = new curvesController();
         this.boatParametersService.loadBoat('/boat')
             .done((data) => {
-                this.app = this.curveController.initCurves(this.app, data);
-                this.app.render();
+                this.$scope.$apply(() => {
+                    this.app = this.curveController.initCurves(this.app, data);
+                    this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
+                    this.app.render();
+                });
             })
             .fail((res, error) => {
                 console.log(error);
             });
 
-        this.$scope.$watch(
-            () => this.boatParametersService.getBoat(), // what we're watching.
+        this.$scope.$watchCollection(
+            () => this.boatParametersService.checkUpdate(), // what we're watching.
             (newVal, oldVal, scope) => { // what we do if there's been a change.
-                this.updateCurves(newVal);
-            }, true);
+                this.updateCurves();
+            });
     }
-    updateCurves(val) {
-        if (val === undefined) {
+
+    updateCurves() {
+        const current = this.boatParametersService.getBoat();
+        if (current === undefined) {
             return;
         }
-        // Remove all of the old curves
-        // TODO: Either parrallelize this or update on a per point basis.
-        this.app.scene.children.forEach((child) => {
-            if (child.type === 'Line' || child.type === 'Mesh') {
-                this.app.scene.remove(child);
-              
-            }
+        if (this.oldValues === undefined) {
+            this.oldValues = current;
+            return;
+        }
+        // itterate the different curves
+        const updates = [];
+        Object.keys(current).forEach((key) => {
+            // itterate the properties of each curve
+            Object.keys(current[key]).forEach((prop) => {
+                // console.log(key, prop, current[key][prop][0], this.oldValues[key][prop][0])
+                if (current[key][prop][0] !== this.oldValues[key][prop][0]) {
+                    updates.push({key: key, values: current[key]})
+                    console.log(`change found in ${key} with prop ${prop} and value ${current[key][prop][0]}`);
+                }
+            });
         });
-        // this.app.render()
-        console.log(this.app.scene.children.length)
+        this.oldValues = JSON.parse(JSON.stringify(current));
+        const updateObj = {}
+        updates.forEach((update) => {
+            this.curveController.deleteCurve(this.app, update);
+            updateObj[update.key] = current[update.key];
+        })
+        this.curveController.initCurves(this.app, updateObj);
+        
+        // this.app.scene.children.forEach((child) => {
+        //     if (child.type === 'Line' || child.type === 'Mesh') {
+        //         this.app.scene.remove(child);
+        // 
+        //     }
+        // });
+        
+        // console.log(this.app.scene.children.length)
         // const thingToRemove = this.app.scene.getObjectByName('curve');
         // this.app.scene.remove(thingToRemove);
         // this.app.curves = [];

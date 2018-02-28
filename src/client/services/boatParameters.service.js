@@ -1,7 +1,22 @@
 export default class boatParametersService {
 
-    updatePoint(parmas) {
-        this.point = 3;
+    updatePoint(data) {
+        console.log('updating');
+        this.data = data;
+        this.updateKey = this.guid();
+        return data;
+    }
+
+    guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return `${s4() + s4() }-${ s4() }-${ s4() }-${ s4() }-${ s4() }${s4() }${s4()}`;
+    }
+    checkUpdate() {
+        return this.updateKey;
     }
 
     getBoat() {
@@ -9,13 +24,6 @@ export default class boatParametersService {
     }
 
     loadBoat(file) {
-        return $.ajax(file)
-            .done((data) => {
-                this.data = data;
-            })
-            .fail((res, error) => {
-                this.data = {};
-            });
-
+        return $.ajax(file);
     }
 }

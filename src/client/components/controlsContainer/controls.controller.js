@@ -10,9 +10,20 @@ export default class controlsContainer {
             console.log(e);
         };
 
-        this.$scope.changeValue = () => {
-            this.boatParametersService.updatePoint();
+        this.$scope.changeValue = (control) => {
+            const newValue = this.$scope.data[control];
+            this.updateModel(control, newValue);
         };
+    }
+
+    updateModel(control, newValue) {
+        const current = this.boatParametersService.getBoat();
+        switch (control) {
+            case 'width':
+                current.aftBeam.end[0] = newValue;
+                current.foreBeam.start[0] = newValue;
+        }
+        this.boatParametersService.updatePoint(current);
     }
 
 
