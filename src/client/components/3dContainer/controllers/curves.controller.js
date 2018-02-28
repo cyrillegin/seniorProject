@@ -57,9 +57,9 @@ export default class CurvesController {
         const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
         app.scene.remove(endControl);
 
-        const start = app.scene.getObjectByName(`curve-point-${update.key}`);
+        const start = app.scene.getObjectByName(`start-point-${update.key}`);
         app.scene.remove(start);
-        const end = app.scene.getObjectByName(`curve-point-${update.key}`);
+        const end = app.scene.getObjectByName(`end-point-${update.key}`);
         app.scene.remove(end);
         const startPoint = app.scene.getObjectByName(`start-control-${update.key}`);
         app.scene.remove(startPoint);

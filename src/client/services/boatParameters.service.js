@@ -1,5 +1,15 @@
 export default class boatParametersService {
 
+    constructor() {
+        this.loadBoat('/boat')
+            .done((data) => {
+                this.data = data;
+            })
+            .fail((res, error) => {
+                console.log(error);
+            });
+    }
+
     updatePoint(data) {
         this.data = data;
         this.updateKey = this.guid();

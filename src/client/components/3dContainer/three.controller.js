@@ -21,8 +21,9 @@ import CurvesController from './controllers/curves.controller';
 
 
 export default class ThreeContainer {
-    constructor($scope, boatParametersService) {
+    constructor($scope, $timeout, boatParametersService) {
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
     }
     $onInit() {
@@ -34,23 +35,18 @@ export default class ThreeContainer {
         //     this.manipulator = new Manipulate(this.app.meshes);
         // });
         this.curveController = new CurvesController();
-        this.boatParametersService.loadBoat('/boat')
-            .done((data) => {
-                this.$scope.$apply(() => {
-                    this.app = this.curveController.initCurves(this.app, data);
-                    this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
-                    this.app.render();
-                });
-            })
-            .fail((res, error) => {
-                console.log(error);
-            });
+        this.$timeout(() => {
+            const data = this.boatParametersService.getBoat();
+            this.app = this.curveController.initCurves(this.app, data);
+            this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
+            this.app.render();
 
-        this.$scope.$watchCollection(
-            () => this.boatParametersService.checkUpdate(), // what we're watching.
-            (newVal, oldVal, scope) => { // what we do if there's been a change.
-                this.updateCurves();
-            });
+            this.$scope.$watchCollection(
+                () => this.boatParametersService.checkUpdate(), // what we're watching.
+                (newVal, oldVal, scope) => { // what we do if there's been a change.
+                    this.updateCurves();
+                });
+        });
     }
 
     updateCurves() {
