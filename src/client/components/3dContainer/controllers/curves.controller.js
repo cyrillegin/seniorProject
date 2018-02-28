@@ -6,6 +6,9 @@ export default class CurvesController {
         app.curves = [];
 
         Object.keys(boat).forEach((key) => {
+            if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                return;
+            }
             const curveMesh = {
                 curve: this.buildCurve(boat[key]),
                 mirror: this.buildCurve(mirrorAttributes(boat[key])),

@@ -38,8 +38,8 @@
             <div ng-repeat="frame in data.frames">
                 <div class="controls-group">
                     <div class="slider-label">frame</div>
-                    <input type="number" class="slider-number-input" ng-model="frame[$index].distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                    <input type="range" class="slider-slide-input" ng-model="frame[$index].distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                    <input type="number" class="slider-number-input" ng-model="frame" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                    <input type="range" class="slider-slide-input" ng-model="frame" ng-change="changeValue('$index-distanceFromBack')" />
                 </div>
             </div>
         </div>
