@@ -50,6 +50,9 @@ export default class ThreeContainer {
     }
 
     updateCurves() {
+        if (true) {
+            return;
+        }
         const current = this.boatParametersService.getBoat();
         if (current === undefined) {
             return;
