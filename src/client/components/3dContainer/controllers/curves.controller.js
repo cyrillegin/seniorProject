@@ -11,11 +11,14 @@ export default class CurvesController {
                 return;
             }
 
-            const curve = this.buildCurve(boat[key], key);
+            const lenOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
+            const heightOffset = key.toLowerCase().includes('beam') ? -this.boat.height : this.boat.height;
+
+            const curve = this.buildCurve(boat[key], key, lenOffset, heightOffset);
             curve.name = `curve-${key}`;
             app.scene.add(curve);
 
-            const mirror = this.buildCurve(mirrorAttributes(boat[key], boat.width), key);
+            const mirror = this.buildCurve(mirrorAttributes(boat[key], boat.width), key, lenOffset, heightOffset);
             mirror.name = `curve-mirror-${key}`;
             app.scene.add(mirror);
 
@@ -27,20 +30,19 @@ export default class CurvesController {
             endControlLine.name = `curve-end-${key}`;
             app.scene.add(endControlLine);
 
-            const startPoint = this.drawCurvePoint(boat[key].start, 0);
+            const startPoint = this.drawCurvePoint(boat[key].start, 0, heightOffset);
             startPoint.name = `start-point-${key}`;
             app.scene.add(startPoint);
 
-            const lenOffset = key.startsWith('aft') ? -this.boat.length : this.boat.length;
-            const endPoint = this.drawCurvePoint(boat[key].end, lenOffset);
+            const endPoint = this.drawCurvePoint(boat[key].end, lenOffset, heightOffset);
             endPoint.name = `end-point-${key}`;
             app.scene.add(endPoint);
 
-            const startControlPoint = this.drawCurveControlPoint(boat[key].startControl);
+            const startControlPoint = this.drawCurveControlPoint(boat[key].startControl, 0, heightOffset);
             startControlPoint.name = `start-control-${key}`;
             app.scene.add(startControlPoint);
 
-            const endControlPoint = this.drawCurveControlPoint(boat[key].endControl, lenOffset);
+            const endControlPoint = this.drawCurveControlPoint(boat[key].endControl, lenOffset, heightOffset);
             endControlPoint.name = `end-control-${key}`;
             app.scene.add(endControlPoint);
 
@@ -68,8 +70,8 @@ export default class CurvesController {
         app.scene.remove(endPoint);
     }
 
-    buildCurve(curveAttributes, key) {
-        const newCurve = this.defineCurve(curveAttributes, key);
+    buildCurve(curveAttributes, key, lenOffset, heightOffset) {
+        const newCurve = this.defineCurve(curveAttributes, key, lenOffset, heightOffset);
 
         const points = newCurve.getPoints(50);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -79,29 +81,28 @@ export default class CurvesController {
         return curveObject;
     }
 
-    defineCurve(curveAttributes, key) {
-        const lenOffset = key.startsWith('aft') ? -this.boat.length : this.boat.length;
-        const pointA = new THREE.Vector3(this.boat.width + curveAttributes.start[0], this.boat.height + curveAttributes.start[1], curveAttributes.start[2]);
-        const pointB = new THREE.Vector3(this.boat.width + curveAttributes.startControl[0], this.boat.height + curveAttributes.startControl[1], curveAttributes.startControl[2]);
-        const pointC = new THREE.Vector3(this.boat.width + curveAttributes.end[0], this.boat.height + curveAttributes.end[1], lenOffset + curveAttributes.end[2]);
-        const pointD = new THREE.Vector3(this.boat.width + curveAttributes.endControl[0], this.boat.height + curveAttributes.endControl[1], lenOffset + curveAttributes.endControl[2]);
+    defineCurve(curveAttributes, key, lenOffset, heightOffset) {
+        const pointA = new THREE.Vector3(this.boat.width + curveAttributes.start[0], heightOffset + curveAttributes.start[1], curveAttributes.start[2]);
+        const pointB = new THREE.Vector3(this.boat.width + curveAttributes.startControl[0], heightOffset + curveAttributes.startControl[1], curveAttributes.startControl[2]);
+        const pointC = new THREE.Vector3(this.boat.width + curveAttributes.end[0], heightOffset + curveAttributes.end[1], lenOffset + curveAttributes.end[2]);
+        const pointD = new THREE.Vector3(this.boat.width + curveAttributes.endControl[0], heightOffset + curveAttributes.endControl[1], lenOffset + curveAttributes.endControl[2]);
         const newCurve = new THREE.CubicBezierCurve3(pointA, pointB, pointC, pointD);
         return newCurve;
     }
 
-    drawCurvePoint(location, lenOffset) {
+    drawCurvePoint(location, lenOffset, heightOffset) {
         const geometry = new THREE.BoxGeometry(2, 2, 2);
         const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(this.boat.width + location[0], this.boat.height + location[1], lenOffset + location[2]);
+        mesh.position.set(this.boat.width + location[0], heightOffset + location[1], lenOffset + location[2]);
         return mesh;
     }
 
-    drawCurveControlPoint(location, lenOffset) {
+    drawCurveControlPoint(location, lenOffset, heightOffset) {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(this.boat.width + location[0], this.boat.height + location[1], lenOffset + location[2]);
+        mesh.position.set(this.boat.width + location[0], heightOffset + location[1], lenOffset + location[2]);
         return mesh;
     }
 

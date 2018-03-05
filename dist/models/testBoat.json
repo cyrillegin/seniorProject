@@ -13,5 +13,17 @@
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
+  },
+  "aftChine": {
+    "start": [0,0,0],
+    "end": [-10,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [-10, 0, 0]
+  },
+  "foreChine": {
+    "start": [0,0,0],
+    "end": [-10,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [-10, 0, 0]
   }
 }
