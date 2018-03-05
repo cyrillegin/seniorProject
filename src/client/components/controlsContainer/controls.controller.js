@@ -18,7 +18,6 @@ export default class controlsContainer {
                 () => this.boatParametersService.checkUpdate(), // what we're watching.
                 (newVal, oldVal, scope) => { // what we do if there's been a change.
                     this.$scope.data = this.boatParametersService.getBoat();
-                    console.log(this.$scope.data)
                 });
             this.$scope.changeValue = (control) => {
                 const newValue = this.$scope.data[control];
@@ -33,7 +32,17 @@ export default class controlsContainer {
             case 'width':
                 current.aftBeam.end[0] = newValue;
                 current.foreBeam.start[0] = newValue;
+                current.beamKeel.start[0] = newValue;
+                // current.aftBeam = this.moveCurve(current.aftBeam, 0, newValue);
         }
         this.boatParametersService.updatePoint(current);
+    }
+
+    moveCurve(curve, axis, value) {
+        curve.start[axis] = value;
+        curve.startControl[axis] = value;
+        curve.end[axis] = value;
+        curve.endControl[axis] = value;
+        return curve;
     }
 }
