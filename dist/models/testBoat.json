@@ -1,12 +1,12 @@
 {
-  "width": 40,
-  "height": 10,
+  "width": 10,
+  "height": 5,
   "length": 50,
   "aftBeam": {
     "start": [0,0,0],
-    "end": [-10,0,0],
-    "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "end": [0,0,0],
+    "startControl": [10, 0, 0],
+    "endControl": [10, 0, 0]
   },
   "foreBeam": {
     "start": [0,0,0],
@@ -25,5 +25,17 @@
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
+  },
+  "aftSternBeam": {
+    "start": [0,0,0],
+    "end": [-10,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [-10, 0, 0]
+  },
+  "aftSternBeam": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
   }
 }
