@@ -1,41 +1,53 @@
 {
-  "width": 10,
+  "width": 20,
   "height": 5,
   "length": 50,
   "aftBeam": {
-    "start": [0,0,0],
-    "end": [0,0,0],
-    "startControl": [10, 0, 0],
-    "endControl": [10, 0, 0]
+    "start": [0, 0, 0],
+    "end": [-10, 0, 0],
+    "startControl": [0, 0, -10],
+    "endControl": [0, 0, 5]
   },
   "foreBeam": {
-    "start": [0,0,0],
-    "end": [-10,0,0],
-    "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "start": [0, 0, 0],
+    "end": [-10, 0, 0],
+    "startControl": [0, 0, 10],
+    "endControl": [0, 0, -5]
   },
   "aftChine": {
-    "start": [0,0,0],
-    "end": [-10,0,0],
+    "start": [0, 0, 0],
+    "end": [-10, 0, 0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
   "foreChine": {
+    "start": [0, 0, 0],
+    "end": [-10, 0, 0],
+    "startControl": [0, 0, 0],
+    "endControl": [-10, 0, 0]
+  },
+  "aftBeamEdge": {
     "start": [0,0,0],
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
-  "aftSternBeam": {
+  "foreBeamEdge": {
     "start": [0,0,0],
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
-  "aftSternBeam": {
+  "aftKeelEdge": {
     "start": [0,0,0],
-    "end": [0,0,0],
+    "end": [-10,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [0, 0, 0]
+    "endControl": [-10, 0, 0]
+  },
+  "foreKeelEdge": {
+    "start": [0,0,0],
+    "end": [-10,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [-10, 0, 0]
   }
 }

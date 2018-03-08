@@ -10,16 +10,18 @@ export default class CurvesController {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
                 return;
             }
-            if (key !== "aftBeam") return;
+
             // Define offsets
             const lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-            const heightOffset = key.toLowerCase().includes('beam') ? -this.boat.height : this.boat.height;
+            const heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
             const widthOffset = key.toLowerCase().includes('mid') ? 0 : this.boat.width;
 
             // Apply offsets
             const curveCoordinates = boat[key];
-            curveCoordinates.start[0] += widthOffset;
-            curveCoordinates.startControl[0] += widthOffset;
+            if (! key.toLowerCase().includes('edge')) {
+                curveCoordinates.start[0] += widthOffset;
+                curveCoordinates.startControl[0] += widthOffset;
+            }
             curveCoordinates.end[0] += widthOffset;
             curveCoordinates.endControl[0] += widthOffset;
 
@@ -30,6 +32,11 @@ export default class CurvesController {
 
             curveCoordinates.end[2] += lengthOffset;
             curveCoordinates.endControl[2] += lengthOffset;
+            if (key.toLowerCase().includes('edge')) {
+                curveCoordinates.start[2] += lengthOffset;
+                curveCoordinates.startControl[2] += lengthOffset;
+            }
+            console.log(key)
             console.log(curveCoordinates)
 
             // Draw curve
