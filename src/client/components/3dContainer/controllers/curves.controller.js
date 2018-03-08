@@ -12,9 +12,16 @@ export default class CurvesController {
             }
 
             // Define offsets
-            const lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-            const heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-            const widthOffset = key.toLowerCase().includes('mid') ? 0 : this.boat.width;
+            let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
+            let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
+            const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
+
+            if (key.toLowerCase().includes('frame')) {
+                heightOffset = this.boat.height;
+            }
+            if (key.toLowerCase().includes('mid')) {
+                lengthOffset = 0;
+            }
 
             // Apply offsets
             const curveCoordinates = boat[key];
@@ -27,17 +34,18 @@ export default class CurvesController {
 
             curveCoordinates.start[1] += heightOffset;
             curveCoordinates.startControl[1] += heightOffset;
+            if (key.toLowerCase().includes('frame')) {
+                heightOffset = -heightOffset;
+            }
             curveCoordinates.end[1] += heightOffset;
             curveCoordinates.endControl[1] += heightOffset;
 
             curveCoordinates.end[2] += lengthOffset;
             curveCoordinates.endControl[2] += lengthOffset;
-            if (key.toLowerCase().includes('edge')) {
+            if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
                 curveCoordinates.start[2] += lengthOffset;
                 curveCoordinates.startControl[2] += lengthOffset;
             }
-            console.log(key)
-            console.log(curveCoordinates)
 
             // Draw curve
             const curve = this.buildCurve(curveCoordinates, key);

@@ -38,16 +38,58 @@
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
-  "aftKeelEdge": {
+  "aftGunEdge": {
     "start": [0,0,0],
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
-  "foreKeelEdge": {
+  "foreGunEdge": {
     "start": [0,0,0],
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
+  },
+  "aftFrame": {
+    "start": [-10,0,0],
+    "end": [-10,0,0],
+    "startControl": [-10, 0, 0],
+    "endControl": [-10, 0, 0]
+  },
+  "foreFrame": {
+    "start": [-10,0,0],
+    "end": [-10,0,0],
+    "startControl": [-10, 0, 0],
+    "endControl": [-10, 0, 0]
+  },
+  "midFrame": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
+  },
+  "aftKeel": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
+  },
+  "foreKeel": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
+  },
+  "aftKeelFrame": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
+  },
+  "foreKeelFrame": {
+    "start": [0,0,0],
+    "end": [0,0,0],
+    "startControl": [0, 0, 0],
+    "endControl": [0, 0, 0]
   }
 }
