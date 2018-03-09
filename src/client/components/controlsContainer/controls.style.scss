@@ -9,3 +9,11 @@
 .controls-section-heading {
     margin: 8px;
 }
+
+.controls-section-hidden {
+    display: none;
+}
+
+.controls-icon-hidden {
+  transform: rotate(-90deg);
+}
