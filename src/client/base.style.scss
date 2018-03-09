@@ -1,4 +1,6 @@
 @import './constants';
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
 
 html {
     font-family: monospace;
