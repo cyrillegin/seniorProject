@@ -50,9 +50,6 @@ export default class ThreeContainer {
     }
 
     updateCurves() {
-        if (true) {
-            return;
-        }
         const current = this.boatParametersService.getBoat();
         if (current === undefined) {
             return;
@@ -64,6 +61,21 @@ export default class ThreeContainer {
         // itterate the different curves
         const updates = [];
         Object.keys(current).forEach((key) => {
+            // If the key is width, height, or length, we actually need to update every
+            // curve in the boat so we itterate the array again and push every curve to
+            // the updates array. NOTE: we could actually skip updating the keel curves.
+            // TODO: This feels pretty hacky, we should consider a different strategy later.
+            if (key === 'width' || key === 'height' || key === 'length') {
+                if (current[key] === this.oldValues[key]) {
+                    return;
+                }
+                Object.keys(current).forEach((innerKey) => {
+                    if (innerKey === 'width' || innerKey === 'height' || innerKey === 'length' || innerKey === 'frames') {
+                        return;
+                    }
+                    updates.push({key: innerKey, values: current[innerKey]});
+                });
+            }
             // itterate the properties of each curve
             Object.keys(current[key]).forEach((prop) => {
                 if (current[key][prop][0] !== this.oldValues[key][prop][0]) {
@@ -74,9 +86,12 @@ export default class ThreeContainer {
         this.oldValues = JSON.parse(JSON.stringify(current));
         const updateObj = {};
         updates.forEach((update) => {
-            this.curveController.deleteCurve(this.app, update);
+            this.app = this.curveController.deleteCurve(this.app, update);
             updateObj[update.key] = current[update.key];
         });
+        updateObj.width = current.width;
+        updateObj.height = current.height;
+        updateObj.length = current.length;
         this.curveController.initCurves(this.app, updateObj);
     }
 }

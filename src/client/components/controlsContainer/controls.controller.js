@@ -30,10 +30,7 @@ export default class controlsContainer {
         const current = this.boatParametersService.getBoat();
         switch (control) {
             case 'width':
-                current.aftBeam.end[0] = newValue;
-                current.foreBeam.start[0] = newValue;
-                current.beamKeel.start[0] = newValue;
-                // current.aftBeam = this.moveCurve(current.aftBeam, 0, newValue);
+                current.width = newValue;
         }
         this.boatParametersService.updatePoint(current);
     }

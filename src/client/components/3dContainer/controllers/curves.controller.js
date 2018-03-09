@@ -4,9 +4,9 @@ export default class CurvesController {
 
     initCurves(app, boat) {
         app.curves = [];
-        this.boat = boat;
+        this.boat = JSON.parse(JSON.stringify(boat));
 
-        Object.keys(boat).forEach((key) => {
+        Object.keys(this.boat).forEach((key) => {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
                 return;
             }
@@ -24,7 +24,7 @@ export default class CurvesController {
             }
 
             // Apply offsets
-            const curveCoordinates = boat[key];
+            const curveCoordinates = this.boat[key];
             if (! key.toLowerCase().includes('edge')) {
                 curveCoordinates.start[0] += widthOffset;
                 curveCoordinates.startControl[0] += widthOffset;
@@ -52,23 +52,23 @@ export default class CurvesController {
             curve.name = `curve-${key}`;
             app.scene.add(curve);
 
-            const mirror = this.buildCurve(mirrorAttributes(curveCoordinates, boat.width), key);
+            const mirror = this.buildCurve(mirrorAttributes(curveCoordinates, this.boat.width), key);
             mirror.name = `curve-mirror-${key}`;
             app.scene.add(mirror);
 
-            const startControlLine = this.drawControlLine(boat[key].start, boat[key].startControl);
+            const startControlLine = this.drawControlLine(this.boat[key].start, this.boat[key].startControl);
             startControlLine.name = `curve-start-${key}`;
             app.scene.add(startControlLine);
 
-            const endControlLine = this.drawControlLine(boat[key].end, boat[key].endControl);
+            const endControlLine = this.drawControlLine(this.boat[key].end, this.boat[key].endControl);
             endControlLine.name = `curve-end-${key}`;
             app.scene.add(endControlLine);
 
-            const startPoint = this.drawCurvePoint(boat[key].start);
+            const startPoint = this.drawCurvePoint(this.boat[key].start);
             startPoint.name = `start-point-${key}`;
             app.scene.add(startPoint);
 
-            const endPoint = this.drawCurvePoint(boat[key].end);
+            const endPoint = this.drawCurvePoint(this.boat[key].end);
             endPoint.name = `end-point-${key}`;
             app.scene.add(endPoint);
 
@@ -93,7 +93,6 @@ export default class CurvesController {
         app.scene.remove(startControl);
         const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
         app.scene.remove(endControl);
-
         const start = app.scene.getObjectByName(`start-point-${update.key}`);
         app.scene.remove(start);
         const end = app.scene.getObjectByName(`end-point-${update.key}`);
@@ -102,6 +101,7 @@ export default class CurvesController {
         app.scene.remove(startPoint);
         const endPoint = app.scene.getObjectByName(`end-control-${update.key}`);
         app.scene.remove(endPoint);
+        return app;
     }
 
     buildCurve(curveAttributes, key) {
