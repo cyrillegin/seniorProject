@@ -7,7 +7,8 @@ export default class controlsContainer {
 
     $onInit() {
         this.$scope.openMenu = (e) => {
-            console.log(e);
+            document.querySelector(`#${e}-menu`).classList.toggle('controls-section-hidden');
+            document.querySelector(`#${e}-menu-icon`).classList.toggle('controls-icon-hidden');
         };
 
         // We need to wait for the boat service to complete initialization

@@ -9,3 +9,40 @@
 .controls-section-heading {
     margin: 8px;
 }
+
+.controls-section-hidden {
+    display: none;
+}
+
+.controls-icon-hidden {
+  transform: rotate(-90deg);
+}
+
+
+
+
+
+.controls-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    width: auto;
+}
+
+.controls-number-input {
+    width: 60px;
+}
+
+.controls-slide-input {
+    vertical-align: middle;
+    width: 220px;
+}
+
+
+.curve-slider {
+    padding-left: 15px;
+    transition: 1s;
+}
+
+.carrot-icon {
+    transition: .2s;
+}
