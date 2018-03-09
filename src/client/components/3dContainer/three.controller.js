@@ -81,6 +81,12 @@ export default class ThreeContainer {
                 if (current[key][prop][0] !== this.oldValues[key][prop][0]) {
                     updates.push({key, values: current[key]});
                 }
+                if (current[key][prop][1] !== this.oldValues[key][prop][1]) {
+                    updates.push({key, values: current[key]});
+                }
+                if (current[key][prop][2] !== this.oldValues[key][prop][2]) {
+                    updates.push({key, values: current[key]});
+                }
             });
         });
         this.oldValues = JSON.parse(JSON.stringify(current));

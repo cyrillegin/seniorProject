@@ -48,180 +48,92 @@
     <hr />
 
     <div class="controls-section">
-        <h3 class="controls-section-heading"> Aft Controls </h3>
-
         <div class="controls-input">
-            <div class="slider-label">
-              <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="fore-beam-menu-icon"/>
-              Beam
-            </div>
-            <div class="controls-group" id="fore-beam-menu">
-                <table>
-                    <thead>
-                        <tr>
-                            <td>
-                                Position
-                            </td>
-                            <td>
-                                x
-                            </td>
-                            <td>
-                                y
-                            </td>
-                            <td>
-                                z
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Start
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.start.x" ng-change="changeValue('fore-beam-start-x')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.start.y" ng-change="changeValue('fore-beam-start-y')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.start.z" ng-change="changeValue('fore-beam-start-z')" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Control
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.startControl.x" ng-change="changeValue('fore-beam-startControl-x')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.startControl.y" ng-change="changeValue('fore-beam-startControl-y')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.startControl.z" ng-change="changeValue('fore-beam-startControl-z')" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                End
-                            </td>
-                            <script>
-                            console.log('helloc')
-                            </script>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.end.x" ng-change="changeValue('fore-beam-end-x')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.end.y" ng-change="changeValue('fore-beam-end-y')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.end.z" ng-change="changeValue('fore-beam-end-z')" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Control
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.endControl.x" ng-change="changeValue('fore-beam-endControl-x')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.endControl.y" ng-change="changeValue('fore-beam-endControl-y')" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.aft.beam.endControl.z" ng-change="changeValue('fore-beam-endControl-z')" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+            <div ng-repeat="(key, value) in data">
+                <div ng-if="key != 'width' && key != 'height' && key != 'length'">
+                    <div class="slider-label">
+                        <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="fore-beam-menu-icon" /> {{key}}
+                    </div>
 
-    <hr />
-
-    <div class="controls-section">
-        <h3 class="controls-section-heading"> Fore Controls </h3>
-
-        <div class="controls-input">
-            <div class="controls-group">
-                <table>
-                    <thead>
-                        <tr>
-                            <td>
-                                pos
-                            </td>
-                            <td>
-                                x
-                            </td>
-                            <td>
-                                y
-                            </td>
-                            <td>
-                                z
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Start
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.x" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.y" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.start.z" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Control
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.x" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.y" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.startControl.z" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                End
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.x" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.y" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.end.z" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Control
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.x" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.y" />
-                            </td>
-                            <td>
-                                <input type="number" class="slider-number-input" ng-model="data.fore.beam.endControl.z" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div class="controls-group" id="{{key}}-menu">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Position
+                                    </td>
+                                    <td>
+                                        x
+                                    </td>
+                                    <td>
+                                        y
+                                    </td>
+                                    <td>
+                                        z
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Start
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Control
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        End
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Control
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -10,9 +10,9 @@
   },
   "foreBeam": {
     "start": [0, 0, 0],
-    "end": [-10, 0, 0],
+    "end": [-18, 0, 0],
     "startControl": [0, 0, 10],
-    "endControl": [0, 0, -5]
+    "endControl": [-10, 0, -5]
   },
   "aftChine": {
     "start": [0, 0, 0],
@@ -22,7 +22,7 @@
   },
   "foreChine": {
     "start": [0, 0, 0],
-    "end": [-10, 0, 0],
+    "end": [-18, 0, 0],
     "startControl": [0, 0, 0],
     "endControl": [-10, 0, 0]
   },
@@ -34,9 +34,9 @@
   },
   "foreBeamEdge": {
     "start": [0,0,0],
-    "end": [-10,0,0],
+    "end": [-18,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "endControl": [-18, 0, 0]
   },
   "aftGunEdge": {
     "start": [0,0,0],
@@ -46,9 +46,9 @@
   },
   "foreGunEdge": {
     "start": [0,0,0],
-    "end": [-10,0,0],
+    "end": [-18,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "endControl": [-18, 0, 0]
   },
   "aftFrame": {
     "start": [-10,0,0],
@@ -57,10 +57,10 @@
     "endControl": [-10, 0, 0]
   },
   "foreFrame": {
-    "start": [-10,0,0],
-    "end": [-10,0,0],
-    "startControl": [-10, 0, 0],
-    "endControl": [-10, 0, 0]
+    "start": [-18,0,0],
+    "end": [-18,0,0],
+    "startControl": [-18, 0, 0],
+    "endControl": [-18, 0, 0]
   },
   "midFrame": {
     "start": [0,0,0],
