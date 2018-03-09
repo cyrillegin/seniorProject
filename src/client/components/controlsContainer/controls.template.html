@@ -1,49 +1,140 @@
-<!-- <slidercomponent title="Hull Width" type="singleSlider"></slidercomponent> -->
-
-
 <div class="controls-heading">
-  <h2>Controls</h2>
+    <h2>Controls</h2>
 </div>
 <hr />
-
-<h3 class="controls-section-heading"> Base controls </h3>
 <div class="controls-input">
-  <slidercomponent data="{title: 'Hull Width', type:'singleSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Hull Height', type:'singleSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Hull Length', type:'singleSlider'}"></slidercomponent>
-</div>
-<hr />
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Base controls </h3>
 
-<h3 class="controls-section-heading"> Frames </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Number of Frames', type:'singleSlider'}"></slidercomponent>
-  <h4>Distance from back</h4>
-  <div ng-repeat="frame in frames">
-    <slidercomponent data="{title: frame.title, type:'singleSlider'}"></slidercomponent>
-  </div>
-</div>
-<hr />
+        <div class="controls-group">
+            <div class="slider-label">Width</div>
+            <input type="number" class="slider-number-input" ng-model="data.width" ng-change="changeValue('width')" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.width" ng-change="changeValue('width')" />
+        </div>
+        <div class="controls-group">
+            <div class="slider-label">Length</div>
+            <input type="number" class="slider-number-input" ng-model="data.length" ng-change="changeValue('length')" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.length" ng-change="changeValue('length')" />
+        </div>
+        <div class="controls-group">
+            <div class="slider-label">Height</div>
+            <input type="number" class="slider-number-input" ng-model="data.height" ng-change="changeValue('height')" /> in.
+            <input type="range" class="slider-slide-input" ng-model="data.height" ng-change="changeValue('height')" />
+        </div>
+    </div>
 
-<h3 class="controls-section-heading"> Aft Controls </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Stern Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Stern-Keel Curve', type:'curveSlider'}"></slidercomponent>
-</div>
-<hr />
+    <hr />
 
+    <div class="controls-section">
+        <h3 class="controls-section-heading"> Frames </h3>
 
-<h3 class="controls-section-heading"> Fore Controls </h3>
-<div class="controls-input">
-  <slidercomponent data="{title: 'Beam Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Beam-Chine Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Chine-Keel Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Bow Curve', type:'curveSlider'}"></slidercomponent>
-  <slidercomponent data="{title: 'Bow-Keel Curve', type:'curveSlider'}"></slidercomponent>
+        <div class="controls-group">
+            <div class="controls-group">
+                <div class="slider-label">Number of Frames</div>
+                <input type="number" class="slider-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+                <input type="range" class="slider-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            </div>
+            <h4>Distance from back</h4>
+            <div ng-repeat="frame in data.frames">
+                <div class="controls-group">
+                    <div class="slider-label">frame</div>
+                    <input type="number" class="slider-number-input" ng-model="frame" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                    <input type="range" class="slider-slide-input" ng-model="frame" ng-change="changeValue('$index-distanceFromBack')" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="controls-section">
+        <div class="controls-input">
+            <div ng-repeat="(key, value) in data">
+                <div ng-if="key != 'width' && key != 'height' && key != 'length'">
+                    <div class="slider-label">
+                        <i class="fa fa-angle-right carrot-icon" ng-click="openMenu()" id="fore-beam-menu-icon" /> {{key}}
+                    </div>
+
+                    <div class="controls-group" id="{{key}}-menu">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Position
+                                    </td>
+                                    <td>
+                                        x
+                                    </td>
+                                    <td>
+                                        y
+                                    </td>
+                                    <td>
+                                        z
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Start
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Control
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        End
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Control
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="slider-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
