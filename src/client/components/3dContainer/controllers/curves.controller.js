@@ -1,143 +1,157 @@
-const A = [25, 20, 200];
-const B = [25, 10, 190];
-const C = [0, 20, 100];
-const D = [5, 5, 100];
-const E = [45, 5, 100];
-const F = [50, 20, 100];
-const G = [15, 5, 10];
-const H = [25, 0, 10];
-const I = [35, 5, 10];
-const J = [10, 20, 10];
-const K = [40, 20, 10];
-const L = [25, 0, 150];
+import mirrorAttributes from '../../../utility/mirror';
 
+export default class CurvesController {
 
-const curves = [{
-    label: 'ACJ',
-    points: [A, C, J],
-}, {
-    label: 'AB',
-    points: [A, B],
-}, {
-    label: 'AFK',
-    points: [A, F, K],
-}, {
-    label: 'BDG',
-    points: [B, D, G],
-}, {
-    label: 'BLH',
-    points: [B, L, H],
-}, {
-    label: 'BEI',
-    points: [B, E, I],
-}, {
-    label: 'GH',
-    points: [G, H],
-}, {
-    label: 'GJ',
-    points: [G, J],
-}, {
-    label: 'HI',
-    points: [H, I],
-}, {
-    label: 'IK',
-    points: [I, K],
-}, {
-    label: 'JK',
-    points: [J, K],
-}];
+    initCurves(app, boat) {
+        app.curves = [];
+        this.boat = JSON.parse(JSON.stringify(boat));
 
-function initCurves(app) {
-    app.curves = [];
-    for (let i = 0; i < curves.length; i ++) {
-        const curveAttributes = {
-            positions: [],
-            splines: {},
-            splineHelperObjects: [],
-            splineMesh: null,
-            geometry: new THREE.BoxGeometry(3, 3, 3),
-        };
-        app.curves.push(curveAttributes);
-        buildCurve(app, i);
+        Object.keys(this.boat).forEach((key) => {
+            if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                return;
+            }
+
+            // Define offsets
+            let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
+            let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
+            const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
+
+            if (key.toLowerCase().includes('frame')) {
+                heightOffset = this.boat.height;
+            }
+            if (key.toLowerCase().includes('mid')) {
+                lengthOffset = 0;
+            }
+
+            // Apply offsets
+            const curveCoordinates = this.boat[key];
+            if (! key.toLowerCase().includes('edge')) {
+                curveCoordinates.start[0] += widthOffset;
+                curveCoordinates.startControl[0] += widthOffset;
+            }
+            curveCoordinates.end[0] += widthOffset;
+            curveCoordinates.endControl[0] += widthOffset;
+
+            curveCoordinates.start[1] += heightOffset;
+            curveCoordinates.startControl[1] += heightOffset;
+            if (key.toLowerCase().includes('frame')) {
+                heightOffset = -heightOffset;
+            }
+            curveCoordinates.end[1] += heightOffset;
+            curveCoordinates.endControl[1] += heightOffset;
+
+            curveCoordinates.end[2] += lengthOffset;
+            curveCoordinates.endControl[2] += lengthOffset;
+            if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
+                curveCoordinates.start[2] += lengthOffset;
+                curveCoordinates.startControl[2] += lengthOffset;
+            }
+
+            // Draw curve
+            const curve = this.buildCurve(curveCoordinates, key);
+            curve.name = `curve-${key}`;
+            app.scene.add(curve);
+
+            const mirror = this.buildCurve(mirrorAttributes(curveCoordinates, this.boat.width), key);
+            mirror.name = `curve-mirror-${key}`;
+            app.scene.add(mirror);
+
+            const startControlLine = this.drawControlLine(this.boat[key].start, this.boat[key].startControl);
+            startControlLine.name = `curve-start-${key}`;
+            app.scene.add(startControlLine);
+
+            const endControlLine = this.drawControlLine(this.boat[key].end, this.boat[key].endControl);
+            endControlLine.name = `curve-end-${key}`;
+            app.scene.add(endControlLine);
+
+            const startPoint = this.drawCurvePoint(this.boat[key].start);
+            startPoint.name = `start-point-${key}`;
+            app.scene.add(startPoint);
+
+            const endPoint = this.drawCurvePoint(this.boat[key].end);
+            endPoint.name = `end-point-${key}`;
+            app.scene.add(endPoint);
+
+            const startControlPoint = this.drawCurveControlPoint(curveCoordinates.startControl);
+            startControlPoint.name = `start-control-${key}`;
+            app.scene.add(startControlPoint);
+
+            const endControlPoint = this.drawCurveControlPoint(curveCoordinates.endControl);
+            endControlPoint.name = `end-control-${key}`;
+            app.scene.add(endControlPoint);
+
+        });
+        return app;
     }
-    return app;
+
+    deleteCurve(app, update) {
+        const curve = app.scene.getObjectByName(`curve-${update.key}`);
+        app.scene.remove(curve);
+        const mirror = app.scene.getObjectByName(`curve-mirror-${update.key}`);
+        app.scene.remove(mirror);
+        const startControl = app.scene.getObjectByName(`curve-start-${update.key}`);
+        app.scene.remove(startControl);
+        const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
+        app.scene.remove(endControl);
+        const start = app.scene.getObjectByName(`start-point-${update.key}`);
+        app.scene.remove(start);
+        const end = app.scene.getObjectByName(`end-point-${update.key}`);
+        app.scene.remove(end);
+        const startPoint = app.scene.getObjectByName(`start-control-${update.key}`);
+        app.scene.remove(startPoint);
+        const endPoint = app.scene.getObjectByName(`end-control-${update.key}`);
+        app.scene.remove(endPoint);
+        return app;
+    }
+
+    buildCurve(curveAttributes, key) {
+        const newCurve = this.defineCurve(curveAttributes, key);
+
+        const points = newCurve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+
+        const material = new THREE.LineBasicMaterial({color: 0xff0000});
+        const curveObject = new THREE.Line(geometry, material);
+        return curveObject;
+    }
+
+    defineCurve(curveAttributes, key) {
+        const pointA = new THREE.Vector3(curveAttributes.start[0], curveAttributes.start[1], curveAttributes.start[2]);
+        const pointB = new THREE.Vector3(curveAttributes.startControl[0], curveAttributes.startControl[1], curveAttributes.startControl[2]);
+        const pointC = new THREE.Vector3(curveAttributes.endControl[0], curveAttributes.endControl[1], curveAttributes.endControl[2]);
+        const pointD = new THREE.Vector3(curveAttributes.end[0], curveAttributes.end[1], curveAttributes.end[2]);
+        const newCurve = new THREE.CubicBezierCurve3(pointA, pointB, pointC, pointD);
+        return newCurve;
+    }
+
+    drawCurvePoint(location) {
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(location[0], location[1], location[2]);
+        return mesh;
+    }
+
+    drawCurveControlPoint(location) {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(location[0], location[1], location[2]);
+        return mesh;
+    }
+
+    drawControlLine(start, end) {
+        const material = new THREE.LineBasicMaterial({
+            color: 0x000088,
+        });
+
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(
+            new THREE.Vector3(start[0], start[1], start[2]),
+            new THREE.Vector3(end[0], end[1], end[2]),
+        );
+
+        const line = new THREE.Line(geometry, material);
+        return line;
+    }
 }
-
-function buildCurve(app, a) {
-    for (let i = 0; i < curves[a].points.length; i ++) {
-        addSplineObject(a, app, app.curves[a].positions[ i ]);
-    }
-
-    // Add the blocks
-    app.curves[a].positions = [];
-    for (let i = 0; i < curves[a].points.length; i ++) {
-        app.curves[a].positions.push(app.curves[a].splineHelperObjects[i].position);
-    }
-
-    // Curve geometry.
-    const geometry = new THREE.Geometry();
-    for (let i = 0; i < 200; i ++) {
-        geometry.vertices.push(new THREE.Vector3());
-    }
-
-    // Create a curve
-    const curve = new THREE.CatmullRomCurve3(app.curves[a].positions);
-    curve.curveType = 'catmullrom';
-    curve.mesh = new THREE.Line(geometry.clone(), new THREE.LineBasicMaterial({
-        color: 0x0000ff,
-        opacity: 0.85,
-        linewidth: 2,
-    }));
-    curve.mesh.castShadow = true;
-    app.curves[a].splines.uniform = curve;
-    app.curves[a].splines.chordal = curve;
-
-    for (const k in app.curves[a].splines) {
-        const spline = app.curves[a].splines[k];
-        app.scene.add(spline.mesh);
-    }
-    const toLoad = [];
-    curves[a].points.forEach((curve) => {
-        toLoad.push(new THREE.Vector3(curve[0], curve[1], curve[2]));
-    });
-
-    while (toLoad.length > app.curves[a].positions.length) {
-        app.curves[a].positions.push(addSplineObject(a).position);
-    }
-
-    for (let i = 0; i < app.curves[a].positions.length; i ++) {
-        app.curves[a].positions[i].copy(toLoad[i]);
-    }
-    for (const k in app.curves[a].splines) {
-        const spline = app.curves[a].splines[k];
-        app.curves[a].splineMesh = spline.mesh;
-        for (let i = 0; i < 200; i ++) {
-            const p = app.curves[a].splineMesh.geometry.vertices[i];
-            const t = i / (200 - 1);
-            spline.getPoint(t, p);
-        }
-        app.curves[a].splineMesh.geometry.verticesNeedUpdate = true;
-    }
-
-    return app;
-}
-
-// This function shows the control points.
-function addSplineObject(a, app, position) {
-    const material = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-    const object = new THREE.Mesh(app.curves[a].geometry, material);
-    if (position) {
-        object.position.copy(position);
-    } else {
-        object.position.x = Math.random() * 1000 - 500;
-        object.position.y = Math.random() * 600;
-        object.position.z = Math.random() * 800 - 400;
-    }
-    object.castShadow = true;
-    object.receiveShadow = true;
-    app.scene.add(object);
-    app.curves[a].splineHelperObjects.push(object);
-    return object;
-}
-
-export default initCurves;
