@@ -56,29 +56,31 @@ export default class CurvesController {
             mirror.name = `curve-mirror-${key}`;
             app.scene.add(mirror);
 
-            const startControlLine = this.drawControlLine(this.boat[key].start, this.boat[key].startControl);
-            startControlLine.name = `curve-start-${key}`;
-            app.scene.add(startControlLine);
+            if (app.displayVerticies) {
+                const startControlLine = this.drawControlLine(this.boat[key].start, this.boat[key].startControl);
+                startControlLine.name = `curve-start-${key}`;
+                app.scene.add(startControlLine);
 
-            const endControlLine = this.drawControlLine(this.boat[key].end, this.boat[key].endControl);
-            endControlLine.name = `curve-end-${key}`;
-            app.scene.add(endControlLine);
+                const endControlLine = this.drawControlLine(this.boat[key].end, this.boat[key].endControl);
+                endControlLine.name = `curve-end-${key}`;
+                app.scene.add(endControlLine);
 
-            const startPoint = this.drawCurvePoint(this.boat[key].start);
-            startPoint.name = `start-point-${key}`;
-            app.scene.add(startPoint);
+                const startPoint = this.drawCurvePoint(this.boat[key].start);
+                startPoint.name = `start-point-${key}`;
+                app.scene.add(startPoint);
 
-            const endPoint = this.drawCurvePoint(this.boat[key].end);
-            endPoint.name = `end-point-${key}`;
-            app.scene.add(endPoint);
+                const endPoint = this.drawCurvePoint(this.boat[key].end);
+                endPoint.name = `end-point-${key}`;
+                app.scene.add(endPoint);
 
-            const startControlPoint = this.drawCurveControlPoint(curveCoordinates.startControl);
-            startControlPoint.name = `start-control-${key}`;
-            app.scene.add(startControlPoint);
+                const startControlPoint = this.drawCurveControlPoint(curveCoordinates.startControl);
+                startControlPoint.name = `start-control-${key}`;
+                app.scene.add(startControlPoint);
 
-            const endControlPoint = this.drawCurveControlPoint(curveCoordinates.endControl);
-            endControlPoint.name = `end-control-${key}`;
-            app.scene.add(endControlPoint);
+                const endControlPoint = this.drawCurveControlPoint(curveCoordinates.endControl);
+                endControlPoint.name = `end-control-${key}`;
+                app.scene.add(endControlPoint);
+            }
 
         });
         return app;
