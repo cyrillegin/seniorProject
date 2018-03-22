@@ -22,10 +22,11 @@ import CurvesController from './controllers/curves.controller';
 // import menuTemplate from './menu.template.html';
 
 export default class ThreeContainer {
-    constructor($scope, $timeout, boatParametersService) {
+    constructor($scope, $timeout, boatParametersService, manipulateService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
+        this.manipulateService = manipulateService;
     }
     $onInit() {
         this.app = initScene($('#canvas')[0]);
@@ -49,9 +50,24 @@ export default class ThreeContainer {
                 (newVal, oldVal, scope) => { // what we do if there's been a change.
                     this.updateCurves();
                 });
-        });
 
-        this.setupMenu();
+            this.$scope.$watch(
+                () => this.manipulateService.getHoverInput(), // what we're watching.
+                (newVal, oldVal, scope) => { // what we do if there's been a change.
+                    if (newVal === null || newVal === undefined) {
+                        return;
+                    }
+                    this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                });
+            this.$scope.$watch(
+                () => this.manipulateService.getUnHoverInput(), // what we're watching.
+                (newVal, oldVal, scope) => { // what we do if there's been a change.
+                    if (newVal === null || newVal === undefined) {
+                        return;
+                    }
+                    this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                });
+        });
     }
 
     setupMenu() {
