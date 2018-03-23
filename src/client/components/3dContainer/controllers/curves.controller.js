@@ -30,19 +30,19 @@ export default class CurvesController {
         app.scene.add(mirror);
 
         if (app.displayVerticies) {
-            const startControlLine = this.drawControlLine(this.boat[key].start, this.boat[key].startControl);
+            const startControlLine = this.drawControlLine(curveCoordinates.start, curveCoordinates.startControl);
             startControlLine.name = `curve-start-${key}`;
             app.scene.add(startControlLine);
 
-            const endControlLine = this.drawControlLine(this.boat[key].end, this.boat[key].endControl);
+            const endControlLine = this.drawControlLine(curveCoordinates.end, curveCoordinates.endControl);
             endControlLine.name = `curve-end-${key}`;
             app.scene.add(endControlLine);
 
-            const startPoint = this.drawCurvePoint(this.boat[key].start);
+            const startPoint = this.drawCurvePoint(curveCoordinates.start);
             startPoint.name = `start-point-${key}`;
             app.scene.add(startPoint);
 
-            const endPoint = this.drawCurvePoint(this.boat[key].end);
+            const endPoint = this.drawCurvePoint(curveCoordinates.end);
             endPoint.name = `end-point-${key}`;
             app.scene.add(endPoint);
 
@@ -117,21 +117,17 @@ export default class CurvesController {
 
     onHandleHover(app, curve, key) {
         this.deleteCurve(app, {key});
-
         this.curveColor = 0x00ff00;
-
-        const curveCoordinates = this.applyOffsets(curve, key);
-
+        const curveCopy = JSON.parse(JSON.stringify(curve));
+        const curveCoordinates = this.applyOffsets(curveCopy, key);
         this.drawCurve(app, curveCoordinates, key);
     }
 
     onHandleHoverOff(app, curve, key) {
         this.deleteCurve(app, {key});
-
         this.curveColor = 0xff0000;
-
-        const curveCoordinates = this.applyOffsets(curve, key);
-
+        const curveCopy = JSON.parse(JSON.stringify(curve));
+        const curveCoordinates = this.applyOffsets(curveCopy, key);
         this.drawCurve(app, curveCoordinates, key);
     }
 
