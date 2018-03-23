@@ -25,24 +25,14 @@ export default class controlsContainer {
                 const newValue = this.$scope.data[control];
                 this.updateModel(control, newValue);
             };
-
-            // Object.keys(this.$scope.data).forEach((key) => {
-            //   console.log(['width', 'height', 'length', 'frames'].indexOf(key))
-            //     if (['width', 'height', 'length', 'frames'].indexOf(key) < 0) {
-            //         console.log(document.querySelector(`#${key}-table`))
-            //         document.querySelector(`#${key}-table`).addEventListener('mouseover', () => {
-            //             console.log('hovering ' + key)
-            //         });
-            //     }
-            // });
         }, 500);
-        
+
         this.$scope.hover = (key) => {
             this.manipulateService.addHoverInput(key);
-        }
+        };
         this.$scope.unhover = (key) => {
-            this.manipulateService.removeHoverInput(key)
-        }
+            this.manipulateService.removeHoverInput(key);
+        };
     }
 
     updateModel(control, newValue) {
