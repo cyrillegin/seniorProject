@@ -18,16 +18,20 @@ import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
 // import initMesh from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
-
+// menu
+// import menuTemplate from './menu.template.html';
 
 export default class ThreeContainer {
-    constructor($scope, $timeout, boatParametersService) {
+    constructor($scope, $timeout, boatParametersService, manipulateService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
+        this.manipulateService = manipulateService;
     }
     $onInit() {
         this.app = initScene($('#canvas')[0]);
+        this.app.displayVerticies = true;
+        this.app.displayWireFrame = true;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
         // initMesh(this.app).then((this.app) => {
@@ -46,7 +50,53 @@ export default class ThreeContainer {
                 (newVal, oldVal, scope) => { // what we do if there's been a change.
                     this.updateCurves();
                 });
+
+            this.$scope.$watch(
+                () => this.manipulateService.getHoverInput(), // what we're watching.
+                (newVal, oldVal, scope) => { // what we do if there's been a change.
+                    if (newVal === null || newVal === undefined) {
+                        return;
+                    }
+                    this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                });
+            this.$scope.$watch(
+                () => this.manipulateService.getUnHoverInput(), // what we're watching.
+                (newVal, oldVal, scope) => { // what we do if there's been a change.
+                    if (newVal === null || newVal === undefined) {
+                        return;
+                    }
+                    this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                });
         });
+    }
+
+    setupMenu() {
+        // wire frame / shaded toggle
+        // display vertix points toggle
+
+        const menuContainer = document.querySelector('#three-menu');
+        menuContainer.classList.toggle('menu-container-active');
+
+        document.querySelector('#wire-frame-toggle').addEventListener('click', (e) => {
+            console.log('toggle wireframe');
+            this.app.displayWireFrame = !this.app.displayWireFrame;
+        });
+
+        document.querySelector('#vertex-toggle').addEventListener('click', (e) => {
+            console.log('toggle vertex');
+            this.app.displayVerticies = !this.app.displayVerticies;
+            const boat = this.boatParametersService.getBoat();
+            Object.keys(boat).forEach((key) => {
+                if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                    return;
+                }
+                this.app = this.curveController.deleteCurve(this.app, {key});
+            });
+            this.curveController.initCurves(this.app, boat);
+        });
+
+        // display debug frame rate toggle
+        // A 3d axis thing would be useful
     }
 
     updateCurves() {
