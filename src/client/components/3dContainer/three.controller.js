@@ -16,10 +16,8 @@ import 'three/examples/js/controls/OrbitControls';
 import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
-// import initMesh from './controllers/mesh.controller';
+import MeshController from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
-// menu
-// import menuTemplate from './menu.template.html';
 
 export default class ThreeContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
@@ -34,11 +32,10 @@ export default class ThreeContainer {
         this.app.displayWireFrame = true;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
-        // initMesh(this.app).then((this.app) => {
-        //     this.app.render();
-        //     this.manipulator = new Manipulate(this.app.meshes);
-        // });
+
+        this.meshController = new MeshController();
         this.curveController = new CurvesController();
+
         this.$timeout(() => {
             const data = this.boatParametersService.getBoat();
             this.app = this.curveController.initCurves(this.app, data);
