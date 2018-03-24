@@ -39,6 +39,7 @@ export default class ThreeContainer {
         this.$timeout(() => {
             const data = this.boatParametersService.getBoat();
             this.app = this.curveController.initCurves(this.app, data);
+            this.app = this.meshController.initMesh(this.app, data);
             this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
             this.app.render();
 
