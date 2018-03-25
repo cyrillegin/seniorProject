@@ -7,7 +7,6 @@ import 'three/examples/js/loaders/MTLLoader';
 
 export default class MeshController {
     initMesh(app, boat) {
-        console.log('drawing')
         const geometry = this.defineGeometry(boat);
         const material = this.defineMaterial();
         const mesh = new THREE.Mesh(geometry, material);
@@ -16,10 +15,9 @@ export default class MeshController {
         app.scene.add(mesh);
         return app;
     }
-    
-    // For mirror, there is a copy function
+
+    // For mirror, there is a copy function, we'll need to do it after a merge of half the boat.
     defineGeometry(boat) {
-        const geometry = new THREE.Geometry();
         const copiedBoat = JSON.parse(JSON.stringify(boat));
         this.boat = {
             width: copiedBoat.width,
@@ -34,28 +32,49 @@ export default class MeshController {
             this.boat[key] = this.applyOffsets(copiedBoat[key], key);
         });
 
+        const face1 = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
+        const face2 = this.drawFace(this.boat.foreBeam, this.boat.foreChine);
+        const face3 = this.drawFace(this.boat.foreChine, this.boat.foreKeel);
+        const face4 = this.drawFace(this.boat.aftChine, this.boat.aftKeel);
+        const face5 = this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge);
+        const face6 = this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge);
+        face1.merge(face2);
+        face1.merge(face3);
+        face1.merge(face4);
+        face1.merge(face5);
+        face1.merge(face6);
+
+        return face1;
+    }
+
+    drawFace(curveA, curveB) {
+        const geometry = new THREE.Geometry();
+        const normal = new THREE.Vector3(0, 0, 0);
         geometry.vertices.push(
-            new THREE.Vector3(this.boat.aftBeam.end[0], this.boat.aftBeam.end[1], this.boat.aftBeam.end[2]),
-            new THREE.Vector3(this.boat.aftBeam.start[0], this.boat.aftBeam.start[1], this.boat.aftBeam.start[2]),
-            new THREE.Vector3(this.boat.aftChine.start[0], this.boat.aftChine.start[1], this.boat.aftChine.start[2]),
+            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
+            new THREE.Vector3(curveA.start[0], curveA.start[1], curveA.start[2]),
+            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
         );
-
-        geometry.faces.push(new THREE.Face3(0, 1, 2));
+        geometry.faces.push(new THREE.Face3(0, 1, 2, normal));
 
         geometry.vertices.push(
-            new THREE.Vector3(this.boat.aftChine.end[0], this.boat.aftChine.end[1], this.boat.aftChine.end[2]),
-            new THREE.Vector3(this.boat.aftChine.start[0], this.boat.aftChine.start[1], this.boat.aftChine.start[2]),
-            new THREE.Vector3(this.boat.aftBeam.end[0], this.boat.aftBeam.end[1], this.boat.aftBeam.end[2]),
+            new THREE.Vector3(curveB.end[0], curveB.end[1], curveB.end[2]),
+            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
+            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
         );
-
-        geometry.faces.push(new THREE.Face3(5, 4, 3));
+        geometry.faces.push(new THREE.Face3(3, 4, 5, normal));
 
         geometry.computeBoundingSphere();
+
         return geometry;
     }
 
     defineMaterial() {
-        return new THREE.MeshBasicMaterial({color: 0xffff00});
+        const material = new THREE.MeshBasicMaterial({color: 0xffff00});
+        material.setValues({
+            side: THREE.DoubleSide,
+        })
+        return material;
     }
 
     // NOTE: This was copy/pasted from the curves controller.
@@ -72,7 +91,6 @@ export default class MeshController {
         if (key.toLowerCase().includes('mid')) {
             lengthOffset = 0;
         }
-        console.log(curve)
 
         // Apply offsets
         const curveCoordinates = curve;
