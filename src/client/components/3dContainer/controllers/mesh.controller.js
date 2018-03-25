@@ -8,8 +8,9 @@ import 'three/examples/js/loaders/MTLLoader';
 export default class MeshController {
     initMesh(app, boat) {
         const geometry = this.defineGeometry(boat);
+        const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(uvedGeometry, material);
 
         app.mesh = mesh;
         app.scene.add(mesh);
@@ -44,6 +45,9 @@ export default class MeshController {
         face1.merge(face5);
         face1.merge(face6);
 
+        face1.mergeVertices();
+        face1.uvsNeedUpdate = true;
+
         return face1;
     }
 
@@ -69,11 +73,40 @@ export default class MeshController {
         return geometry;
     }
 
+    defineUvs(geometry) {
+        // NOTE: The following was taken from: https://stackoverflow.com/questions/20774648/three-js-generate-uv-coordinate
+        // TODO: We'll need to run our own uving system but this seems to work okay for the time being.
+        geometry.faceVertexUvs[0] = [];
+
+        geometry.faces.forEach((face) => {
+
+            const components = ['x', 'y', 'z'].sort((a, b) => Math.abs(face.normal[a]) > Math.abs(face.normal[b]));
+
+            const v1 = geometry.vertices[face.a];
+            const v2 = geometry.vertices[face.b];
+            const v3 = geometry.vertices[face.c];
+
+            geometry.faceVertexUvs[0].push([
+                new THREE.Vector2(v1[components[0]], v1[components[1]]),
+                new THREE.Vector2(v2[components[0]], v2[components[1]]),
+                new THREE.Vector2(v3[components[0]], v3[components[1]]),
+            ]);
+
+        });
+
+        geometry.uvsNeedUpdate = true;
+        return geometry;
+    }
+
     defineMaterial() {
-        const material = new THREE.MeshBasicMaterial({color: 0xffff00});
+        const texture = new THREE.TextureLoader().load('models/wood_texture.jpg');
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(0.1, 0.05);
+        const material = new THREE.MeshBasicMaterial({map: texture});
         material.setValues({
             side: THREE.DoubleSide,
-        })
+        });
         return material;
     }
 
@@ -137,7 +170,7 @@ export default class MeshController {
 //             });
 //     });
 // }
-// 
+//
 // function loadMesh(file, material) {
 //     return new Promise((resolve, reject) => {
 //         const objLoader = new THREE.OBJLoader();
@@ -159,7 +192,7 @@ export default class MeshController {
 //         );
 //     });
 // }
-// 
+//
 // // wrapper for loading materials onto objects.
 // function loadMaterial(file) {
 //     return new Promise((resolve, reject) => {
@@ -174,5 +207,5 @@ export default class MeshController {
 //         });
 //     });
 // }
-// 
+//
 // export default initMesh;
