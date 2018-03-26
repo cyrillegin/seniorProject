@@ -28,7 +28,7 @@ export default class ThreeContainer {
     }
     $onInit() {
         this.setupMenu();
-        this.app = initScene($('#canvas')[0]);
+        this.app = initScene(document.querySelector('#canvas'));
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
         this.app.displayShaded = true;
