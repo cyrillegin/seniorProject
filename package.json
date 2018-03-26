@@ -24,7 +24,7 @@
         "test": "npm run lint && npm run tests",
         "lint": "npm run htmllint && npm run eslint",
         "htmllint": "./node_modules/.bin/htmlhint --config .htmlhintrc.json src",
-        "eslint": "./node_modules/.bin/eslint .",
+        "eslint": "./node_modules/.bin/eslint src",
         "tests": "mocha --require babel-register tests/test.js",
         "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js",
         "eStart": "electron ."
