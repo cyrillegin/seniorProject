@@ -79,6 +79,7 @@ export default class ThreeContainer {
 
         document.querySelector('#wire-frame-toggle').addEventListener('click', (e) => {
             this.app.displayWireFrame = !this.app.displayWireFrame;
+            this.curveController.showCurves(this.app.displayWireFrame);
         });
 
         document.querySelector('#vertex-toggle').addEventListener('click', (e) => {

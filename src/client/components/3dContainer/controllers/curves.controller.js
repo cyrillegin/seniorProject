@@ -1,6 +1,9 @@
 import mirrorAttributes from '../../../utility/mirror';
 
 export default class CurvesController {
+    constructor() {
+        this.curveObjects = [];
+    }
 
     initCurves(app, boat) {
         app.curves = [];
@@ -13,47 +16,57 @@ export default class CurvesController {
             }
 
             const curveCoordinates = this.applyOffsets(this.boat[key], key);
-
-            this.drawCurve(app, curveCoordinates, key);
+            this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
 
         });
         return app;
     }
 
     drawCurve(app, curveCoordinates, key) {
+        const curveObject = {};
+
         const curve = this.buildCurve(curveCoordinates, key);
         curve.name = `curve-${key}`;
         app.scene.add(curve);
+        curveObject.curve = curve;
 
         const mirror = this.buildCurve(mirrorAttributes(curveCoordinates, this.boat.width), key);
         mirror.name = `curve-mirror-${key}`;
         app.scene.add(mirror);
+        curveObject.mirror = mirror;
 
         if (app.displayVerticies) {
             const startControlLine = this.drawControlLine(curveCoordinates.start, curveCoordinates.startControl);
             startControlLine.name = `curve-start-${key}`;
             app.scene.add(startControlLine);
+            curveObject.startControlLine = startControlLine;
 
             const endControlLine = this.drawControlLine(curveCoordinates.end, curveCoordinates.endControl);
             endControlLine.name = `curve-end-${key}`;
             app.scene.add(endControlLine);
+            curveObject.endControlLine = endControlLine;
 
             const startPoint = this.drawCurvePoint(curveCoordinates.start);
             startPoint.name = `start-point-${key}`;
             app.scene.add(startPoint);
+            curveObject.startPoint = startPoint;
 
             const endPoint = this.drawCurvePoint(curveCoordinates.end);
             endPoint.name = `end-point-${key}`;
             app.scene.add(endPoint);
+            curveObject.endPoint = endPoint;
 
             const startControlPoint = this.drawCurveControlPoint(curveCoordinates.startControl);
             startControlPoint.name = `start-control-${key}`;
             app.scene.add(startControlPoint);
+            curveObject.startControlPoint = startControlPoint;
 
             const endControlPoint = this.drawCurveControlPoint(curveCoordinates.endControl);
             endControlPoint.name = `end-control-${key}`;
             app.scene.add(endControlPoint);
+            curveObject.endControlPoint = endControlPoint;
         }
+        return curveObject;
     }
 
     applyOffsets(curve, key) {
@@ -120,7 +133,8 @@ export default class CurvesController {
         this.curveColor = 0x00ff00;
         const curveCopy = JSON.parse(JSON.stringify(curve));
         const curveCoordinates = this.applyOffsets(curveCopy, key);
-        this.drawCurve(app, curveCoordinates, key);
+        const newCurve = this.drawCurve(app, curveCoordinates, key);
+        this.curveObjects.push(newCurve);
     }
 
     onHandleHoverOff(app, curve, key) {
@@ -128,7 +142,8 @@ export default class CurvesController {
         this.curveColor = 0xff0000;
         const curveCopy = JSON.parse(JSON.stringify(curve));
         const curveCoordinates = this.applyOffsets(curveCopy, key);
-        this.drawCurve(app, curveCoordinates, key);
+        const newCurve = this.drawCurve(app, curveCoordinates, key);
+        this.curveObjects.push(newCurve);
     }
 
     buildCurve(curveAttributes, key) {
@@ -180,5 +195,13 @@ export default class CurvesController {
 
         const line = new THREE.Line(geometry, material);
         return line;
+    }
+
+    showCurves(show) {
+        this.curveObjects.forEach((curveObject) => {
+            Object.keys(curveObject).forEach((piece) => {
+                curveObject[piece].visible = show;
+            });
+        });
     }
 }
