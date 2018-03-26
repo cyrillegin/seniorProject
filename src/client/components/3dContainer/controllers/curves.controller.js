@@ -15,7 +15,6 @@ export default class CurvesController {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
                 return;
             }
-            console.log('curve')
 
             const curveCoordinates = this.applyOffsets(this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));

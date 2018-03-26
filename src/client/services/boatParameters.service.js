@@ -1,4 +1,7 @@
 export default class boatParametersService {
+    constructor() {
+        this.boatLoaded = false;
+    }
 
     updatePoint(data) {
         this.data = data;
@@ -19,10 +22,14 @@ export default class boatParametersService {
     }
 
     getBoat() {
+        if (this.boatLoaded === true) {
+            return this.data;
+        }
         return new Promise((res, rej) => {
             this.loadBoat('/boat')
                 .done((data) => {
                     this.data = data;
+                    this.boatLoaded = true;
                     res(data);
                 })
                 .fail((res, error) => {
