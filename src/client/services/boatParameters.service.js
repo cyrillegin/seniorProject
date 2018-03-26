@@ -1,15 +1,5 @@
 export default class boatParametersService {
 
-    constructor() {
-        this.loadBoat('/boat')
-            .done((data) => {
-                this.data = data;
-            })
-            .fail((res, error) => {
-                console.log(error);
-            });
-    }
-
     updatePoint(data) {
         this.data = data;
         this.updateKey = this.guid();
@@ -29,7 +19,17 @@ export default class boatParametersService {
     }
 
     getBoat() {
-        return this.data;
+        return new Promise((res, rej) => {
+            this.loadBoat('/boat')
+                .done((data) => {
+                    this.data = data;
+                    res(data);
+                })
+                .fail((res, error) => {
+                    console.log(error);
+                    rej(error);
+                });
+        });
     }
 
     loadBoat(file) {

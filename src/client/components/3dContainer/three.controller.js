@@ -38,13 +38,20 @@ export default class ThreeContainer {
         this.meshController = new MeshController();
         this.curveController = new CurvesController();
 
-        this.$timeout(() => {
-            const data = this.boatParametersService.getBoat();
-            this.app = this.curveController.initCurves(this.app, data);
-            this.meshController.initMesh(this.app, data);
-            this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
-            this.app.render();
 
+        this.boatParametersService.getBoat()
+            .then((data) => {
+                this.app = this.curveController.initCurves(this.app, data);
+                this.meshController.initMesh(this.app, data);
+                this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
+                this.app.render();
+            })
+            .catch((error) => {
+                console.log('error loading boat');
+                console.log(error);
+            });
+
+        this.$timeout(() => {
             this.$scope.$watchCollection(
                 () => this.boatParametersService.checkUpdate(), // what we're watching.
                 (newVal, oldVal, scope) => { // what we do if there's been a change.

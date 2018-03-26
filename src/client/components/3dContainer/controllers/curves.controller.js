@@ -6,6 +6,7 @@ export default class CurvesController {
     }
 
     initCurves(app, boat) {
+        console.log('init')
         app.curves = [];
         this.boat = JSON.parse(JSON.stringify(boat));
         this.curveColor = 0xff0000;
@@ -14,6 +15,7 @@ export default class CurvesController {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
                 return;
             }
+            console.log('curve')
 
             const curveCoordinates = this.applyOffsets(this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
