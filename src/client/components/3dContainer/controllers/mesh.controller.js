@@ -11,7 +11,7 @@ export default class MeshController {
         const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
         this.mesh = new THREE.Mesh(uvedGeometry, material);
-        
+
         app.mesh = this.mesh;
         app.scene.add(this.mesh);
         return app;
@@ -47,6 +47,12 @@ export default class MeshController {
 
         face1.mergeVertices();
         face1.uvsNeedUpdate = true;
+
+        const mirror = face1.clone();
+        mirror.scale(-1, 1, 1);
+        mirror.mergeVertices();
+        mirror.uvsNeedUpdate = true;
+        face1.merge(mirror);
 
         return face1;
     }
