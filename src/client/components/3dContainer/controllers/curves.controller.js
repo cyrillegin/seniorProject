@@ -6,7 +6,6 @@ export default class CurvesController {
     }
 
     initCurves(app, boat) {
-        console.log('init')
         app.curves = [];
         this.boat = JSON.parse(JSON.stringify(boat));
         this.curveColor = 0xff0000;
