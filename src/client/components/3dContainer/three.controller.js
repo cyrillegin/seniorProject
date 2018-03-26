@@ -16,10 +16,8 @@ import 'three/examples/js/controls/OrbitControls';
 import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
-// import initMesh from './controllers/mesh.controller';
+import MeshController from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
-// menu
-// import menuTemplate from './menu.template.html';
 
 export default class ThreeContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
@@ -33,16 +31,17 @@ export default class ThreeContainer {
         this.app = initScene($('#canvas')[0]);
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
+        this.app.displayShaded = true;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
-        // initMesh(this.app).then((this.app) => {
-        //     this.app.render();
-        //     this.manipulator = new Manipulate(this.app.meshes);
-        // });
+
+        this.meshController = new MeshController();
         this.curveController = new CurvesController();
+
         this.$timeout(() => {
             const data = this.boatParametersService.getBoat();
             this.app = this.curveController.initCurves(this.app, data);
+            this.meshController.initMesh(this.app, data);
             this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
             this.app.render();
 
@@ -79,12 +78,11 @@ export default class ThreeContainer {
         menuContainer.classList.toggle('menu-container-active');
 
         document.querySelector('#wire-frame-toggle').addEventListener('click', (e) => {
-            console.log('toggle wireframe');
             this.app.displayWireFrame = !this.app.displayWireFrame;
+            this.curveController.showCurves(this.app.displayWireFrame);
         });
 
         document.querySelector('#vertex-toggle').addEventListener('click', (e) => {
-            console.log('toggle vertex');
             this.app.displayVerticies = !this.app.displayVerticies;
             const boat = this.boatParametersService.getBoat();
             Object.keys(boat).forEach((key) => {
@@ -94,6 +92,11 @@ export default class ThreeContainer {
                 this.app = this.curveController.deleteCurve(this.app, {key});
             });
             this.curveController.initCurves(this.app, boat);
+        });
+
+        document.querySelector('#shaded-toggle').addEventListener('click', (e) => {
+            this.app.displayShaded = ! this.app.displayShaded;
+            this.meshController.showMesh(this.app.displayShaded);
         });
 
         // display debug frame rate toggle
