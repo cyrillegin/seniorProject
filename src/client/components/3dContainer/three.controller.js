@@ -29,6 +29,7 @@ export default class ThreeContainer {
         this.manipulateService = manipulateService;
     }
     $onInit() {
+        this.setupMenu();
         this.app = initScene($('#canvas')[0]);
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
