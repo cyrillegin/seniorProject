@@ -5,6 +5,7 @@
     "description": "3d-boats",
     "repository": "https://github.com/cyrillegin/seniorProject",
     "license": "MIT",
+    "main": "main.js",
     "author": "Cyrille Gindreau",
     "engines": {
         "node": "8.6.2"
@@ -26,17 +27,19 @@
         "scsslint": "./node_modules/.bin/sass-lint src '**/*.scss' -v -q",
         "eslint": "./node_modules/.bin/eslint src",
         "tests": "mocha --require babel-register tests/test.js",
-        "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js"
+        "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js",
+        "eStart": "electron ."
     },
     "dependencies": {
         "@uirouter/angularjs": "1.0.15",
-        "angular": "1.6.9",
+        "angular": "^1.6.9",
         "angular-animate": "1.6.9",
         "angular-aria": "1.6.9",
         "angular-route": "1.6.9",
         "d3": "4.13.0",
         "font-awesome": "4.7.0",
         "jquery": "3.3.1",
+        "node": "^9.9.0",
         "nodemon": "1.15.1",
         "three": "0.90.0"
     },
