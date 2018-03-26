@@ -28,7 +28,7 @@ export default class ThreeContainer {
     }
     $onInit() {
         this.setupMenu();
-        this.app = initScene($('#canvas')[0]);
+        this.app = initScene(document.querySelector('#canvas'));
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
         this.app.displayShaded = true;
@@ -38,36 +38,41 @@ export default class ThreeContainer {
         this.meshController = new MeshController();
         this.curveController = new CurvesController();
 
-        this.$timeout(() => {
-            const data = this.boatParametersService.getBoat();
-            this.app = this.curveController.initCurves(this.app, data);
-            this.meshController.initMesh(this.app, data);
-            this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
-            this.app.render();
 
-            this.$scope.$watchCollection(
-                () => this.boatParametersService.checkUpdate(), // what we're watching.
-                (newVal, oldVal, scope) => { // what we do if there's been a change.
-                    this.updateCurves();
-                });
+        this.boatParametersService.getBoat()
+            .then((data) => {
+                this.app = this.curveController.initCurves(this.app, data);
+                this.meshController.initMesh(this.app, data);
+                this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
+                this.app.render();
 
-            this.$scope.$watch(
-                () => this.manipulateService.getHoverInput(), // what we're watching.
-                (newVal, oldVal, scope) => { // what we do if there's been a change.
-                    if (newVal === null || newVal === undefined) {
-                        return;
-                    }
-                    this.curveController.onHandleHover(this.app, data[newVal], newVal);
-                });
-            this.$scope.$watch(
-                () => this.manipulateService.getUnHoverInput(), // what we're watching.
-                (newVal, oldVal, scope) => { // what we do if there's been a change.
-                    if (newVal === null || newVal === undefined) {
-                        return;
-                    }
-                    this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
-                });
-        });
+                this.$scope.$watchCollection(
+                    () => this.boatParametersService.checkUpdate(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        this.updateCurves();
+                    });
+
+                this.$scope.$watch(
+                    () => this.manipulateService.getHoverInput(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        if (newVal === null || newVal === undefined) {
+                            return;
+                        }
+                        this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                    });
+                this.$scope.$watch(
+                    () => this.manipulateService.getUnHoverInput(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        if (newVal === null || newVal === undefined) {
+                            return;
+                        }
+                        this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                    });
+            })
+            .catch((error) => {
+                console.log('error loading boat');
+                console.log(error);
+            });
     }
 
     setupMenu() {
