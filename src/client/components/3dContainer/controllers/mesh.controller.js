@@ -10,10 +10,10 @@ export default class MeshController {
         const geometry = this.defineGeometry(boat);
         const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
-        const mesh = new THREE.Mesh(uvedGeometry, material);
-
-        app.mesh = mesh;
-        app.scene.add(mesh);
+        this.mesh = new THREE.Mesh(uvedGeometry, material);
+        
+        app.mesh = this.mesh;
+        app.scene.add(this.mesh);
         return app;
     }
 
@@ -108,6 +108,10 @@ export default class MeshController {
             side: THREE.DoubleSide,
         });
         return material;
+    }
+
+    showMesh(show) {
+        this.mesh.visible = show;
     }
 
     // NOTE: This was copy/pasted from the curves controller.

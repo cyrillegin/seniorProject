@@ -31,6 +31,7 @@ export default class ThreeContainer {
         this.app = initScene($('#canvas')[0]);
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
+        this.app.displayShaded = true;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
 
@@ -77,12 +78,10 @@ export default class ThreeContainer {
         menuContainer.classList.toggle('menu-container-active');
 
         document.querySelector('#wire-frame-toggle').addEventListener('click', (e) => {
-            console.log('toggle wireframe');
             this.app.displayWireFrame = !this.app.displayWireFrame;
         });
 
         document.querySelector('#vertex-toggle').addEventListener('click', (e) => {
-            console.log('toggle vertex');
             this.app.displayVerticies = !this.app.displayVerticies;
             const boat = this.boatParametersService.getBoat();
             Object.keys(boat).forEach((key) => {
@@ -92,6 +91,11 @@ export default class ThreeContainer {
                 this.app = this.curveController.deleteCurve(this.app, {key});
             });
             this.curveController.initCurves(this.app, boat);
+        });
+
+        document.querySelector('#shaded-toggle').addEventListener('click', (e) => {
+            this.app.displayShaded = ! this.app.displayShaded;
+            this.meshController.showMesh(this.app.displayShaded);
         });
 
         // display debug frame rate toggle
