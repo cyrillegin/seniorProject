@@ -1,8 +1,9 @@
 export default class controlsContainer {
-    constructor($scope, $timeout, boatParametersService) {
+    constructor($scope, $timeout, boatParametersService, manipulateService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
+        this.manipulateService = manipulateService;
     }
 
     $onInit() {
@@ -24,7 +25,14 @@ export default class controlsContainer {
                 const newValue = this.$scope.data[control];
                 this.updateModel(control, newValue);
             };
-        });
+        }, 500);
+
+        this.$scope.hover = (key) => {
+            this.manipulateService.addHoverInput(key);
+        };
+        this.$scope.unhover = (key) => {
+            this.manipulateService.removeHoverInput(key);
+        };
     }
 
     updateModel(control, newValue) {
