@@ -38,8 +38,31 @@ export default class controlsContainer {
     updateModel(control, newValue) {
         const current = this.boatParametersService.getBoat();
         switch (control) {
-            case 'width':
-                current.width = newValue;
+            case 'aftBeam-start-x':
+                this.$scope.data.foreBeam.start[0] = this.$scope.data.aftBeam.start[0];
+                this.$scope.data.midFrame.start[0] = this.$scope.data.aftBeam.start[0];
+                break;
+            case 'aftBeam-start-y':
+                this.$scope.data.foreBeam.start[1] = this.$scope.data.aftBeam.start[1];
+                this.$scope.data.midFrame.start[1] = this.$scope.data.aftBeam.start[1];
+                break;
+            case 'aftBeam-start-z':
+                this.$scope.data.foreBeam.start[2] = this.$scope.data.aftBeam.start[2];
+                this.$scope.data.midFrame.start[2] = this.$scope.data.aftBeam.start[2];
+                break;
+
+            case 'foreBeam-start-x':
+                this.$scope.data.aftBeam.start[0] = this.$scope.data.foreBeam.start[0];
+                this.$scope.data.midFrame.start[0] = this.$scope.data.foreBeam.start[0];
+                break;
+            case 'foreBeam-start-y':
+                this.$scope.data.aftBeam.start[1] = this.$scope.data.foreBeam.start[1];
+                this.$scope.data.midFrame.start[1] = this.$scope.data.foreBeam.start[1];
+                break;
+            case 'foreBeam-start-z':
+                this.$scope.data.aftBeam.start[2] = this.$scope.data.foreBeam.start[2];
+                this.$scope.data.midFrame.start[2] = this.$scope.data.foreBeam.start[2];
+                break;
         }
         this.boatParametersService.updatePoint(current);
     }
