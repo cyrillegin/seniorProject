@@ -8,11 +8,17 @@ const sidePanel = [
     {x: 1, y: 170}, {x: 1, y: 1},
 ];
 
+const aftBeam = [
+    {x: 1, y: 11}, {x: 6, y: 1},
+    {x: 20, y: 1}, {x: -8, y: 1}, {x: 5, y: 0},
+    
+];
+
 export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
         this.$scope = $scope;
-	this.$timeout = $timeout;
-	this.boatParametersService = boatParametersService; 
+        this.$timeout = $timeout;
+        this.boatParametersService = boatParametersService; 
     }
 
     $onInit() {
@@ -23,30 +29,39 @@ export default class BlueprintEditor {
         /*index of key
         data['aftBeam']
         data.aftBeam.start
+        
+         iterate through json file keys 
+         Object.keys(data).forEach((key) => {
+             if (i !== 'width') {
+                const curve = getCoords(i);
+            }
+         });
         */
-	const elem = $('#blueprint-container')[0];	
+        const elem = $('#blueprint-container')[0];	
         this.svgContainer = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', '200');
-        //iterate through json file keys 
-         Object.keys(data).forEach((key) => {
-             if (i !== "width) {
-                const curve = getCoords(i);
-             
-        }
-         })
+            .attr('height', 600);
+        
         const lineFunction = d3.line()
-            .data.aftBeam.start[0]((d) => d.x)
-            .data.aftBeam.end[1]((d) => d.y)
+            .x((d) => d.x)
+            .y((d) => d.y)
+            .curve(d3.curveLinear);
+            
+        const lineFunc = d3.line()
+            .x((d) => d.x)
+            .y((d) => d.y)
             .curve(d3.curveBasis);
+            
         this.svgContainer.append('path')
-            .attr('d', lineFunction(curve))
+            .attr('d', lineFunction(aftBeam))
             .attr('stroke', 'blue')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
+        this.svgContainer.append('path')
+            .attr('d', lineFunc(aftBeam))
+            .attr('stroke', 'red')
+            .attr('stroke-width', 2)
+            .attr('fill', 'none');
     }
-    //function to translate 3d points to 2d 
-    getCoors(3dCoord) {
-        return {x: 4, y:7}
 }
