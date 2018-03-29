@@ -152,10 +152,26 @@ export default class CurvesController {
     }
 
     defineCurve(curveAttributes, key) {
-        const pointA = new THREE.Vector3(curveAttributes.start[0], curveAttributes.start[1], curveAttributes.start[2]);
-        const pointB = new THREE.Vector3(curveAttributes.start[0] + curveAttributes.startControl[0], curveAttributes.start[1] + curveAttributes.startControl[1], curveAttributes.start[2] + curveAttributes.startControl[2]);
-        const pointC = new THREE.Vector3(curveAttributes.end[0] + curveAttributes.endControl[0], curveAttributes.end[1] + curveAttributes.endControl[1], curveAttributes.end[2] + curveAttributes.endControl[2]);
-        const pointD = new THREE.Vector3(curveAttributes.end[0], curveAttributes.end[1], curveAttributes.end[2]);
+        const pointA = new THREE.Vector3(
+            curveAttributes.start[0],
+            curveAttributes.start[1],
+            curveAttributes.start[2],
+        );
+        const pointB = new THREE.Vector3(
+            curveAttributes.start[0] + curveAttributes.startControl[0],
+            curveAttributes.start[1] + curveAttributes.startControl[1],
+            curveAttributes.start[2] + curveAttributes.startControl[2],
+        );
+        const pointC = new THREE.Vector3(
+            curveAttributes.end[0] + curveAttributes.endControl[0],
+            curveAttributes.end[1] + curveAttributes.endControl[1],
+            curveAttributes.end[2] + curveAttributes.endControl[2],
+        );
+        const pointD = new THREE.Vector3(
+            curveAttributes.end[0],
+            curveAttributes.end[1],
+            curveAttributes.end[2],
+        );
         const newCurve = new THREE.CubicBezierCurve3(pointA, pointB, pointC, pointD);
         return newCurve;
     }
