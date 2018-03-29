@@ -71,10 +71,18 @@ export default class controlsContainer {
             case 'aftBeam-end-y':
                 this.$scope.data.aftBeamEdge.end[1] = this.$scope.data.aftBeam.end[1];
                 this.$scope.data.aftFrame.start[1] = this.$scope.data.aftBeam.end[1];
+                this.$scope.data.aftBeamEdge.start[1] = this.$scope.data.aftBeam.end[1];
+                this.$scope.data.aftKeelFrame.start[1] = this.$scope.data.aftBeam.end[1];
+                this.$scope.data.aftBeamEdge.startControl[1] = this.$scope.data.aftBeam.end[1];
+                this.$scope.data.aftKeelFrame.startControl[1] = this.$scope.data.aftBeam.end[1];
                 break;
             case 'aftBeam-end-z':
                 this.$scope.data.aftBeamEdge.end[2] = this.$scope.data.aftBeam.end[2];
                 this.$scope.data.aftFrame.start[2] = this.$scope.data.aftBeam.end[2];
+                this.$scope.data.aftBeamEdge.start[2] = this.$scope.data.aftBeam.end[2];
+                this.$scope.data.aftKeelFrame.start[2] = this.$scope.data.aftBeam.end[2];
+                this.$scope.data.aftBeamEdge.startControl[2] = this.$scope.data.aftBeam.end[2];
+                this.$scope.data.aftKeelFrame.startControl[2] = this.$scope.data.aftBeam.end[2];
                 break;
 
             case 'foreBeam-end-x':
@@ -84,13 +92,20 @@ export default class controlsContainer {
             case 'foreBeam-end-y':
                 this.$scope.data.foreBeamEdge.end[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreFrame.start[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreBeamEdge.start[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreKeelFrame.start[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreBeamEdge.startControl[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreKeelFrame.startControl[1] = this.$scope.data.foreBeam.end[1];
                 break;
             case 'foreBeam-end-z':
                 this.$scope.data.foreBeamEdge.end[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreFrame.start[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreBeamEdge.start[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreKeelFrame.start[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreBeamEdge.startControl[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreKeelFrame.startControl[2] = this.$scope.data.foreBeam.end[2];
                 break;
-            
-            
+
             case 'aftChine-start-x':
                 this.$scope.data.foreChine.start[0] = this.$scope.data.aftChine.start[0];
                 this.$scope.data.midFrame.end[0] = this.$scope.data.aftChine.start[0];
