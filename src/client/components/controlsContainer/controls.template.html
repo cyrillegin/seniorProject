@@ -49,7 +49,7 @@
 <div class="controls-section">
     <div class="controls-input">
         <div ng-repeat="(key, value) in data">
-            <div ng-if="key != 'width' && key != 'height' && key != 'length'">
+            <div ng-if="key != 'width' && key != 'height' && key != 'length' && value.controlable == true">
                 <div class="controls-label">
                     <i class="fa fa-angle-down carrot-icon" ng-click="openMenu(key)" id="{{key}}-menu-icon" /> {{key}}
                 </div>
