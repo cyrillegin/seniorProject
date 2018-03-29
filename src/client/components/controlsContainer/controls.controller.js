@@ -63,6 +63,32 @@ export default class controlsContainer {
                 this.$scope.data.aftBeam.start[2] = this.$scope.data.foreBeam.start[2];
                 this.$scope.data.midFrame.start[2] = this.$scope.data.foreBeam.start[2];
                 break;
+
+            case 'aftBeam-end-x':
+                this.$scope.data.aftBeamEdge.end[0] = this.$scope.data.aftBeam.end[0];
+                this.$scope.data.aftFrame.start[0] = this.$scope.data.aftBeam.end[0];
+                break;
+            case 'aftBeam-end-y':
+                this.$scope.data.aftBeamEdge.end[1] = this.$scope.data.aftBeam.end[1];
+                this.$scope.data.aftFrame.start[1] = this.$scope.data.aftBeam.end[1];
+                break;
+            case 'aftBeam-end-z':
+                this.$scope.data.aftBeamEdge.end[2] = this.$scope.data.aftBeam.end[2];
+                this.$scope.data.aftFrame.start[2] = this.$scope.data.aftBeam.end[2];
+                break;
+
+            case 'foreBeam-end-x':
+                this.$scope.data.foreBeamEdge.end[0] = this.$scope.data.foreBeam.end[0];
+                this.$scope.data.foreFrame.start[0] = this.$scope.data.foreBeam.end[0];
+                break;
+            case 'foreBeam-end-y':
+                this.$scope.data.foreBeamEdge.end[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreFrame.start[1] = this.$scope.data.foreBeam.end[1];
+                break;
+            case 'foreBeam-end-z':
+                this.$scope.data.foreBeamEdge.end[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreFrame.start[2] = this.$scope.data.foreBeam.end[2];
+                break;
         }
         this.boatParametersService.updatePoint(current);
     }
