@@ -87,7 +87,7 @@
     "endControl": [0, 0, 10]
   },
   "foreKeel": {
-    "controlable": false,
+    "controlable": true,
     "start": [0,0,0],
     "end": [0,0,-7],
     "startControl": [0, 0, 10],
