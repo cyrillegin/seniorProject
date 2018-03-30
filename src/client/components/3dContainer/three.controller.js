@@ -31,7 +31,7 @@ export default class ThreeContainer {
         this.app = initScene(document.querySelector('#canvas'));
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
-        this.app.displayShaded = true;
+        this.app.displayShaded = false;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
 
@@ -43,6 +43,7 @@ export default class ThreeContainer {
             .then((data) => {
                 this.app = this.curveController.initCurves(this.app, data);
                 this.meshController.initMesh(this.app, data);
+                this.meshController.showMesh(this.app.displayShaded);
                 this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
                 this.app.render();
 
