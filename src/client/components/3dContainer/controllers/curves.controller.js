@@ -19,7 +19,15 @@ export default class CurvesController {
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
 
         });
+
+        this.curveObjects.concat(this.drawFrames(boat));
+
         return app;
+    }
+    
+    drawFrames(boat) {
+        console.log(boat);
+        return [];
     }
 
     drawCurve(app, curveCoordinates, key) {

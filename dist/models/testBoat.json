@@ -2,6 +2,11 @@
   "width": 18,
   "height": 5,
   "length": 50,
+  "frames": [{
+    "distanceFromBack": 5
+    }, {
+      "distanceFromBack": 10
+  }],
   "aftBeam": {
     "controlable": true,
     "start": [0, 0, 0],

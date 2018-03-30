@@ -15,7 +15,11 @@ export default class controlsContainer {
         // We need to wait for the boat service to complete initialization
         // before we can init our values.
         this.$timeout(() => {
-            this.$scope.data = this.boatParametersService.getBoat();
+            const data = this.boatParametersService.getBoat();
+            console.log(data)
+            this.$scope.frameCount = data.frames.length;
+            this.$scope.data = data;
+          
             this.$scope.$watchCollection(
                 () => this.boatParametersService.checkUpdate(), // what we're watching.
                 (newVal, oldVal, scope) => { // what we do if there's been a change.
@@ -23,6 +27,9 @@ export default class controlsContainer {
                 });
             this.$scope.changeValue = (control) => {
                 const newValue = this.$scope.data[control];
+                if (control === 'frameCount') {
+                    this.boatParametersService.updateFrameCount(this.$scope.frameCount);
+                }
                 this.updateModel(control, newValue);
             };
         }, 500);

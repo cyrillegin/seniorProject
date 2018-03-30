@@ -121,6 +121,9 @@ export default class ThreeContainer {
         // itterate the different curves
         const updates = [];
         Object.keys(current).forEach((key) => {
+            if (key === 'frames') {
+                return;
+            }
             // If the key is width, height, or length, we actually need to update every
             // curve in the boat so we itterate the array again and push every curve to
             // the updates array. NOTE: we could actually skip updating the keel curves.
