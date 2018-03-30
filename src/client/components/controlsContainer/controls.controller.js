@@ -16,10 +16,9 @@ export default class controlsContainer {
         // before we can init our values.
         this.$timeout(() => {
             const data = this.boatParametersService.getBoat();
-            console.log(data)
             this.$scope.frameCount = data.frames.length;
             this.$scope.data = data;
-          
+
             this.$scope.$watchCollection(
                 () => this.boatParametersService.checkUpdate(), // what we're watching.
                 (newVal, oldVal, scope) => { // what we do if there's been a change.

@@ -24,10 +24,17 @@ export default class CurvesController {
 
         return app;
     }
-    
+
     drawFrames(boat) {
-        console.log(boat);
-        return [];
+        if (Object.keys(boat).length < 5) {
+            return;
+        }
+        const frameCurves = [];
+        boat.frames.forEach((frame) => {
+            // calculate frames
+        });
+
+        return frameCurves;
     }
 
     drawCurve(app, curveCoordinates, key) {
