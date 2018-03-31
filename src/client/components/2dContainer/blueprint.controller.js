@@ -20,7 +20,7 @@ const aftForeChine = [
     {x: 55, y: 16}, {x: 61, y: 15},
 ];
 
-const prow = [
+const bow = [
     {x: 10, y: 10}, {x: 14, y: 15},
 ];
 
@@ -64,22 +64,12 @@ export default class BlueprintEditor {
 
         // Create the fore and aft Beam curves (simplified for now)
         this.canvas.append('path')
-            .attr('d', lineFunction(aftForeBeam))
-            .attr('stroke', 'blue')
-            .attr('stroke-width', 2)
-            .attr('fill', 'none');
-        this.canvas.append('path')
             .attr('d', lineFunc(aftForeBeam))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create the for and aft Chine curves (simplified for now)
-        this.canvas.append('path')
-            .attr('d', lineFunction(aftForeChine))
-            .attr('stroke', 'blue')
-            .attr('stroke-width', 2)
-            .attr('fill', 'none');
         this.canvas.append('path')
             .attr('d', lineFunc(aftForeChine))
             .attr('stroke', 'red')
@@ -88,7 +78,7 @@ export default class BlueprintEditor {
 
         // Connect the Beam and Chine curves
         this.canvas.append('path')
-            .attr('d', lineFunction(prow))
+	    .attr('d', lineFunction(bow))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
