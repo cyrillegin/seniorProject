@@ -1,6 +1,5 @@
 const {app, BrowserWindow, Menu} = require('electron');
 
-
 let win = null;
 const DEBUG = false;
 
@@ -86,6 +85,9 @@ const mainMenuTemplate = [
             {role: 'pasteandmatchstyle'},
             {role: 'delete'},
             {role: 'selectall'}]}, // submenu
+
+    {label: 'import'},
+    {label: 'export'},
     {role: 'help',
         submenu: [{label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
