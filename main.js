@@ -1,20 +1,14 @@
-import {
-    app,
-    BrowserWindow,
-    Menu,
-} from 'electron';  // eslint-disable-line
-// const,, path = require('path');
-// const url = require('url');
-// const electron = require('electron')
+const {app, BrowserWindow, Menu} = require('electron');
+
 
 let win = null;
-const DEBUG = true;
+const DEBUG = false;
 
 function createWindow() {
     // Initialize the window to our specified dimensions
     win = new BrowserWindow({
-        width: 1000,
-        height: 600,
+        width: 1200,
+        height: 800,
     });
     // Specify entry point
     win.loadURL('http://localhost:3000');
@@ -39,6 +33,7 @@ app.on('ready', () => {
     createWindow();
 });
 
+// Quit when all windows are closed
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -54,31 +49,33 @@ app.on('activate', () => {
 });
 
 
-// build menu from template
-const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-Menu.setApplicationMenu(mainMenu);
-
-
 // NOTE: Working on the file menu right now
 // create menu template
 const mainMenuTemplate = [
-    /*  {label: 'File',
+    {label: 'File',
         submenu: [{label: 'New Project'},
-            {label: 'Open Project', accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
+            {label: 'Open Project',
+            // could not fix the lint error in these lines withour breaking the code
+                /*eslint-disable */
+                accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
                 click() { var properties = ['multiSelections', 'createDirectory', 'openFile'],
-                 parentWindow = (process.platform == 'darwin') ? null : BrowserWindow.getFocusedWindow();}},
+                    parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();}
+                    /* eslint-enable */
+            },
 
             {type: 'separator'},
-            {label: 'Save'},
-            {label: 'Save As'},
-
+            {label: 'Save json'},
+            {label: 'Load json'},
+            {type: 'separator'},
+            {label: 'Save stl'},
+            {label: 'Save pdf'},
             {type: 'separator'},
             {label: 'Exit',
                 accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
                 click() {
                     app.quit();
                 },
-            }]}, // submenu */
+            }]}, // submenu
     {label: 'Edit',
         submenu: [{role: 'undo'},
             {role: 'redo'},
