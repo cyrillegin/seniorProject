@@ -31,14 +31,14 @@
     },
     "dependencies": {
         "@uirouter/angularjs": "1.0.15",
-        "angular": "1.6.9",
+        "angular": "^1.6.9",
         "angular-animate": "1.6.9",
         "angular-aria": "1.6.9",
         "angular-route": "1.6.9",
         "d3": "4.13.0",
-        "electron": "1.8.4",
         "font-awesome": "4.7.0",
         "jquery": "3.3.1",
+        "node": "^9.9.0",
         "nodemon": "1.15.1",
         "three": "0.90.0"
     },
