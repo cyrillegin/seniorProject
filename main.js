@@ -54,12 +54,12 @@ const mainMenuTemplate = [
     {label: 'File',
         submenu: [{label: 'New Project'},
             {label: 'Open Project',
-            // could not fix the lint error in these lines withour breaking the code
-                /*eslint-disable */
+            // could not fix the lint error in these lines withour breaking the code also still working on it
                 accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
-                click() { var properties = ['multiSelections', 'createDirectory', 'openFile'],
-                    parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();}
-                    /* eslint-enable */
+                click() {
+                    const properties = ['multiSelections', 'createDirectory', 'openFile']; //eslint-disable-line
+                    const parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();//eslint-disable-line
+                },
             },
 
             {type: 'separator'},
