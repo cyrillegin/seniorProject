@@ -27,7 +27,7 @@
         "eslint": "./node_modules/.bin/eslint src",
         "tests": "mocha --require babel-register tests/test.js",
         "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js",
-        "eStart": "electron ."
+        "electron": "electron ."
     },
     "dependencies": {
         "@uirouter/angularjs": "1.0.15",
