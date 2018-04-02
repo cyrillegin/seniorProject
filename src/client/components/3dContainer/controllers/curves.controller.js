@@ -24,11 +24,7 @@ export default class CurvesController {
         return app;
     }
 
-    drawFrames(app, boat) {
-        if (Object.keys(boat).length < 5) {
-            return;
-        }
-        const frameLines = [];
+    updateFrames(app, boat) {
         boat.frames.forEach((frame, index) => {
             // Remove the old frames first.
             const frameA = app.scene.getObjectByName(`beam-chine-frame-${index}`);
@@ -39,6 +35,23 @@ export default class CurvesController {
             app.scene.remove(frameC);
             const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${index}`);
             app.scene.remove(frameD);
+        });
+        const boatCopy = JSON.parse(JSON.stringify(boat));
+        Object.keys(boatCopy).forEach((key) => {
+            if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                return;
+            }
+            boatCopy[key] = this.applyOffsets(boatCopy[key], key);
+        });
+        this.drawFrames(app, boatCopy);
+    }
+
+    drawFrames(app, boat) {
+        if (Object.keys(boat).length < 5) {
+            return;
+        }
+        const frameLines = [];
+        boat.frames.forEach((frame, index) => {
             // calculate frames, returns a beam point, a chine point, and the keel point
             const {locationA, locationB, locationC} = this.findLocation(boat, frame);
             locationA.z = -locationA.z;
@@ -46,7 +59,7 @@ export default class CurvesController {
             locationC.z = -locationC.z;
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
-            
+
             locationA.x = -locationA.x;
             locationB.x = -locationB.x;
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
@@ -66,7 +79,7 @@ export default class CurvesController {
         geometry.vertices.push(new THREE.Vector3(start.x, start.y, start.z));
         geometry.vertices.push(new THREE.Vector3(end.x, end.y, end.z));
         const line = new THREE.Line(geometry, material);
-        line.name = name
+        line.name = name;
         return line;
     }
 

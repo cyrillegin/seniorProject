@@ -118,6 +118,7 @@ export default class ThreeContainer {
             this.oldValues = current;
             return;
         }
+
         // itterate the different curves
         const updates = [];
         Object.keys(current).forEach((key) => {
@@ -162,6 +163,8 @@ export default class ThreeContainer {
         updateObj.height = current.height;
         updateObj.length = current.length;
         updateObj.frames = current.frames;
+
         this.curveController.initCurves(this.app, updateObj);
+        this.curveController.updateFrames(this.app, current);
     }
 }
