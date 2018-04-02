@@ -61,11 +61,7 @@ export default class CurvesController {
         boat.frames.forEach((frame, index) => {
             // calculate frames, returns a beam point, a chine point, and the keel point
             const {locationA, locationB, locationC} = this.findLocation(boat, frame);
-            if (frame.distanceFromBack < boat.length) {
-                locationA.z = -locationA.z;
-                locationB.z = -locationB.z;
-                locationC.z = -locationC.z;
-            }
+
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
 
@@ -98,17 +94,21 @@ export default class CurvesController {
         let beamCurve;
         let chineCurve;
         let keelCurve;
-        if (frame.distanceFromBack < boat.width) {
-            T = (boat.width - frame.distanceFromBack) / boat.width;
+        console.log(boat.length);
+        console.log(frame.distanceFromBack)
+        if (frame.distanceFromBack < boat.length) {
+            T = (boat.length - frame.distanceFromBack) / boat.length;
             beamCurve = boat.aftBeam;
             chineCurve = boat.aftChine;
             keelCurve = boat.aftKeel;
         } else {
-            T = (frame.distanceFromBack - boat.width) / boat.width;
+            T = (frame.distanceFromBack - boat.length) / boat.length;
             beamCurve = boat.foreBeam;
             chineCurve = boat.foreChine;
             keelCurve = boat.foreKeel;
         }
+        // console.log(T)
+        // console.log(beamCurve)
         const locationA = this.casteljauPoint(beamCurve, T);
         const locationB = this.casteljauPoint(chineCurve, T);
         const locationC = this.casteljauPoint(keelCurve, T);
