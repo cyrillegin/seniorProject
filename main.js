@@ -1,20 +1,15 @@
-import {
-    app,
-    BrowserWindow,
-    Menu,
-} from 'electron';  // eslint-disable-line
+const {app, BrowserWindow, Menu} = require('electron');  // eslint-disable-line
 // const,, path = require('path');
 // const url = require('url');
-// const electron = require('electron')
 
 let win = null;
-const DEBUG = true;
+const DEBUG = false;
 
 function createWindow() {
     // Initialize the window to our specified dimensions
     win = new BrowserWindow({
-        width: 1000,
-        height: 600,
+        width: 2560,
+        height: 1600,
     });
     // Specify entry point
     win.loadURL('http://localhost:3000');
@@ -54,19 +49,17 @@ app.on('activate', () => {
 });
 
 
-// build menu from template
-const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-Menu.setApplicationMenu(mainMenu);
-
-
 // NOTE: Working on the file menu right now
 // create menu template
 const mainMenuTemplate = [
-    /*  {label: 'File',
+    {},
+    {label: 'File',
         submenu: [{label: 'New Project'},
             {label: 'Open Project', accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
-                click() { var properties = ['multiSelections', 'createDirectory', 'openFile'],
-                 parentWindow = (process.platform == 'darwin') ? null : BrowserWindow.getFocusedWindow();}},
+                click() {
+                    // const properties = ['multiSelections', 'createDirectory', 'openFile'];
+                    // const parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();
+                }},
 
             {type: 'separator'},
             {label: 'Save'},
@@ -78,7 +71,7 @@ const mainMenuTemplate = [
                 click() {
                     app.quit();
                 },
-            }]}, // submenu */
+            }]}, // submenu
     {label: 'Edit',
         submenu: [{role: 'undo'},
             {role: 'redo'},
@@ -94,3 +87,7 @@ const mainMenuTemplate = [
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
         }}]},
 ];
+
+// build menu from template
+const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+Menu.setApplicationMenu(mainMenu);
