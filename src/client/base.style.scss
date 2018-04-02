@@ -17,6 +17,17 @@ html {
     top: 0;
 }
 
+.name-bar {
+    background-color: $dark-grey;
+    color: $white;
+    height: 64px;
+    left: 0;
+    padding-left: 24px;
+    position: absolute;
+    top: 1;
+    right: 0;
+}
+
 .left {
     left: 0;
     position: absolute;
