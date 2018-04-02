@@ -93,3 +93,7 @@ const mainMenuTemplate = [
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
         }}]},
 ];
+
+// build menu from template
+const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+Menu.setApplicationMenu(mainMenu);
