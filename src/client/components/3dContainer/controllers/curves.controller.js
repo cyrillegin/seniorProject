@@ -56,12 +56,12 @@ export default class CurvesController {
             app.scene.add(endPoint);
             curveObject.endPoint = endPoint;
 
-            const startControlPoint = this.drawCurveControlPoint(curveCoordinates.startControl);
+            const startControlPoint = this.drawCurveControlPoint(curveCoordinates.start, curveCoordinates.startControl);
             startControlPoint.name = `start-control-${key}`;
             app.scene.add(startControlPoint);
             curveObject.startControlPoint = startControlPoint;
 
-            const endControlPoint = this.drawCurveControlPoint(curveCoordinates.endControl);
+            const endControlPoint = this.drawCurveControlPoint(curveCoordinates.end, curveCoordinates.endControl);
             endControlPoint.name = `end-control-${key}`;
             app.scene.add(endControlPoint);
             curveObject.endControlPoint = endControlPoint;
@@ -86,24 +86,18 @@ export default class CurvesController {
         const curveCoordinates = curve;
         if (! key.toLowerCase().includes('edge')) {
             curveCoordinates.start[0] += widthOffset;
-            curveCoordinates.startControl[0] += widthOffset;
         }
         curveCoordinates.end[0] += widthOffset;
-        curveCoordinates.endControl[0] += widthOffset;
 
         curveCoordinates.start[1] += heightOffset;
-        curveCoordinates.startControl[1] += heightOffset;
         if (key.toLowerCase().includes('frame')) {
             heightOffset = -heightOffset;
         }
         curveCoordinates.end[1] += heightOffset;
-        curveCoordinates.endControl[1] += heightOffset;
 
         curveCoordinates.end[2] += lengthOffset;
-        curveCoordinates.endControl[2] += lengthOffset;
         if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
             curveCoordinates.start[2] += lengthOffset;
-            curveCoordinates.startControl[2] += lengthOffset;
         }
         return curveCoordinates;
     }
@@ -158,10 +152,26 @@ export default class CurvesController {
     }
 
     defineCurve(curveAttributes, key) {
-        const pointA = new THREE.Vector3(curveAttributes.start[0], curveAttributes.start[1], curveAttributes.start[2]);
-        const pointB = new THREE.Vector3(curveAttributes.startControl[0], curveAttributes.startControl[1], curveAttributes.startControl[2]);
-        const pointC = new THREE.Vector3(curveAttributes.endControl[0], curveAttributes.endControl[1], curveAttributes.endControl[2]);
-        const pointD = new THREE.Vector3(curveAttributes.end[0], curveAttributes.end[1], curveAttributes.end[2]);
+        const pointA = new THREE.Vector3(
+            curveAttributes.start[0],
+            curveAttributes.start[1],
+            curveAttributes.start[2],
+        );
+        const pointB = new THREE.Vector3(
+            curveAttributes.start[0] + curveAttributes.startControl[0],
+            curveAttributes.start[1] + curveAttributes.startControl[1],
+            curveAttributes.start[2] + curveAttributes.startControl[2],
+        );
+        const pointC = new THREE.Vector3(
+            curveAttributes.end[0] + curveAttributes.endControl[0],
+            curveAttributes.end[1] + curveAttributes.endControl[1],
+            curveAttributes.end[2] + curveAttributes.endControl[2],
+        );
+        const pointD = new THREE.Vector3(
+            curveAttributes.end[0],
+            curveAttributes.end[1],
+            curveAttributes.end[2],
+        );
         const newCurve = new THREE.CubicBezierCurve3(pointA, pointB, pointC, pointD);
         return newCurve;
     }
@@ -174,11 +184,11 @@ export default class CurvesController {
         return mesh;
     }
 
-    drawCurveControlPoint(location) {
+    drawCurveControlPoint(base, offset) {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(location[0], location[1], location[2]);
+        mesh.position.set(base[0] + offset[0], base[1] + offset[1], base[2] + offset[2]);
         return mesh;
     }
 
@@ -190,7 +200,7 @@ export default class CurvesController {
         const geometry = new THREE.Geometry();
         geometry.vertices.push(
             new THREE.Vector3(start[0], start[1], start[2]),
-            new THREE.Vector3(end[0], end[1], end[2]),
+            new THREE.Vector3(start[0] + end[0], start[1] + end[1], start[2] + end[2]),
         );
 
         const line = new THREE.Line(geometry, material);
