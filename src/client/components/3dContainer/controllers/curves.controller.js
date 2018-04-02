@@ -9,6 +9,7 @@ export default class CurvesController {
         app.curves = [];
         this.boat = JSON.parse(JSON.stringify(boat));
         this.curveColor = 0xff0000;
+        this.removeFrames(app);
 
         Object.keys(this.boat).forEach((key) => {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
@@ -25,17 +26,7 @@ export default class CurvesController {
     }
 
     updateFrames(app, boat) {
-        boat.frames.forEach((frame, index) => {
-            // Remove the old frames first.
-            const frameA = app.scene.getObjectByName(`beam-chine-frame-${index}`);
-            app.scene.remove(frameA);
-            const frameB = app.scene.getObjectByName(`chine-keel-frame-${index}`);
-            app.scene.remove(frameB);
-            const frameC = app.scene.getObjectByName(`beam-chine-frame-mirror-${index}`);
-            app.scene.remove(frameC);
-            const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${index}`);
-            app.scene.remove(frameD);
-        });
+        this.removeFrames(app);
         const boatCopy = JSON.parse(JSON.stringify(boat));
         Object.keys(boatCopy).forEach((key) => {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
@@ -46,6 +37,22 @@ export default class CurvesController {
         this.drawFrames(app, boatCopy);
     }
 
+    removeFrames(app) {
+        // 15 is the max number of frames allowable. We can't use boat.frames.length
+        // because that number could be lower than the actual number of frames in the scene.
+        // ie: i had 12 frames, now I want 11.
+        for (let i = 0; i < 15; i++) {
+            const frameA = app.scene.getObjectByName(`beam-chine-frame-${i}`);
+            app.scene.remove(frameA);
+            const frameB = app.scene.getObjectByName(`chine-keel-frame-${i}`);
+            app.scene.remove(frameB);
+            const frameC = app.scene.getObjectByName(`beam-chine-frame-mirror-${i}`);
+            app.scene.remove(frameC);
+            const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${i}`);
+            app.scene.remove(frameD);
+        }
+    }
+
     drawFrames(app, boat) {
         if (Object.keys(boat).length < 5) {
             return;
@@ -54,12 +61,15 @@ export default class CurvesController {
         boat.frames.forEach((frame, index) => {
             // calculate frames, returns a beam point, a chine point, and the keel point
             const {locationA, locationB, locationC} = this.findLocation(boat, frame);
-            locationA.z = -locationA.z;
-            locationB.z = -locationB.z;
-            locationC.z = -locationC.z;
+            if (frame.distanceFromBack < boat.length) {
+                locationA.z = -locationA.z;
+                locationB.z = -locationB.z;
+                locationC.z = -locationC.z;
+            }
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
 
+            // Draw mirror.
             locationA.x = -locationA.x;
             locationB.x = -locationB.x;
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
@@ -109,15 +119,15 @@ export default class CurvesController {
     // https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
     casteljauPoint(curve, t) {
         // Step 1
-        const Ax = ((1 - t) * curve.start[0]) + (t * curve.start[0] + curve.startControl[0]);
-        const Ay = ((1 - t) * curve.start[1]) + (t * curve.start[1] + curve.startControl[1]);
-        const Az = ((1 - t) * curve.start[2]) + (t * curve.start[2] + curve.startControl[2]);
-        const Bx = ((1 - t) * curve.start[0] + curve.startControl[0]) + (t * curve.end[0] + curve.endControl[0]);
-        const By = ((1 - t) * curve.start[1] + curve.startControl[1]) + (t * curve.end[1] + curve.endControl[1]);
-        const Bz = ((1 - t) * curve.start[2] + curve.startControl[2]) + (t * curve.end[2] + curve.endControl[2]);
-        const Cx = ((1 - t) * curve.end[0] + curve.endControl[0]) + (t * curve.end[0]);
-        const Cy = ((1 - t) * curve.end[1] + curve.endControl[1]) + (t * curve.end[1]);
-        const Cz = ((1 - t) * curve.end[2] + curve.endControl[2]) + (t * curve.end[2]);
+        const Ax = ((1 - t) * curve.start[0]) + (t * (curve.start[0] + curve.startControl[0]));
+        const Ay = ((1 - t) * curve.start[1]) + (t * (curve.start[1] + curve.startControl[1]));
+        const Az = ((1 - t) * curve.start[2]) + (t * (curve.start[2] + curve.startControl[2]));
+        const Bx = ((1 - t) * (curve.start[0] + curve.startControl[0])) + (t * (curve.end[0] + curve.endControl[0]));
+        const By = ((1 - t) * (curve.start[1] + curve.startControl[1])) + (t * (curve.end[1] + curve.endControl[1]));
+        const Bz = ((1 - t) * (curve.start[2] + curve.startControl[2])) + (t * (curve.end[2] + curve.endControl[2]));
+        const Cx = ((1 - t) * (curve.end[0] + curve.endControl[0])) + (t * curve.end[0]);
+        const Cy = ((1 - t) * (curve.end[1] + curve.endControl[1])) + (t * curve.end[1]);
+        const Cz = ((1 - t) * (curve.end[2] + curve.endControl[2])) + (t * curve.end[2]);
 
         // Step 2
         const Dx = ((1 - t) * Ax) + (t * Bx);
