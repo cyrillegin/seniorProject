@@ -161,6 +161,7 @@ export default class ThreeContainer {
         updateObj.width = current.width;
         updateObj.height = current.height;
         updateObj.length = current.length;
+        updateObj.frames = current.frames;
         this.curveController.initCurves(this.app, updateObj);
     }
 }

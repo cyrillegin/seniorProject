@@ -17,24 +17,108 @@ export default class CurvesController {
 
             const curveCoordinates = this.applyOffsets(this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
-
         });
 
-        this.curveObjects.concat(this.drawFrames(boat));
+        this.curveObjects.concat(this.drawFrames(app, this.boat));
 
         return app;
     }
 
-    drawFrames(boat) {
+    drawFrames(app, boat) {
         if (Object.keys(boat).length < 5) {
             return;
         }
-        const frameCurves = [];
-        boat.frames.forEach((frame) => {
-            // calculate frames
+        const frameLines = [];
+        boat.frames.forEach((frame, index) => {
+            // Remove the old frames first.
+            const frameA = app.scene.getObjectByName(`beam-chine-frame-${index}`);
+            app.scene.remove(frameA);
+            const frameB = app.scene.getObjectByName(`chine-keel-frame-${index}`);
+            app.scene.remove(frameB);
+            const frameC = app.scene.getObjectByName(`beam-chine-frame-mirror-${index}`);
+            app.scene.remove(frameC);
+            const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${index}`);
+            app.scene.remove(frameD);
+            // calculate frames, returns a beam point, a chine point, and the keel point
+            const {locationA, locationB, locationC} = this.findLocation(boat, frame);
+            locationA.z = -locationA.z;
+            locationB.z = -locationB.z;
+            locationC.z = -locationC.z;
+            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
+            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
+            
+            locationA.x = -locationA.x;
+            locationB.x = -locationB.x;
+            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
+            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-mirror-${index}`));
         });
 
-        return frameCurves;
+        frameLines.forEach((line) => {
+            app.scene.add(line);
+        });
+
+        return frameLines;
+    }
+
+    drawLine(start, end, name) {
+        const material = new THREE.LineBasicMaterial({color: 0x9400D3});
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(start.x, start.y, start.z));
+        geometry.vertices.push(new THREE.Vector3(end.x, end.y, end.z));
+        const line = new THREE.Line(geometry, material);
+        line.name = name
+        return line;
+    }
+
+    findLocation(boat, frame) {
+        let T;
+        let beamCurve;
+        let chineCurve;
+        let keelCurve;
+        if (frame.distanceFromBack < boat.width) {
+            T = (boat.width - frame.distanceFromBack) / boat.width;
+            beamCurve = boat.aftBeam;
+            chineCurve = boat.aftChine;
+            keelCurve = boat.aftKeel;
+        } else {
+            T = (frame.distanceFromBack - boat.width) / boat.width;
+            beamCurve = boat.foreBeam;
+            chineCurve = boat.foreChine;
+            keelCurve = boat.foreKeel;
+        }
+        const locationA = this.casteljauPoint(beamCurve, T);
+        const locationB = this.casteljauPoint(chineCurve, T);
+        const locationC = this.casteljauPoint(keelCurve, T);
+        return {locationA, locationB, locationC};
+    }
+
+    // Implementation of casteljau's algorithem, adapted from 2d to 3d from
+    // https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
+    casteljauPoint(curve, t) {
+        // Step 1
+        const Ax = ((1 - t) * curve.start[0]) + (t * curve.start[0] + curve.startControl[0]);
+        const Ay = ((1 - t) * curve.start[1]) + (t * curve.start[1] + curve.startControl[1]);
+        const Az = ((1 - t) * curve.start[2]) + (t * curve.start[2] + curve.startControl[2]);
+        const Bx = ((1 - t) * curve.start[0] + curve.startControl[0]) + (t * curve.end[0] + curve.endControl[0]);
+        const By = ((1 - t) * curve.start[1] + curve.startControl[1]) + (t * curve.end[1] + curve.endControl[1]);
+        const Bz = ((1 - t) * curve.start[2] + curve.startControl[2]) + (t * curve.end[2] + curve.endControl[2]);
+        const Cx = ((1 - t) * curve.end[0] + curve.endControl[0]) + (t * curve.end[0]);
+        const Cy = ((1 - t) * curve.end[1] + curve.endControl[1]) + (t * curve.end[1]);
+        const Cz = ((1 - t) * curve.end[2] + curve.endControl[2]) + (t * curve.end[2]);
+
+        // Step 2
+        const Dx = ((1 - t) * Ax) + (t * Bx);
+        const Dy = ((1 - t) * Ay) + (t * By);
+        const Dz = ((1 - t) * Az) + (t * Bz);
+        const Ex = ((1 - t) * Bx) + (t * Cx);
+        const Ey = ((1 - t) * By) + (t * Cy);
+        const Ez = ((1 - t) * Bz) + (t * Cz);
+
+        // Step 3
+        const Px = ((1 - t) * Dx) + (t * Ex);
+        const Py = ((1 - t) * Dy) + (t * Ey);
+        const Pz = ((1 - t) * Dz) + (t * Ez);
+        return new THREE.Vector3(Px, Py, Pz);
     }
 
     drawCurve(app, curveCoordinates, key) {

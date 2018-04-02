@@ -84,8 +84,8 @@ export default class BlueprintEditor {
 
     $onInit() {
         this.$timeout(() => {
-            const data = this.boatParametersService.getBoat();
-            console.log(data);
+            // const data = this.boatParametersService.getBoat();
+            // console.log(data);
         });
 
         const elem = $('#blueprint-container')[0];
