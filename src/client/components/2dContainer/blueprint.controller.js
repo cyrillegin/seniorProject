@@ -92,7 +92,7 @@ export default class BlueprintEditor {
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', 900);
+            .attr('height', 700);
 
         // Scale for svg window sizing
         const scale = 0.015;
