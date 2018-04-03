@@ -62,7 +62,9 @@ export default class CurvesController {
             // calculate frames, returns a beam point, a chine point, and the keel point
             const {locationA, locationB, locationC} = this.findLocation(boat, frame);
 
+            // Draws a line from the beam to the chine
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
+            // Draws a line from the chine to the keel
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
 
             // Draw mirror.
@@ -72,6 +74,7 @@ export default class CurvesController {
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-mirror-${index}`));
         });
 
+        // Add the newly created lines to the scene
         frameLines.forEach((line) => {
             app.scene.add(line);
         });
