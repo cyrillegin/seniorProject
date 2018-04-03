@@ -31,7 +31,7 @@
         <div class="controls-group">
             <div class="controls-label">Number of Frames</div>
             <input type="number" class="controls-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
-            <input type="range" min=0 max=15 class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            <input type="range" min="0" max="15" class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
         </div>
         <h4>Distance from back</h4>
         <div ng-repeat="frame in data.frames">

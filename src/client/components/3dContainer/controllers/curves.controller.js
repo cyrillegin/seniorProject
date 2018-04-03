@@ -94,8 +94,6 @@ export default class CurvesController {
         let beamCurve;
         let chineCurve;
         let keelCurve;
-        console.log(boat.length);
-        console.log(frame.distanceFromBack)
         if (frame.distanceFromBack < boat.length) {
             T = (boat.length - frame.distanceFromBack) / boat.length;
             beamCurve = boat.aftBeam;
@@ -107,8 +105,6 @@ export default class CurvesController {
             chineCurve = boat.foreChine;
             keelCurve = boat.foreKeel;
         }
-        // console.log(T)
-        // console.log(beamCurve)
         const locationA = this.casteljauPoint(beamCurve, T);
         const locationB = this.casteljauPoint(chineCurve, T);
         const locationC = this.casteljauPoint(keelCurve, T);
