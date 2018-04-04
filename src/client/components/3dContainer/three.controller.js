@@ -42,6 +42,7 @@ export default class ThreeContainer {
         this.boatParametersService.getBoat()
             .then((data) => {
                 this.app = this.curveController.initCurves(this.app, data);
+                this.curveController.updateFrames(this.app, data);
                 this.meshController.initMesh(this.app, data);
                 this.meshController.showMesh(this.app.displayShaded);
                 this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
@@ -118,9 +119,13 @@ export default class ThreeContainer {
             this.oldValues = current;
             return;
         }
+
         // itterate the different curves
         const updates = [];
         Object.keys(current).forEach((key) => {
+            if (key === 'frames') {
+                return;
+            }
             // If the key is width, height, or length, we actually need to update every
             // curve in the boat so we itterate the array again and push every curve to
             // the updates array. NOTE: we could actually skip updating the keel curves.
@@ -158,6 +163,9 @@ export default class ThreeContainer {
         updateObj.width = current.width;
         updateObj.height = current.height;
         updateObj.length = current.length;
+        updateObj.frames = current.frames;
+
         this.curveController.initCurves(this.app, updateObj);
+        this.curveController.updateFrames(this.app, current);
     }
 }
