@@ -9,7 +9,7 @@
     "run": true
   },
   "sonarwhal": {
-    "run": true,
+    "run": false,
     "uri": ["localhost:3000/"]
   },
   "flake8": {
