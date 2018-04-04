@@ -6,19 +6,22 @@
     <h3 class="controls-section-heading"> Base controls </h3>
 
     <div class="controls-group">
-        <div class="controls-label">Width</div>
-        <input type="number" class="controls-number-input" ng-model="data.width" ng-change="changeValue('width')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.width" ng-change="changeValue('width')" />
+        <label for='width-control' class="controls-label">Width</label>
+        <input id='width-control' type="number" class="controls-number-input" ng-model="data.width" ng-change="changeValue('width')" /> in.
+        <label for='width-control-range' class="controls-label hidden">Width</label>
+        <input id='width-control-range' type="range" class="controls-slide-input" ng-model="data.width" ng-change="changeValue('width')" />
     </div>
     <div class="controls-group">
-        <div class="controls-label">Length</div>
-        <input type="number" class="controls-number-input" ng-model="data.length" ng-change="changeValue('length')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.length" ng-change="changeValue('length')" />
+        <label for='length-control' class="controls-label">Length</label>
+        <input id='length-control' type="number" class="controls-number-input" ng-model="data.length" ng-change="changeValue('length')" /> in.
+        <label for='length-control-range' class="controls-label hidden">Length</label>
+        <input id='length-control-range' type="range" class="controls-slide-input" ng-model="data.length" ng-change="changeValue('length')" />
     </div>
     <div class="controls-group">
-        <div class="controls-label">Height</div>
-        <input type="number" class="controls-number-input" ng-model="data.height" ng-change="changeValue('height')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.height" ng-change="changeValue('height')" />
+        <label for='height-control' class="controls-label">Height</label>
+        <input id='height-control' type="number" class="controls-number-input" ng-model="data.height" ng-change="changeValue('height')" /> in.
+        <label for='height-control-range' class="controls-label hidden">Height</label>
+        <input id='height-control-range' type="range" class="controls-slide-input" ng-model="data.height" ng-change="changeValue('height')" />
     </div>
 </div>
 
@@ -26,19 +29,20 @@
 
 <div class="controls-section">
     <h3 class="controls-section-heading"> Frames </h3>
-
     <div class="controls-group">
         <div class="controls-group">
-            <div class="controls-label">Number of Frames</div>
-            <input type="number" class="controls-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
-            <input type="range" min="0" max="15" class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            <label for='frame-count' class="controls-label">Number of Frames</label>
+            <input id='frame-count' type="number" class="controls-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            <label for='frame-count-range' class="controls-label hidden">Number of Frames</label>
+            <input id='frame-count-range' type="range" min="0" max="15" class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
         </div>
         <h4>Distance from back</h4>
         <div ng-repeat="frame in data.frames">
             <div class="controls-group">
-                <div class="controls-label">frame</div>
-                <input type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                <input type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                <label for='frame-distance-{{$index}}' class="controls-label">frame</label>
+                <input id='frame-distance-{{$index}}' type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                <label for='frame-distance-range-{{$index}}' class="controls-label hidden">frame</label>
+                <input id='frame-distance-range-{{$index}}' type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
             </div>
         </div>
     </div>
