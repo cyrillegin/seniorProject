@@ -1,5 +1,6 @@
 export default class boatParametersService {
     constructor() {
+        'ngInject';
         this.boatLoaded = false;
     }
 

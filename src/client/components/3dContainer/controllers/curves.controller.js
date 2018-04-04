@@ -2,6 +2,7 @@ import mirrorAttributes from '../../../utility/mirror';
 
 export default class CurvesController {
     constructor() {
+        'ngInject';
         this.curveObjects = [];
     }
 

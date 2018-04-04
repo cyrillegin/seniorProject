@@ -1,5 +1,7 @@
 export default class controlsContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
