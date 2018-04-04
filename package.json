@@ -42,7 +42,7 @@
         "three": "0.90.0"
     },
     "optionalDependencies": {
-        "code-assess": "0.2.9",
+        "code-assess": "0.2.9"
     },
     "devDependencies": {
         "babel-istanbul": "0.12.2",
