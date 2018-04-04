@@ -8,8 +8,8 @@ const DEBUG = false;
 function createWindow() {
     // Initialize the window to our specified dimensions
     win = new BrowserWindow({
-        width: 2560,
-        height: 1600,
+        width: 1560,
+        height: 600,
     });
     // Specify entry point
     win.loadURL('http://localhost:3000');
