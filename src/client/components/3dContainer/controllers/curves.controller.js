@@ -9,7 +9,6 @@ export default class CurvesController {
         app.curves = [];
         this.boat = JSON.parse(JSON.stringify(boat));
         this.curveColor = 0xff0000;
-        this.removeFrames(app);
 
         Object.keys(this.boat).forEach((key) => {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
@@ -19,8 +18,6 @@ export default class CurvesController {
             const curveCoordinates = this.applyOffsets(this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
         });
-
-        this.curveObjects.concat(this.drawFrames(app, this.boat));
 
         return app;
     }
@@ -108,6 +105,7 @@ export default class CurvesController {
             chineCurve = boat.foreChine;
             keelCurve = boat.foreKeel;
         }
+
         const locationA = this.casteljauPoint(beamCurve, T);
         const locationB = this.casteljauPoint(chineCurve, T);
         const locationC = this.casteljauPoint(keelCurve, T);

@@ -42,6 +42,7 @@ export default class ThreeContainer {
         this.boatParametersService.getBoat()
             .then((data) => {
                 this.app = this.curveController.initCurves(this.app, data);
+                this.curveController.updateFrames(this.app, data);
                 this.meshController.initMesh(this.app, data);
                 this.meshController.showMesh(this.app.displayShaded);
                 this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
