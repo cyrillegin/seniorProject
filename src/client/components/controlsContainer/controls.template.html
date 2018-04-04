@@ -6,19 +6,19 @@
     <h3 class="controls-section-heading"> Base controls </h3>
 
     <div class="controls-group">
-        <div class="controls-label">Width</div>
-        <input type="number" class="controls-number-input" ng-model="data.width" ng-change="changeValue('width')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.width" ng-change="changeValue('width')" />
+        <div for="width-control" class="controls-label">Width</div>
+        <input aria-label="width-control" type="number" class="controls-number-input" ng-model="data.width" ng-change="changeValue('width')" /> in.
+        <input aria-label="width-control-range" type="range" class="controls-slide-input" ng-model="data.width" ng-change="changeValue('width')" />
     </div>
     <div class="controls-group">
-        <div class="controls-label">Length</div>
-        <input type="number" class="controls-number-input" ng-model="data.length" ng-change="changeValue('length')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.length" ng-change="changeValue('length')" />
+        <div for="length-control" class="controls-label">Length</div>
+        <input aria-label="length-control" type="number" class="controls-number-input" ng-model="data.length" ng-change="changeValue('length')" /> in.
+        <input aria-label="length-control-range" type="range" class="controls-slide-input" ng-model="data.length" ng-change="changeValue('length')" />
     </div>
     <div class="controls-group">
-        <div class="controls-label">Height</div>
-        <input type="number" class="controls-number-input" ng-model="data.height" ng-change="changeValue('height')" /> in.
-        <input type="range" class="controls-slide-input" ng-model="data.height" ng-change="changeValue('height')" />
+        <div for="height-control" class="controls-label">Height</div>
+        <input aria-label="height-control" type="number" class="controls-number-input" ng-model="data.height" ng-change="changeValue('height')" /> in.
+        <input aria-label="height-control-range" type="range" class="controls-slide-input" ng-model="data.height" ng-change="changeValue('height')" />
     </div>
 </div>
 
@@ -26,19 +26,18 @@
 
 <div class="controls-section">
     <h3 class="controls-section-heading"> Frames </h3>
-
     <div class="controls-group">
         <div class="controls-group">
-            <div class="controls-label">Number of Frames</div>
-            <input type="number" class="controls-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
-            <input type="range" min="0" max="15" class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            <label class="controls-label">Number of Frames</label>
+            <input aria-label="frame-count" type="number" class="controls-number-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
+            <input aria-label="frame-count-range" type="range" min="0" max="15" class="controls-slide-input" ng-model="frameCount" ng-change="changeValue('frameCount')" />
         </div>
         <h4>Distance from back</h4>
         <div ng-repeat="frame in data.frames">
             <div class="controls-group">
                 <div class="controls-label">frame</div>
-                <input type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                <input type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                <input aria-label="frame-distance-{{$index}}" type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                <input aria-label="frame-distance-range-{{$index}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
             </div>
         </div>
     </div>
@@ -78,13 +77,13 @@
                                     Start
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" />
+                                    <input aria-label="{{key}}-start-x" type="number" class="controls-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" />
+                                    <input aria-label="{{key}}-start-y" type="number" class="controls-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" />
+                                    <input aria-label="{{key}}-start-z" id="{{key}}-start-z" type="number" class="controls-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" />
                                 </td>
                             </tr>
                             <tr>
@@ -92,13 +91,13 @@
                                     Control
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" />
+                                    <input aria-label="{{key}}-start-control-x" type="number" class="controls-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" />
+                                    <input aria-label="{{key}}-start-control-y" type="number" class="controls-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" />
+                                    <input aria-label="{{key}}-start-control-z" type="number" class="controls-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" />
                                 </td>
                             </tr>
                             <tr>
@@ -106,13 +105,13 @@
                                     End
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')" />
+                                    <input aria-label="{{key}}-end-x" type="number" class="controls-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" />
+                                    <input aria-label="{{key}}-end-y" type="number" class="controls-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" />
+                                    <input aria-label="{{key}}-end-z" type="number" class="controls-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" />
                                 </td>
                             </tr>
                             <tr>
@@ -120,13 +119,13 @@
                                     Control
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" />
+                                    <input aria-label="{{key}}-end-control-x" type="number" class="controls-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" />
+                                    <input aria-label="{{key}}-end-control-y" type="number" class="controls-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" />
                                 </td>
                                 <td>
-                                    <input type="number" class="controls-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')" />
+                                    <input aria-label="{{key}}-end-control-z" type="number" class="controls-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')" />
                                 </td>
                             </tr>
                         </tbody>
