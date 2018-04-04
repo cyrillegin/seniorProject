@@ -25,6 +25,26 @@ export default class controlsContainer {
                 this.updateModel(control, newValue);
             };
         });
+
+	this.mouseDown = false;
+        this.oldMouseY = null;
+        this.oldValue = null;
+
+        this.$scope.mDown = (e) => {
+            this.mouseDown = true;
+            this.oldMouseY = e.originalEvent.clientY;
+        };
+
+        this.$scope.mMove = (e) => {
+            if (this.mouseDown) {
+                e.originalEvent.target.value = parseFloat(e.originalEvent.target.value) + (this.oldMouseY - e.originalEvent.clientY) / 10;
+                this.oldMouseY = e.originalEvent.clientY;
+            }
+        };
+
+        this.$scope.mUp = (e) => {
+            this.mouseDown = false;
+        };
     }
 
     updateModel(control, newValue) {
