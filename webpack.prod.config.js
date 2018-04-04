@@ -1,14 +1,17 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // eslint-disable-line
 
 module.exports = {
     entry: {
         app: './src/client/index.js',
         vendor: [
-            'three',
+            'angular',
+            'angular-route',
+            'd3',
             'jquery',
-            'd3'
+            'three',
         ],
     },
     output: {
@@ -63,6 +66,7 @@ module.exports = {
         }],
     },
     plugins: [
+        // new BundleAnalyzerPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
