@@ -1,6 +1,4 @@
-const {app, BrowserWindow, Menu} = require('electron');  // eslint-disable-line
-// const,, path = require('path');
-// const url = require('url');
+const {app, BrowserWindow, Menu} = require('electron');
 
 let win = null;
 const DEBUG = false;
@@ -8,8 +6,8 @@ const DEBUG = false;
 function createWindow() {
     // Initialize the window to our specified dimensions
     win = new BrowserWindow({
-        width: 2560,
-        height: 1600,
+        width: 1200,
+        height: 800,
     });
     // Specify entry point
     win.loadURL('http://localhost:3000');
@@ -34,6 +32,7 @@ app.on('ready', () => {
     createWindow();
 });
 
+// Quit when all windows are closed
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -52,19 +51,23 @@ app.on('activate', () => {
 // NOTE: Working on the file menu right now
 // create menu template
 const mainMenuTemplate = [
-    {},
     {label: 'File',
         submenu: [{label: 'New Project'},
-            {label: 'Open Project', accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
+            {label: 'Open Project',
+            // could not fix the lint error in these lines withour breaking the code also still working on it
+                accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
                 click() {
-                    // const properties = ['multiSelections', 'createDirectory', 'openFile'];
-                    // const parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();
-                }},
+                    const properties = ['multiSelections', 'createDirectory', 'openFile']; //eslint-disable-line
+                    const parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();//eslint-disable-line
+                },
+            },
 
             {type: 'separator'},
-            {label: 'Save'},
-            {label: 'Save As'},
-
+            {label: 'Save json'},
+            {label: 'Load json'},
+            {type: 'separator'},
+            {label: 'Save stl'},
+            {label: 'Save pdf'},
             {type: 'separator'},
             {label: 'Exit',
                 accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
@@ -82,6 +85,9 @@ const mainMenuTemplate = [
             {role: 'pasteandmatchstyle'},
             {role: 'delete'},
             {role: 'selectall'}]}, // submenu
+
+    {label: 'import'},
+    {label: 'export'},
     {role: 'help',
         submenu: [{label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
