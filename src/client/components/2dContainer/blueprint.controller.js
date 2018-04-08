@@ -79,7 +79,7 @@ export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.boatParametersService = boatParametersService;
+        this.boat = boatParametersService;
     }
 
     applyOffsets(curve, key) {
@@ -114,12 +114,20 @@ export default class BlueprintEditor {
         }
         return curveCoordinates;
     }
-    
+
     $onInit() {
         this.$timeout(() => {
-            // const data = this.boatParametersService.getBoat();
-            // console.log(data);
+            const data = this.boat.getBoat();
+          //  console.log(data);
+            this.boat = data;
+            // get rid of the shit in here, it fucks with the 3d
+            const curveAft = this.applyOffsets(this.boat['aftBeam'], 'aftBeam');
+          //  const curveAft = applyOffsets(data["aftBeam"], "start");
+          //  console.log(curveAft);
         });
+        console.log(this.boat);
+  //      const curveAft = this.applyOffsets(this.boat['aftBeam'], 'aftBeam');
+      //  console.log(curveAft);
 
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
