@@ -75,44 +75,46 @@ const box1 = [
     {x: 10, y: 22.5},
 ];
 
+export default class myClass{
+  applyOffsets(curve, key) {
+      // Define offsets
+      let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
+      let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
+      const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
+
+      if (key.toLowerCase().includes('frame')) {
+          heightOffset = this.boat.height;
+      }
+      if (key.toLowerCase().includes('mid')) {
+          lengthOffset = 0;
+      }
+
+      // Apply offsets
+      const curveCoordinates = curve;
+      if (! key.toLowerCase().includes('edge')) {
+          curveCoordinates.start[0] += widthOffset;
+      }
+      curveCoordinates.end[0] += widthOffset;
+
+      curveCoordinates.start[1] += heightOffset;
+      if (key.toLowerCase().includes('frame')) {
+          heightOffset = -heightOffset;
+      }
+      curveCoordinates.end[1] += heightOffset;
+
+      curveCoordinates.end[2] += lengthOffset;
+      if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
+          curveCoordinates.start[2] += lengthOffset;
+      }
+      return curveCoordinates;
+  }
+}
+
 export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boat = boatParametersService;
-    }
-
-    applyOffsets(curve, key) {
-        // Define offsets
-        let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-        let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-        const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
-
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = this.boat.height;
-        }
-        if (key.toLowerCase().includes('mid')) {
-            lengthOffset = 0;
-        }
-
-        // Apply offsets
-        const curveCoordinates = curve;
-        if (! key.toLowerCase().includes('edge')) {
-            curveCoordinates.start[0] += widthOffset;
-        }
-        curveCoordinates.end[0] += widthOffset;
-
-        curveCoordinates.start[1] += heightOffset;
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = -heightOffset;
-        }
-        curveCoordinates.end[1] += heightOffset;
-
-        curveCoordinates.end[2] += lengthOffset;
-        if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
-            curveCoordinates.start[2] += lengthOffset;
-        }
-        return curveCoordinates;
     }
 
     $onInit() {
