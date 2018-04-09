@@ -82,7 +82,7 @@ export default class BlueprintEditor {
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
     }
-    
+
     applyOffsets(curve, key) {
       // Define offsets
       let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
@@ -117,8 +117,8 @@ export default class BlueprintEditor {
   }
 
     $onInit() {
-       //this.$timeout(() => {
-    const data = this.boatParametersService.getBoat().then((data) => { 
+        //this.$timeout(() => {
+    const data = this.boatParametersService.getBoat().then((data) => {
           //  console.log(data);
             this.boat = JSON.parse(JSON.stringify(data));
             //console.log(this.boat);
