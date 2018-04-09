@@ -75,8 +75,15 @@ const box1 = [
     {x: 10, y: 22.5},
 ];
 
-export default class myClass{
-  applyOffsets(curve, key) {
+
+export default class BlueprintEditor {
+    constructor($scope, $timeout, boatParametersService) {
+        this.$scope = $scope;
+        this.$timeout = $timeout;
+        this.boatParametersService = boatParametersService;
+    }
+    
+    applyOffsets(curve, key) {
       // Define offsets
       let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
       let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
@@ -108,29 +115,17 @@ export default class myClass{
       }
       return curveCoordinates;
   }
-}
-
-export default class BlueprintEditor {
-    constructor($scope, $timeout, boatParametersService) {
-        this.$scope = $scope;
-        this.$timeout = $timeout;
-        this.boat = boatParametersService;
-    }
 
     $onInit() {
-        this.$timeout(() => {
-            const data = this.boat.getBoat();
+       //this.$timeout(() => {
+    const data = this.boatParametersService.getBoat().then((data) => { 
           //  console.log(data);
-            this.boat = data;
-            // get rid of the shit in here, it fucks with the 3d
+            this.boat = JSON.parse(JSON.stringify(data));
+            //console.log(this.boat);
             const curveAft = this.applyOffsets(this.boat['aftBeam'], 'aftBeam');
-          //  const curveAft = applyOffsets(data["aftBeam"], "start");
-          //  console.log(curveAft);
+            console.log(this.boat.aftBeam.end[0]);
+            console.log(curveAft);
         });
-        console.log(this.boat);
-  //      const curveAft = this.applyOffsets(this.boat['aftBeam'], 'aftBeam');
-      //  console.log(curveAft);
-
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
