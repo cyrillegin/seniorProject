@@ -22,6 +22,7 @@ export default class controlsContainer {
                 });
             this.$scope.changeValue = (control) => {
                 const newValue = this.$scope.data[control];
+                console.log(control, newValue)
                 this.updateModel(control, newValue);
             };
         });
@@ -39,6 +40,8 @@ export default class controlsContainer {
             if (this.mouseDown) {
                 e.originalEvent.target.value = parseFloat(e.originalEvent.target.value) + (this.oldMouseY - e.originalEvent.clientY) / 10;
                 this.oldMouseY = e.originalEvent.clientY;
+                console.log("control: "+e.originalEvent.target.id+" value: "+e.originalEvent.target.value);
+                this.updateModel(e.originalEvent.target.id, e.originalEvent.target.value);
             }
         };
 
