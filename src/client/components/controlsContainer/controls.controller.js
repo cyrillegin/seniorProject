@@ -74,6 +74,14 @@ export default class controlsContainer {
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
         };
+        
+        this.$scope.SaveJson = () => {
+            console.log('save');
+        }
+        
+        this.$scope.LoadJson = () => {
+            console.log('load')
+        }
     }
 
     updateModel(control, newValue) {
