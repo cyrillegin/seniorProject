@@ -93,20 +93,18 @@ export default class controlsContainer {
         this.$scope.LoadJson = () => {
             console.log('load');
             document.querySelector('#json-file-input').click();
-        }
-        
+        };
+
         document.querySelector('#json-file-input').onchange = (e) => {
             const reader = new FileReader();
-            reader.onload = this.onReaderLoad;
+            reader.onload = (e) => {
+                const obj = JSON.parse(event.target.result);
+                this.boatParametersService.loadBoat(obj);
+                this.$scope.data = obj;
+            };
             reader.readAsText(e.target.files[0]);
-        }
+        };
 
-    }
-
-    onReaderLoad(event) {
-        console.log(event.target.result);
-        const obj = JSON.parse(event.target.result);
-        console.log(obj)
     }
 
     updateModel(control, newValue) {
