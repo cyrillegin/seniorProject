@@ -36,8 +36,8 @@
         <div ng-repeat="frame in data.frames">
             <div class="controls-group">
                 <div class="controls-label">frame</div>
-                <input aria-label="frame-distance-{{$index}}" type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                <input aria-label="frame-distance-range-{{$index}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                <input aria-label="frame-distance-{{$index}}" type="number" max="{{data.length*2}}" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                <input aria-label="frame-distance-range-{{$index}}" max="{{data.length*2}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
             </div>
         </div>
     </div>
