@@ -1,15 +1,17 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin'); // eslint-disable-line
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // eslint-disable-line
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // eslint-disable-line
 
 module.exports = {
     entry: {
         app: './src/client/index.js',
         vendor: [
-            'three',
-            'jquery',
+            'angular',
+            'angular-route',
             'd3',
+            'jquery',
+            'three',
         ],
     },
     output: {
@@ -29,6 +31,7 @@ module.exports = {
             loader: 'babel-loader',
             options: {
                 presets: ['babel-preset-env'],
+                plugins: ['angularjs-annotate'],
             },
         }, {
             test: /\.html$/,
