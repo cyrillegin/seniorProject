@@ -40,10 +40,6 @@ export default class boatParametersService {
         });
     }
 
-    loadBoat(boat) {
-        this.data = boat;
-    }
-
     updateFrameCount(amount) {
         if (amount === this.data.frames.length) {
             return;

@@ -91,7 +91,6 @@ export default class controlsContainer {
         };
 
         this.$scope.LoadJson = () => {
-            console.log('load');
             document.querySelector('#json-file-input').click();
         };
 
@@ -99,8 +98,15 @@ export default class controlsContainer {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const obj = JSON.parse(event.target.result);
-                this.boatParametersService.loadBoat(obj);
+                this.boatParametersService.updatePoint(obj);
                 this.$scope.data = obj;
+                this.$scope.$apply();
+                $('input').each((index, elem) => {
+                    if ($(elem).scope) {
+                        $(elem).scope()
+                            .$apply();
+                    }
+                });
             };
             reader.readAsText(e.target.files[0]);
         };
