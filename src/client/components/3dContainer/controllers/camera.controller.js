@@ -11,11 +11,6 @@ import 'three/examples/js/controls/OrbitControls';
 import TWEEN from '@tweenjs/tween.js';
 
 export default class CameraController {
-    constructor() {
-        'ngInject';
-
-        this.camera = null;
-    }
     initCamera(app) {
         app.camera = new THREE.PerspectiveCamera(45, app.container.offsetWidth / app.container.offsetHeight, 0.1, 80000);
         app.camera.position.set(-100, 50, -100);
