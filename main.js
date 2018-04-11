@@ -91,6 +91,9 @@ const mainMenuTemplate = [
     {role: 'help',
         submenu: [{label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
+        }},
+        {label: 'DevTool', click() {
+            win.webContents.openDevTools();
         }}]},
 ];
 
