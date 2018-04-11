@@ -44,11 +44,12 @@ export default class controlsContainer {
             this.oldMouseY = e.originalEvent.clientY;
         };
 
-        this.$scope.mMove = (e) => {
+        this.$scope.mMove = (e, key, part, axis) => {
             if (this.mouseDown) {
                 e.originalEvent.target.value = parseFloat(e.originalEvent.target.value) + (this.oldMouseY - e.originalEvent.clientY) / 10;
                 this.oldMouseY = e.originalEvent.clientY;
-                console.log(e)
+                console.log( e.originalEvent.target.value)
+                // console.log(this.$scope.data[key.key][part][axis])
                 this.updateModel(e.originalEvent.target.id, e.originalEvent.target.value);
             }
         };
