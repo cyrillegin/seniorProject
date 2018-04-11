@@ -16,37 +16,100 @@ import 'three/examples/js/controls/OrbitControls';
 import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
 import initCamera from './controllers/camera.controller';
-// import initMesh from './controllers/mesh.controller';
+import MeshController from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
 
-
 export default class ThreeContainer {
-    constructor($scope, $timeout, boatParametersService) {
+    constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
+        this.manipulateService = manipulateService;
     }
     $onInit() {
-        this.app = initScene($('#canvas')[0]);
+        this.setupMenu();
+        this.app = initScene(document.querySelector('#canvas'));
+        this.app.displayVerticies = true;
+        this.app.displayWireFrame = true;
+        this.app.displayShaded = false;
         this.app = initLights(this.app);
         this.app = initCamera(this.app);
-        // initMesh(this.app).then((this.app) => {
-        //     this.app.render();
-        //     this.manipulator = new Manipulate(this.app.meshes);
-        // });
-        this.curveController = new CurvesController();
-        this.$timeout(() => {
-            const data = this.boatParametersService.getBoat();
-            this.app = this.curveController.initCurves(this.app, data);
-            this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
-            this.app.render();
 
-            this.$scope.$watchCollection(
-                () => this.boatParametersService.checkUpdate(), // what we're watching.
-                (newVal, oldVal, scope) => { // what we do if there's been a change.
-                    this.updateCurves();
-                });
+        this.meshController = new MeshController();
+        this.curveController = new CurvesController();
+
+
+        this.boatParametersService.getBoat()
+            .then((data) => {
+                this.app = this.curveController.initCurves(this.app, data);
+                this.curveController.updateFrames(this.app, data);
+                this.meshController.initMesh(this.app, data);
+                this.meshController.showMesh(this.app.displayShaded);
+                this.oldValues = JSON.parse(JSON.stringify(this.boatParametersService.updatePoint(data)));
+                this.app.render();
+
+                this.$scope.$watchCollection(
+                    () => this.boatParametersService.checkUpdate(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        this.updateCurves();
+                    });
+
+                this.$scope.$watch(
+                    () => this.manipulateService.getHoverInput(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        if (newVal === null || newVal === undefined) {
+                            return;
+                        }
+                        this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                    });
+                this.$scope.$watch(
+                    () => this.manipulateService.getUnHoverInput(), // what we're watching.
+                    (newVal, oldVal, scope) => { // what we do if there's been a change.
+                        if (newVal === null || newVal === undefined) {
+                            return;
+                        }
+                        this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                    });
+            })
+            .catch((error) => {
+                console.log('error loading boat');
+                console.log(error);
+            });
+    }
+
+    setupMenu() {
+        // wire frame / shaded toggle
+        // display vertix points toggle
+
+        const menuContainer = document.querySelector('#three-menu');
+        menuContainer.classList.toggle('menu-container-active');
+
+        document.querySelector('#wire-frame-toggle').addEventListener('click', (e) => {
+            this.app.displayWireFrame = !this.app.displayWireFrame;
+            this.curveController.showCurves(this.app.displayWireFrame);
         });
+
+        document.querySelector('#vertex-toggle').addEventListener('click', (e) => {
+            this.app.displayVerticies = !this.app.displayVerticies;
+            const boat = this.boatParametersService.getBoat();
+            Object.keys(boat).forEach((key) => {
+                if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                    return;
+                }
+                this.app = this.curveController.deleteCurve(this.app, {key});
+            });
+            this.curveController.initCurves(this.app, boat);
+        });
+
+        document.querySelector('#shaded-toggle').addEventListener('click', (e) => {
+            this.app.displayShaded = ! this.app.displayShaded;
+            this.meshController.showMesh(this.app.displayShaded);
+        });
+
+        // display debug frame rate toggle
+        // A 3d axis thing would be useful
     }
 
     updateCurves() {
@@ -58,9 +121,13 @@ export default class ThreeContainer {
             this.oldValues = current;
             return;
         }
+
         // itterate the different curves
         const updates = [];
         Object.keys(current).forEach((key) => {
+            if (key === 'frames') {
+                return;
+            }
             // If the key is width, height, or length, we actually need to update every
             // curve in the boat so we itterate the array again and push every curve to
             // the updates array. NOTE: we could actually skip updating the keel curves.
@@ -98,6 +165,9 @@ export default class ThreeContainer {
         updateObj.width = current.width;
         updateObj.height = current.height;
         updateObj.length = current.length;
+        updateObj.frames = current.frames;
+
         this.curveController.initCurves(this.app, updateObj);
+        this.curveController.updateFrames(this.app, current);
     }
 }

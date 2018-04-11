@@ -1,5 +1,7 @@
+@import './../../constants';
+
 .blueprint-container {
-    margin: auto;
-    margin-top: 60px;
-    width: 50%;
+    background-color: $light-grey;
+    height: 700px;
+    margin: 40px;
 }

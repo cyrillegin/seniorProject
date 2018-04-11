@@ -1,94 +1,98 @@
 {
-  "width": 20,
+  "width": 18,
   "height": 5,
   "length": 50,
+  "frames": [{
+    "distanceFromBack": 25
+  }],
   "aftBeam": {
+    "controlable": true,
     "start": [0, 0, 0],
     "end": [-10, 0, 0],
-    "startControl": [0, 0, -10],
-    "endControl": [0, 0, 5]
+    "startControl": [0, 0, -17],
+    "endControl": [7, 0, 11]
   },
   "foreBeam": {
+    "controlable": true,
     "start": [0, 0, 0],
-    "end": [-18, 0, 0],
-    "startControl": [0, 0, 10],
-    "endControl": [-10, 0, -5]
+    "end": [-13, 0, 0],
+    "startControl": [0, 0, 17],
+    "endControl": [7, 0, -11]
   },
   "aftChine": {
-    "start": [0, 0, 0],
-    "end": [-10, 0, 0],
-    "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "controlable": true,
+    "start": [-5, 0, 0],
+    "end": [-13, 0, 0],
+    "startControl": [0, 0, -17],
+    "endControl": [7, 0, 17]
   },
   "foreChine": {
-    "start": [0, 0, 0],
-    "end": [-18, 0, 0],
-    "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "controlable": true,
+    "start": [-5, 0, 0],
+    "end": [-14, 0, -7],
+    "startControl": [0, 0, 17],
+    "endControl": [7, 0, -11]
   },
   "aftBeamEdge": {
+    "controlable": false,
     "start": [0,0,0],
     "end": [-10,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "endControl": [0, 0, 0]
   },
   "foreBeamEdge": {
+    "controlable": false,
     "start": [0,0,0],
-    "end": [-18,0,0],
+    "end": [-13,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [-18, 0, 0]
+    "endControl": [0, 0, 0]
   },
   "aftGunEdge": {
+    "controlable": false,
     "start": [0,0,0],
-    "end": [-10,0,0],
+    "end": [-13,0,0],
     "startControl": [0, 0, 0],
-    "endControl": [-10, 0, 0]
+    "endControl": [0, 0, 0]
   },
   "foreGunEdge": {
-    "start": [0,0,0],
-    "end": [-18,0,0],
+    "controlable": false,
+    "start": [0,0,-7],
+    "end": [-14,0,-7],
     "startControl": [0, 0, 0],
-    "endControl": [-18, 0, 0]
+    "endControl": [0, 0, 0]
   },
   "aftFrame": {
+    "controlable": false,
     "start": [-10,0,0],
-    "end": [-10,0,0],
-    "startControl": [-10, 0, 0],
-    "endControl": [-10, 0, 0]
-  },
-  "foreFrame": {
-    "start": [-18,0,0],
-    "end": [-18,0,0],
-    "startControl": [-18, 0, 0],
-    "endControl": [-18, 0, 0]
-  },
-  "midFrame": {
-    "start": [0,0,0],
-    "end": [0,0,0],
+    "end": [-13,0,0],
     "startControl": [0, 0, 0],
     "endControl": [0, 0, 0]
   },
   "aftKeel": {
+    "controlable": true,
     "start": [0,0,0],
     "end": [0,0,0],
-    "startControl": [0, 0, 0],
-    "endControl": [0, 0, 0]
+    "startControl": [0, 0, -12],
+    "endControl": [0, 0, 12]
   },
   "foreKeel": {
+    "controlable": true,
     "start": [0,0,0],
-    "end": [0,0,0],
-    "startControl": [0, 0, 0],
-    "endControl": [0, 0, 0]
+    "end": [0,0,-7],
+    "startControl": [0, 0, 12],
+    "endControl": [0, 0, -12]
   },
   "aftKeelFrame": {
+    "controlable": false,
     "start": [0,0,0],
     "end": [0,0,0],
     "startControl": [0, 0, 0],
     "endControl": [0, 0, 0]
   },
   "foreKeelFrame": {
+    "controlable": false,
     "start": [0,0,0],
-    "end": [0,0,0],
+    "end": [0,0,-7],
     "startControl": [0, 0, 0],
     "endControl": [0, 0, 0]
   }

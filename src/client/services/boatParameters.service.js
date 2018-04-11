@@ -1,13 +1,7 @@
 export default class boatParametersService {
-
     constructor() {
-        this.loadBoat('/boat')
-            .done((data) => {
-                this.data = data;
-            })
-            .fail((res, error) => {
-                console.log(error);
-            });
+        'ngInject';
+        this.boatLoaded = false;
     }
 
     updatePoint(data) {
@@ -29,7 +23,36 @@ export default class boatParametersService {
     }
 
     getBoat() {
-        return this.data;
+        if (this.boatLoaded === true) {
+            return this.data;
+        }
+        return new Promise((res, rej) => {
+            this.loadBoat('/boat')
+                .done((data) => {
+                    this.data = data;
+                    this.boatLoaded = true;
+                    res(data);
+                })
+                .fail((res, error) => {
+                    console.log(error);
+                    rej(error);
+                });
+        });
+    }
+
+    updateFrameCount(amount) {
+        if (amount === this.data.frames.length) {
+            return;
+        }
+        if (amount > this.data.frames.length) {
+            while (this.data.frames.length < amount) {
+                this.data.frames.push({distanceFromBack: 0});
+            }
+        } else {
+            while (this.data.frames.length > amount) {
+                this.data.frames.pop();
+            }
+        }
     }
 
     loadBoat(file) {

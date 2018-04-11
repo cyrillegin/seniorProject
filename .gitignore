@@ -15,3 +15,7 @@ dist/server/index.js
 
 # Maya
 .mayaSwatches/
+
+
+# misc
+.Rhistory

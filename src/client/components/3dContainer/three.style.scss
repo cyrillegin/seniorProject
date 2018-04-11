@@ -1,13 +1,5 @@
 @import './../../constants';
 
-.container {
-    background-color: $light-grey;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 30px;
-}
-
 .side-bar {
     color: $dark-grey;
     grid-column: 1 / 2;
@@ -15,10 +7,6 @@
 
 table {
     padding: 5px;
-    width: 100%;
-}
-
-input {
     width: 100%;
 }
 
@@ -35,7 +23,31 @@ input {
 }
 
 .canvas {
-    grid-column: 2 / 2;
     height: 600px;
-    width: 1000px;
+    width: 100%;
+}
+
+.menu-container {
+    display: inline-block;
+    opacity: 0;
+    position: absolute;
+    right: 10px;
+    top: 120px;
+    transition: 1s;
+}
+
+.menu-container-active {
+    opacity: 1;
+}
+
+.wire-frame-toggle {
+    display: inline-block;
+    height: 32px;
+    width: 200px;
+}
+
+.vertex-toggle {
+    display: inline-block;
+    height: 32px;
+    width: 200px;
 }
