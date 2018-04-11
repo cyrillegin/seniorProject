@@ -20,10 +20,6 @@
     display: none;
 }
 
-.controls-icon-hidden {
-    transform: rotate(-90deg);
-}
-
 .controls-label {
     display: inline-block;
     margin-bottom: 8px;
@@ -44,6 +40,19 @@
     transition: 1s;
 }
 
-.carrot-icon {
+i {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
     transition: .2s;
+}
+  
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.controls-icon-hidden {
+    transform: rotate(-45deg);
 }
