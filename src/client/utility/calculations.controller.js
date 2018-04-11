@@ -1,5 +1,6 @@
 class Manipulate {
     constructor(mesh) {
+        'ngInject';
         this.mesh = mesh.main.children[0];
     }
     adjustWidth(value) {

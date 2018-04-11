@@ -21,6 +21,8 @@ import CurvesController from './controllers/curves.controller';
 
 export default class ThreeContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
