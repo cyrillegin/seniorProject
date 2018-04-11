@@ -39,24 +39,33 @@ export default class controlsContainer {
         this.oldMouseY = null;
         this.oldValue = null;
 
-        this.$scope.mDown = (e) => {
+        this.$scope.mDown = (e, key, part, axis) => {
             this.mouseDown = true;
-            this.oldMouseY = e.originalEvent.clientY;
+            this.key = key.key;
+            this.part = part;
+            this.axis = axis;
+            this.startingMousePosition = e.originalEvent.clientX;
         };
 
-        this.$scope.mMove = (e, key, part, axis) => {
+        document.querySelector('body').addEventListener('mousemove', (e) => {
             if (this.mouseDown) {
-                e.originalEvent.target.value = parseFloat(e.originalEvent.target.value) + (this.oldMouseY - e.originalEvent.clientY) / 10;
-                this.oldMouseY = e.originalEvent.clientY;
-                console.log( e.originalEvent.target.value)
-                // console.log(this.$scope.data[key.key][part][axis])
-                this.updateModel(e.originalEvent.target.id, e.originalEvent.target.value);
+                let control = `${this.key}-${this.part}-`;
+                if (this.axis === 0) {
+                    control += 'x';
+                } else if (this.axis === 1) {
+                    control += 'y';
+                } else {
+                    control += 'z';
+                }
+                const newValue = -(this.startingMousePosition - e.clientX) / 10;
+                this.$scope.data[this.key][this.part][this.axis] = newValue;
+                this.updateModel(control, newValue);
             }
-        };
+        });
 
-        this.$scope.mUp = (e) => {
+        document.querySelector('body').addEventListener('mouseup', (e) => {
             this.mouseDown = false;
-        };
+        });
 
         this.$scope.hover = (key) => {
             this.manipulateService.addHoverInput(key);
