@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="touch_logo.png" />
 
     <title>Boat builder</title>
     <base href="/" />
@@ -15,7 +17,7 @@
 
 </head>
 
-<body ng-app="boat_builder">
+<body ng-app="boat_builder"  ng-strict-di>
     <div ng-view />
 </body>
 </html>

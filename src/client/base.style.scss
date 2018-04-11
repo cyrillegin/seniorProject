@@ -1,31 +1,19 @@
 @import './constants';
-$fa-font-path: '~font-awesome/fonts';
-@import '~font-awesome/scss/font-awesome';
 
 html {
     font-family: monospace;
 }
 
+h1 {
+    margin-left: 40px;
+}
+
 .nav-bar {
     background-color: $dark-grey;
     color: $white;
+    display: inline-block;
     height: 64px;
-    left: 0;
-    padding-left: 24px;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-.name-bar {
-    background-color: $dark-grey;
-    color: $white;
-    height: 64px;
-    left: 0;
-    padding-left: 24px;
-    position: absolute;
-    top: 1;
-    right: 0;
+    width: 100%;
 }
 
 .left {
@@ -48,11 +36,17 @@ html {
 
 .canvas-container {
     background-color: $grey;
-    position: absolute;
-    top: 64px;
+    height: 100%;
     width: 100%;
 }
 
 .three-container {
-    margin: 40px;
+    background: $light-grey;
+    display: inline-block;
+    width: 100%;
+}
+
+.extra-pad {
+    background: $grey;
+    padding: 40px;
 }

@@ -1,5 +1,7 @@
+@import './../../constants';
+
 .controls-heading {
-    margin: 8px 8px 24px;
+    margin: 0 24px;
 }
 
 .controls-input {
@@ -7,7 +9,7 @@
 }
 
 .controls-container {
-    height: 100%;
+    height: 1574px;
     overflow-y: auto;
     padding: 8px;
 }
@@ -18,10 +20,6 @@
 
 .controls-section-hidden {
     display: none;
-}
-
-.controls-icon-hidden {
-    transform: rotate(-90deg);
 }
 
 .controls-label {
@@ -44,6 +42,18 @@
     transition: 1s;
 }
 
-.carrot-icon {
+i {
+    border: solid $black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
     transition: .2s;
+}
+
+.down {
+    transform: rotate(45deg);
+}
+
+.controls-icon-hidden {
+    transform: rotate(-45deg);
 }

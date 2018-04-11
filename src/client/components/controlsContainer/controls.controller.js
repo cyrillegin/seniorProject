@@ -1,5 +1,7 @@
 export default class controlsContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
@@ -15,7 +17,10 @@ export default class controlsContainer {
         // We need to wait for the boat service to complete initialization
         // before we can init our values.
         this.$timeout(() => {
-            this.$scope.data = this.boatParametersService.getBoat();
+            const data = this.boatParametersService.getBoat();
+            this.$scope.frameCount = data.frames.length;
+            this.$scope.data = data;
+
             this.$scope.$watchCollection(
                 () => this.boatParametersService.checkUpdate(), // what we're watching.
                 (newVal, oldVal, scope) => { // what we do if there's been a change.
@@ -23,13 +28,49 @@ export default class controlsContainer {
                 });
             this.$scope.changeValue = (control) => {
                 const newValue = this.$scope.data[control];
+                if (control === 'frameCount') {
+                    this.boatParametersService.updateFrameCount(this.$scope.frameCount);
+                }
                 this.updateModel(control, newValue);
             };
         }, 500);
 
+	      this.mouseDown = false;
+        this.oldMouseY = null;
+        this.oldValue = null;
+
+        this.$scope.mDown = (e, key, part, axis) => {
+            this.mouseDown = true;
+            this.key = key.key;
+            this.part = part;
+            this.axis = axis;
+            this.startingMousePosition = e.originalEvent.clientX;
+        };
+
+        document.querySelector('body').addEventListener('mousemove', (e) => {
+            if (this.mouseDown) {
+                let control = `${this.key}-${this.part}-`;
+                if (this.axis === 0) {
+                    control += 'x';
+                } else if (this.axis === 1) {
+                    control += 'y';
+                } else {
+                    control += 'z';
+                }
+                const newValue = -(this.startingMousePosition - e.clientX) / 10;
+                this.$scope.data[this.key][this.part][this.axis] = newValue;
+                this.updateModel(control, newValue);
+            }
+        });
+
+        document.querySelector('body').addEventListener('mouseup', (e) => {
+            this.mouseDown = false;
+        });
+
         this.$scope.hover = (key) => {
             this.manipulateService.addHoverInput(key);
         };
+
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
         };
@@ -40,28 +81,22 @@ export default class controlsContainer {
         switch (control) {
             case 'aftBeam-start-x':
                 this.$scope.data.foreBeam.start[0] = this.$scope.data.aftBeam.start[0];
-                this.$scope.data.midFrame.start[0] = this.$scope.data.aftBeam.start[0];
                 break;
             case 'aftBeam-start-y':
                 this.$scope.data.foreBeam.start[1] = this.$scope.data.aftBeam.start[1];
-                this.$scope.data.midFrame.start[1] = this.$scope.data.aftBeam.start[1];
                 break;
             case 'aftBeam-start-z':
                 this.$scope.data.foreBeam.start[2] = this.$scope.data.aftBeam.start[2];
-                this.$scope.data.midFrame.start[2] = this.$scope.data.aftBeam.start[2];
                 break;
 
             case 'foreBeam-start-x':
                 this.$scope.data.aftBeam.start[0] = this.$scope.data.foreBeam.start[0];
-                this.$scope.data.midFrame.start[0] = this.$scope.data.foreBeam.start[0];
                 break;
             case 'foreBeam-start-y':
                 this.$scope.data.aftBeam.start[1] = this.$scope.data.foreBeam.start[1];
-                this.$scope.data.midFrame.start[1] = this.$scope.data.foreBeam.start[1];
                 break;
             case 'foreBeam-start-z':
                 this.$scope.data.aftBeam.start[2] = this.$scope.data.foreBeam.start[2];
-                this.$scope.data.midFrame.start[2] = this.$scope.data.foreBeam.start[2];
                 break;
 
             case 'aftBeam-end-x':
@@ -87,11 +122,9 @@ export default class controlsContainer {
 
             case 'foreBeam-end-x':
                 this.$scope.data.foreBeamEdge.end[0] = this.$scope.data.foreBeam.end[0];
-                this.$scope.data.foreFrame.start[0] = this.$scope.data.foreBeam.end[0];
                 break;
             case 'foreBeam-end-y':
                 this.$scope.data.foreBeamEdge.end[1] = this.$scope.data.foreBeam.end[1];
-                this.$scope.data.foreFrame.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreBeamEdge.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreKeelFrame.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreBeamEdge.startControl[1] = this.$scope.data.foreBeam.end[1];
@@ -99,7 +132,6 @@ export default class controlsContainer {
                 break;
             case 'foreBeam-end-z':
                 this.$scope.data.foreBeamEdge.end[2] = this.$scope.data.foreBeam.end[2];
-                this.$scope.data.foreFrame.start[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreBeamEdge.start[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreKeelFrame.start[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreBeamEdge.startControl[2] = this.$scope.data.foreBeam.end[2];
@@ -108,28 +140,22 @@ export default class controlsContainer {
 
             case 'aftChine-start-x':
                 this.$scope.data.foreChine.start[0] = this.$scope.data.aftChine.start[0];
-                this.$scope.data.midFrame.end[0] = this.$scope.data.aftChine.start[0];
                 break;
             case 'aftChine-start-y':
                 this.$scope.data.foreChine.start[1] = this.$scope.data.aftChine.start[1];
-                this.$scope.data.midFrame.end[1] = this.$scope.data.aftChine.start[1];
                 break;
             case 'aftChine-start-z':
                 this.$scope.data.foreChine.start[2] = this.$scope.data.aftChine.start[2];
-                this.$scope.data.midFrame.end[2] = this.$scope.data.aftChine.start[2];
                 break;
 
             case 'foreChine-start-x':
                 this.$scope.data.aftChine.start[0] = this.$scope.data.foreChine.start[0];
-                this.$scope.data.midFrame.end[0] = this.$scope.data.foreChine.start[0];
                 break;
             case 'foreChine-start-y':
                 this.$scope.data.aftChine.start[1] = this.$scope.data.foreChine.start[1];
-                this.$scope.data.midFrame.end[1] = this.$scope.data.foreChine.start[1];
                 break;
             case 'foreChine-start-z':
                 this.$scope.data.aftChine.start[2] = this.$scope.data.foreChine.start[2];
-                this.$scope.data.midFrame.end[2] = this.$scope.data.foreChine.start[2];
                 break;
 
             case 'aftChine-end-x':
@@ -147,15 +173,12 @@ export default class controlsContainer {
 
             case 'foreChine-end-x':
                 this.$scope.data.foreGunEdge.end[0] = this.$scope.data.foreChine.end[0];
-                this.$scope.data.foreFrame.end[0] = this.$scope.data.foreChine.end[0];
                 break;
             case 'foreChine-end-y':
                 this.$scope.data.foreGunEdge.end[1] = this.$scope.data.foreChine.end[1];
-                this.$scope.data.foreFrame.end[1] = this.$scope.data.foreChine.end[1];
                 break;
             case 'foreChine-end-z':
                 this.$scope.data.foreGunEdge.end[2] = this.$scope.data.foreChine.end[2];
-                this.$scope.data.foreFrame.end[2] = this.$scope.data.foreChine.end[2];
                 break;
 
             case 'aftKeel-start-x':

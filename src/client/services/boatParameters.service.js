@@ -1,5 +1,6 @@
 export default class boatParametersService {
     constructor() {
+        'ngInject';
         this.boatLoaded = false;
     }
 
@@ -37,6 +38,21 @@ export default class boatParametersService {
                     rej(error);
                 });
         });
+    }
+
+    updateFrameCount(amount) {
+        if (amount === this.data.frames.length) {
+            return;
+        }
+        if (amount > this.data.frames.length) {
+            while (this.data.frames.length < amount) {
+                this.data.frames.push({distanceFromBack: 0});
+            }
+        } else {
+            while (this.data.frames.length > amount) {
+                this.data.frames.pop();
+            }
+        }
     }
 
     loadBoat(file) {

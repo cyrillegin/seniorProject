@@ -77,6 +77,8 @@ const box1 = [
 
 export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
@@ -84,15 +86,15 @@ export default class BlueprintEditor {
 
     $onInit() {
         this.$timeout(() => {
-            const data = this.boatParametersService.getBoat();
-            console.log(data);
+            // const data = this.boatParametersService.getBoat();
+            // console.log(data);
         });
 
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', 900);
+            .attr('height', 700);
 
         // Scale for svg window sizing
         const scale = 0.015;
