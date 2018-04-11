@@ -31,9 +31,10 @@ table {
     display: inline-block;
     opacity: 0;
     position: absolute;
-    right: 10px;
     top: 120px;
+    left: 80px;
     transition: 1s;
+    width: 100%;
 }
 
 .menu-container-active {
@@ -50,4 +51,35 @@ table {
     display: inline-block;
     height: 32px;
     width: 200px;
+}
+
+.camera-controls {
+  background: linear-gradient(to bottom, #747474, #404040);
+  border-radius: 20px;
+  padding: 5px;
+  box-shadow: inset 0 0 20px 0 $shadow-two;
+  display: inline-block;
+  height: 24px;
+  margin-right: 7%;
+}
+
+.camera-control  {
+  text-shadow: 0px 1px 1px #9d9d9d;
+	color: #222;
+  cursor: pointer;
+	font: 18px 'monospace';
+  display: inline-block;
+  font-weight: 500;
+  margin-left: 20px;
+  margin-right: 9px;
+  
+}
+
+.camera-control-divider {
+  background: linear-gradient(90deg,#424242 10%,#414141 0,#000 50%,#424242 90%);
+  display: inline-block;
+  height: 34px;
+  width: 3px;
+  position: absolute;
+  top: 0px;
 }
