@@ -36,7 +36,7 @@ export default class CameraController {
         document.querySelector('#camera-top-button').addEventListener('click', (e) => {
             const to = {
                 x: 0,
-                y: 100,
+                y: 150,
                 z: 0,
             };
             this.tweenCamera(app, to);
