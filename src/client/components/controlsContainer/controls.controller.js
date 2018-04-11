@@ -110,7 +110,6 @@ export default class controlsContainer {
             };
             reader.readAsText(e.target.files[0]);
         };
-
     }
 
     updateModel(control, newValue) {

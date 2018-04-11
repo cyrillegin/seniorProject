@@ -59,36 +59,24 @@ i {
 }
 
 
-
-
-
-// colors
-$primary: #F85F73;
-$secondary: #FBE8D3;
-$acc1: #283C63;
-$acc2: #928A97;
-// 
-
-
-
 .mui-button {
-  width:45%;
-  background: white;;
-  color: black;
-  font-family: monospace;
-  font-size: 12pt;
-  height: 50px;
-  margin-left: 2.5%;
-  transition: .3s;
-  border: none;
-  
-  &:hover {
-    box-shadow: 0 0 12px 0 rgba(0,0,0,0.2);
-    transform: scale(0.97);
-    cursor: pointer;
-  }
+    background: $white;
+    border: 0;
+    color: $black;
+    font-family: monospace;
+    font-size: 12pt;
+    height: 50px;
+    margin-left: 2.5%;
+    transition: .3s;
+    width: 45%;
+
+    &:hover {
+        box-shadow: 0 0 12px 0 $shadow;
+        cursor: pointer;
+        transform: scale(.97);
+    }
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
