@@ -1,9 +1,9 @@
 # NMSU Senior Project Spring 2018
 
-### Authors: 
+### Authors:
 Cyrille Gindreau  
 Luis M  Perez  
-Tim Kraus
+Tim Kraus  
 Alec Gonzales
 
 ### Dependencies
@@ -17,6 +17,9 @@ Change into directory: `cd seniorProject`
 Run setup command: `npm run setup`  
 Start dev server: `npm run start`  
 
+##### Run Electron
+Start server: `npm run start-server`  
+Start electron: `npm run electron`  
 
 ##### Misc
 Stand in canoe taken from https://www.turbosquid.com/FullPreview/Index.cfm/ID/622136
