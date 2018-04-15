@@ -209,7 +209,7 @@ export default class BlueprintEditor {
 
         // Scale for svg window sizing
         const scale = 0.008;
-
+        /*
         const svgText = this.canvas.append('text')
             .attr('x', 15)
             .attr('y', y1)
@@ -220,7 +220,7 @@ export default class BlueprintEditor {
             .attr('x', x6)
             .attr('y', y7)
             .text('Keel Panels');
-        console.log(svgText1);
+        console.log(svgText1); */
 
         // Function to create Bezier curves
         const lineFunction = d3.line()
