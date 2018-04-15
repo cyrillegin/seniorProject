@@ -1,11 +1,23 @@
 <div class="container">
     <div id="canvas" class="canvas card" />
     <div class="menu-container" id="three-menu">
-      <div class="wire-frame-toggle">
-          <input type="checkbox" id="shaded-toggle" />
-          <label for="shaded-toggle">Toggle Shaded</label>
-      </div>
-      <div class="wire-frame-toggle">
+      
+        <div class="camera-controls">
+          <div class="camera-control" id="camera-front-button">front</div>
+          <div class="camera-control-divider"></div>
+          <div class="camera-control" id="camera-side-button">side</div>
+          <div class="camera-control-divider"></div>
+          <div class="camera-control" id="camera-top-button">top</div>
+          <div class="camera-control-divider"></div>
+          <div class="camera-control" id="camera-45-button">45</div>
+        </div>
+        
+        
+        <div class="wire-frame-toggle">
+            <input type="checkbox" id="shaded-toggle" />
+            <label for="shaded-toggle">Toggle Shaded</label>
+        </div>
+        <div class="wire-frame-toggle">
             <input type="checkbox" id="wire-frame-toggle" checked />
             <label for="wire-frame-toggle">Toggle wireframe</label>
         </div>
