@@ -74,6 +74,42 @@ export default class controlsContainer {
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
         };
+
+        this.$scope.SaveJson = () => {
+            const data = JSON.stringify(this.$scope.data);
+            const file = new Blob([data], {type: 'JSON'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.json';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        };
+
+        this.$scope.LoadJson = () => {
+            document.querySelector('#json-file-input').click();
+        };
+
+        document.querySelector('#json-file-input').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const obj = JSON.parse(event.target.result);
+                this.boatParametersService.updatePoint(obj);
+                this.$scope.data = obj;
+                this.$scope.$apply();
+                $('input').each((index, elem) => {
+                    if ($(elem).scope) {
+                        $(elem).scope()
+                            .$apply();
+                    }
+                });
+            };
+            reader.readAsText(e.target.files[0]);
+        };
     }
 
     updateModel(control, newValue) {
