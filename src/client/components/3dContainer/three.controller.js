@@ -63,7 +63,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHover(this.app, newBoat[newVal], newVal);
                     });
                 this.$scope.$watch(
                     () => this.manipulateService.getUnHoverInput(), // what we're watching.
@@ -71,7 +72,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHoverOff(this.app, newBoat[newVal], newVal);
                     });
             })
             .catch((error) => {
