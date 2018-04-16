@@ -298,12 +298,12 @@ export default class BlueprintEditor {
         const aftHeight = Number((Math.sqrt(Math.pow((Math.abs(x13 - x15)), 2) + Math.pow((Math.abs(y13 - y15)), 2))).toFixed(1));
         const foreHeight = Number((Math.sqrt(Math.pow((Math.abs(x17 - x19)), 2) + Math.pow((Math.abs(y17 - y19)), 2))).toFixed(1));
 
-        const windowHeight = Math.abs(y1 - y19) * 20;
+        const windowHeight = Math.abs(y1 - y19) * 30;
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', windowHeight);
+            .attr('height', windowHeight / 2);
 
 
         // Scale for svg window sizing
@@ -535,9 +535,17 @@ export default class BlueprintEditor {
             .attr('id', 'gunForeEdge');
     }
 
-    update(data) {
+    update() {
+        const current = this.boatParametersService.getBoat();
+        if (current === undefined) {
+            return;
+        }
+        if (this.oldValues === undefined) {
+            this.oldValues = current;
+            return;
+        }
         this.canvas.remove();
-        this.boat = JSON.parse(JSON.stringify(data));
+        this.boat = JSON.parse(JSON.stringify(current));
         this.drawBlueprints(this.boat);
     }
 
@@ -545,9 +553,14 @@ export default class BlueprintEditor {
         // this.$timeout(() => {
         const data = this.boatParametersService.getBoat().then((data) => {
             this.boat = JSON.parse(JSON.stringify(data));
-            this.drawBlueprints(this.boat);/*
-            d3.select('#gunForeEdge').remove();
-            this.update(data); */
+            this.drawBlueprints(this.boat);
+
+            this.$scope.$watchCollection(
+                () => this.boatParametersService.checkUpdate(),
+                (newVal, oldVal, scope) => {
+                    this.update();
+                },
+            );
         });
 
         // log to get past one of the linting errors
