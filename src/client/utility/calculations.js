@@ -1,33 +1,6 @@
-// Implementation of casteljau's algorithem, adapted from 2d to 3d from
-// https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
-// Takes a curve and a percent along the curve and returns the 3d coordinates of that point in a vector3
-export function casteljauPoint(curve, t) {
-    // Step 1
-    const Ax = ((1 - t) * curve.start[0]) + (t * (curve.start[0] + curve.startControl[0]));
-    const Ay = ((1 - t) * curve.start[1]) + (t * (curve.start[1] + curve.startControl[1]));
-    const Az = ((1 - t) * curve.start[2]) + (t * (curve.start[2] + curve.startControl[2]));
-    const Bx = ((1 - t) * (curve.start[0] + curve.startControl[0])) + (t * (curve.end[0] + curve.endControl[0]));
-    const By = ((1 - t) * (curve.start[1] + curve.startControl[1])) + (t * (curve.end[1] + curve.endControl[1]));
-    const Bz = ((1 - t) * (curve.start[2] + curve.startControl[2])) + (t * (curve.end[2] + curve.endControl[2]));
-    const Cx = ((1 - t) * (curve.end[0] + curve.endControl[0])) + (t * curve.end[0]);
-    const Cy = ((1 - t) * (curve.end[1] + curve.endControl[1])) + (t * curve.end[1]);
-    const Cz = ((1 - t) * (curve.end[2] + curve.endControl[2])) + (t * curve.end[2]);
-
-    // Step 2
-    const Dx = ((1 - t) * Ax) + (t * Bx);
-    const Dy = ((1 - t) * Ay) + (t * By);
-    const Dz = ((1 - t) * Az) + (t * Bz);
-    const Ex = ((1 - t) * Bx) + (t * Cx);
-    const Ey = ((1 - t) * By) + (t * Cy);
-    const Ez = ((1 - t) * Bz) + (t * Cz);
-
-    // Step 3
-    const Px = ((1 - t) * Dx) + (t * Ex);
-    const Py = ((1 - t) * Dy) + (t * Ey);
-    const Pz = ((1 - t) * Dz) + (t * Ez);
-    return new THREE.Vector3(Px, Py, Pz);
-}
-
+// Takes in the boat, a curve to apply offsets to, and its key (the name of the curve)
+// Returns the modifed curve coordinates taking into consideration, width, height, length,
+// as well as positional offsets for the curve controls.
 export function applyOffsets(boat, curve, key) {
     // Define offsets
     let lengthOffset = key.toLowerCase().includes('aft') ? -boat.length : boat.length;
@@ -61,6 +34,45 @@ export function applyOffsets(boat, curve, key) {
     return curveCoordinates;
 }
 
+// Implementation of casteljau's algorithem, adapted from 2d to 3d from
+// https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
+// Takes a curve and a percent along the curve and returns the 3d coordinates of that point in a vector3
+export function casteljauPoint(curve, t) {
+    // Step 1
+    const Ax = ((1 - t) * curve.start[0]) + (t * (curve.start[0] + curve.startControl[0]));
+    const Ay = ((1 - t) * curve.start[1]) + (t * (curve.start[1] + curve.startControl[1]));
+    const Az = ((1 - t) * curve.start[2]) + (t * (curve.start[2] + curve.startControl[2]));
+    const Bx = ((1 - t) * (curve.start[0] + curve.startControl[0])) + (t * (curve.end[0] + curve.endControl[0]));
+    const By = ((1 - t) * (curve.start[1] + curve.startControl[1])) + (t * (curve.end[1] + curve.endControl[1]));
+    const Bz = ((1 - t) * (curve.start[2] + curve.startControl[2])) + (t * (curve.end[2] + curve.endControl[2]));
+    const Cx = ((1 - t) * (curve.end[0] + curve.endControl[0])) + (t * curve.end[0]);
+    const Cy = ((1 - t) * (curve.end[1] + curve.endControl[1])) + (t * curve.end[1]);
+    const Cz = ((1 - t) * (curve.end[2] + curve.endControl[2])) + (t * curve.end[2]);
+
+    // Step 2
+    const Dx = ((1 - t) * Ax) + (t * Bx);
+    const Dy = ((1 - t) * Ay) + (t * By);
+    const Dz = ((1 - t) * Az) + (t * Bz);
+    const Ex = ((1 - t) * Bx) + (t * Cx);
+    const Ey = ((1 - t) * By) + (t * Cy);
+    const Ez = ((1 - t) * Bz) + (t * Cz);
+
+    // Step 3
+    const Px = ((1 - t) * Dx) + (t * Ex);
+    const Py = ((1 - t) * Dy) + (t * Ey);
+    const Pz = ((1 - t) * Dz) + (t * Ez);
+    return new THREE.Vector3(Px, Py, Pz);
+}
+
+// Inverse of casteljau's algorithem, takes in a curve and a y dimension and Returns
+// the t value from use in the casteljauPoint function.
+export function getPointFromY(curve, y) {
+    // TODO: Everything.
+    const t = 0;
+    return t;
+}
+
+// es6 modules like having a default.
 export default applyOffsets;
 
 // export default {casteljauPoint, applyOffsets};
