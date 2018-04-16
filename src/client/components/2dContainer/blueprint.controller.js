@@ -1,5 +1,7 @@
 // Global imports
 import * as d3 from 'd3';
+import {applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+
 /* Original sidepanel coordinates
 const sidePanel = [
     {x: 1, y: 1}, {x: 500, y: 1},
@@ -19,44 +21,12 @@ export default class BlueprintEditor {
         this.boatParametersService = boatParametersService;
     }
 
-    applyOffsets(curve, key) {
-        // Define offsets
-        let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-        let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-        const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
-
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = this.boat.height;
-        }
-        if (key.toLowerCase().includes('mid')) {
-            lengthOffset = 0;
-        }
-
-        // Apply offsets
-        const curveCoordinates = curve;
-        if (! key.toLowerCase().includes('edge')) {
-            curveCoordinates.start[0] += widthOffset;
-        }
-        curveCoordinates.end[0] += widthOffset;
-
-        curveCoordinates.start[1] += heightOffset;
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = -heightOffset;
-        }
-        curveCoordinates.end[1] += heightOffset;
-
-        curveCoordinates.end[2] += lengthOffset;
-        if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
-            curveCoordinates.start[2] += lengthOffset;
-        }
-        return curveCoordinates;
-    }
-
     drawBlueprints(boat) {
 
+        const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
         // Coordinates for first panel
         // Get Coordinates for foreBeam
-        this.applyOffsets(this.boat.foreBeam, 'foreBeam');
+        applyOffsets(this.boat, this.boat.foreBeam, 'foreBeam');
         const y1 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - this.boat.foreBeam.start[0]) - 20);
         const x1 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreBeam.start[2]) + 15;
         const scy1 = Math.abs(this.boat.foreBeam.endControl[0] - 20);
@@ -65,7 +35,7 @@ export default class BlueprintEditor {
         const ecx1 = Math.abs(this.boat.foreBeam.startControl[2] - x1);
 
         // Get Coordinates for aftBeam
-        this.applyOffsets(this.boat.aftBeam, 'aftBeam');
+        applyOffsets(this.boat, this.boat.aftBeam, 'aftBeam');
         const y2 = Math.abs(this.boat.aftBeam.start[0] - this.boat.aftBeam.end[0]) + y1;
         const x2 = Math.abs(this.boat.aftBeam.start[2] - this.boat.aftBeam.end[2]) + x1;
         const scy2 = Math.abs(this.boat.aftBeam.startControl[0] - y1);
@@ -74,7 +44,7 @@ export default class BlueprintEditor {
         const ecx2 = Math.abs(this.boat.aftBeam.endControl[2] - x2);
 
         // Get Coordinates for foreChine
-        this.applyOffsets(this.boat.foreChine, 'foreChine');
+        applyOffsets(this.boat, this.boat.foreChine, 'foreChine');
         const y3 = Math.abs(this.boat.foreBeam.end[1] - this.boat.foreChine.end[1]) + 20;
         const x3 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
         const ecy3 = Math.abs(this.boat.foreChine.endControl[0]) + y3;
@@ -85,7 +55,7 @@ export default class BlueprintEditor {
         const scx3 = x4 - this.boat.foreChine.startControl[2];
 
         // Get Coordinates for aftChine
-        this.applyOffsets(this.boat.aftChine, 'aftChine');
+        applyOffsets(this.boat, this.boat.aftChine, 'aftChine');
         const y5 = y4 - Math.abs(this.boat.aftChine.start[0] - this.boat.aftChine.end[0]);
         const x5 = Math.abs(this.boat.aftChine.start[2] - this.boat.aftChine.end[2]) + x4;
         const scy4 = this.boat.aftChine.startControl[0] + y4;
@@ -113,7 +83,7 @@ export default class BlueprintEditor {
         const ecx6 = x8 - this.boat.aftChine.endControl[2];
 
         // Get coordinates for foreKeel
-        this.applyOffsets(this.boat.foreKeel, 'foreKeel');
+        applyOffsets(this.boat, this.boat.foreKeel, 'foreKeel');
         const y9 = Math.abs(this.boat.foreKeel.end[0] - this.boat.foreChine.end[0]) + y6;
         const x9 = x6 - Math.abs(this.boat.foreKeel.end[2] - this.boat.foreChine.end[2]);
         const ecy7 = y9 - this.boat.foreKeel.endControl[0];
@@ -124,7 +94,7 @@ export default class BlueprintEditor {
         const scx7 = x9 - Math.abs(this.boat.foreKeel.startControl[2]);
 
         // Get coordinates for aftKeel
-        this.applyOffsets(this.boat.aftKeel, 'aftKeel');
+        applyOffsets(this.boat, this.boat.aftKeel, 'aftKeel');
         const y11 = y10 + (this.boat.aftKeel.end[0] - this.boat.aftKeel.start[0]);
         const x11 = x10 + Math.abs(this.boat.aftKeel.end[2] - this.boat.aftKeel.start[2]);
         const ecy8 = y11 - this.boat.aftKeel.endControl[0];
@@ -133,26 +103,26 @@ export default class BlueprintEditor {
         const scx8 = x11 + Math.abs(this.boat.aftKeel.startControl[2]);
 
         // Get coordinates for aft panel
-        this.applyOffsets(this.boat.aftBeamEdge, 'aftBeamEdge');
+        applyOffsets(this.boat, this.boat.aftBeamEdge, 'aftBeamEdge');
         const y12 = y11 + 15;
         const x12 = 15;
         const y13 = Math.abs(this.boat.aftBeamEdge.start[2] - this.boat.aftBeamEdge.end[2]) * 2 + y12;
         const x13 = Math.abs(this.boat.aftBeamEdge.start[0] - this.boat.aftBeamEdge.end[0]) * 2 + x12;
 
-        this.applyOffsets(this.boat.aftGunEdge, 'aftGunEdge');
+        applyOffsets(this.boat, this.boat.aftGunEdge, 'aftGunEdge');
         const y14 = Math.abs(this.boat.aftBeamEdge.end[1] - this.boat.aftGunEdge.end[1]) + y12;
         const x14 = x12 + Math.abs(this.boat.aftBeamEdge.end[0] - this.boat.aftGunEdge.end[0]);
         const y15 = Math.abs(this.boat.aftGunEdge.start[2] - this.boat.aftGunEdge.end[2]) * 2 + y14;
         const x15 = Math.abs(this.boat.aftGunEdge.start[0] - this.boat.aftGunEdge.end[0]) * 2 + x14;
 
         // Get coorindates for fore panel
-        this.applyOffsets(this.boat.foreBeamEdge, 'foreBeamEdge');
+        applyOffsets(this.boat, this.boat.foreBeamEdge, 'foreBeamEdge');
         const y16 = y15 + 15;
         const x16 = 15;
         const y17 = Math.abs(this.boat.foreBeamEdge.start[2] - this.boat.foreBeamEdge.end[2]) * 2 + y16;
         const x17 = Math.abs(this.boat.foreBeamEdge.start[0] - this.boat.foreBeamEdge.end[0]) * 2 + x16;
 
-        this.applyOffsets(this.boat.foreGunEdge, 'foreGunEdge');
+        applyOffsets(this.boat, this.boat.foreGunEdge, 'foreGunEdge');
         const y18 = Math.abs(this.boat.foreBeamEdge.end[1] - this.boat.foreGunEdge.end[1]) + y16;
         const x18 = x16 + Math.abs(this.boat.foreBeamEdge.end[0] - this.boat.foreGunEdge.end[0]);
         const y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + y18;
