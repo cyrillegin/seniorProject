@@ -1,5 +1,5 @@
 import mirrorAttributes from '../../../utility/mirror';
-import {casteljauPoint, applyOffsets} from '../../../utility/calculations';
+import {casteljauPoint, casteljauFromY, applyOffsets} from '../../../utility/calculations';
 
 export default class CurvesController {
     constructor() {
@@ -20,29 +20,6 @@ export default class CurvesController {
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
         });
         return app;
-    }
-
-    findLocation(boat, frame) {
-        let T;
-        let beamCurve;
-        let chineCurve;
-        let keelCurve;
-        if (frame.distanceFromBack < boat.length) {
-            T = (boat.length - frame.distanceFromBack) / boat.length;
-            beamCurve = boat.aftBeam;
-            chineCurve = boat.aftChine;
-            keelCurve = boat.aftKeel;
-        } else {
-            T = (frame.distanceFromBack - boat.length) / boat.length;
-            beamCurve = boat.foreBeam;
-            chineCurve = boat.foreChine;
-            keelCurve = boat.foreKeel;
-        }
-
-        const locationA = casteljauPoint(beamCurve, T);
-        const locationB = casteljauPoint(chineCurve, T);
-        const locationC = casteljauPoint(keelCurve, T);
-        return {locationA, locationB, locationC};
     }
 
     drawCurve(app, curveCoordinates, key) {
@@ -255,6 +232,31 @@ export default class CurvesController {
             boatCopy[key] = applyOffsets(this.boat, boatCopy[key], key);
         });
         this.drawFrames(app, boatCopy);
+    }
+    
+    findLocation(boat, frame) {
+        let T;
+        let beamCurve;
+        let chineCurve;
+        let keelCurve;
+        if (frame.distanceFromBack < boat.length) {
+            T = (boat.length - frame.distanceFromBack) / boat.length;
+            beamCurve = boat.aftBeam;
+            chineCurve = boat.aftChine;
+            keelCurve = boat.aftKeel;
+        } else {
+            T = (frame.distanceFromBack - boat.length) / boat.length;
+            beamCurve = boat.foreBeam;
+            chineCurve = boat.foreChine;
+            keelCurve = boat.foreKeel;
+        }
+        
+        casteljauFromY(beamCurve, frame.distanceFromBack);
+
+        const locationA = casteljauPoint(beamCurve, T);
+        const locationB = casteljauPoint(chineCurve, T);
+        const locationC = casteljauPoint(keelCurve, T);
+        return {locationA, locationB, locationC};
     }
 
     removeFrames(app) {
