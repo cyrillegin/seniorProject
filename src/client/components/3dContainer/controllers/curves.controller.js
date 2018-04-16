@@ -1,5 +1,5 @@
 import mirrorAttributes from '../../../utility/mirror';
-import {casteljauPoint, casteljauFromY, applyOffsets} from '../../../utility/calculations';
+import {casteljauPoint, applyOffsets} from '../../../utility/calculations';
 
 export default class CurvesController {
     constructor() {
@@ -233,7 +233,7 @@ export default class CurvesController {
         });
         this.drawFrames(app, boatCopy);
     }
-    
+
     findLocation(boat, frame) {
         let T;
         let beamCurve;
@@ -250,8 +250,6 @@ export default class CurvesController {
             chineCurve = boat.foreChine;
             keelCurve = boat.foreKeel;
         }
-        
-        casteljauFromY(beamCurve, frame.distanceFromBack);
 
         const locationA = casteljauPoint(beamCurve, T);
         const locationB = casteljauPoint(chineCurve, T);
