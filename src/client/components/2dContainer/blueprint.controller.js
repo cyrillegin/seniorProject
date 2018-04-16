@@ -542,18 +542,13 @@ export default class BlueprintEditor {
         if (current === undefined) {
             return;
         }
-        if (this.oldValues === undefined) {
-            this.oldValues = current;
-            return;
-        }
         this.canvas.remove();
         this.boat = JSON.parse(JSON.stringify(current));
         this.drawBlueprints(this.boat);
     }
 
     $onInit() {
-        // this.$timeout(() => {
-        const data = this.boatParametersService.getBoat().then((data) => {
+        this.boatParametersService.getBoat().then((data) => {
             this.boat = JSON.parse(JSON.stringify(data));
             this.drawBlueprints(this.boat);
 
@@ -564,9 +559,5 @@ export default class BlueprintEditor {
                 },
             );
         });
-
-        // log to get past one of the linting errors
-        console.log(data);
-
     }
 }
