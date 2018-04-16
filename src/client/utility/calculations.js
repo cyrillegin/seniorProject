@@ -66,6 +66,8 @@ export function casteljauPoint(curve, t) {
 
 export function casteljauFromY() {}
 
+export function conver3dTo2dCoordinates() {}
+
 // es6 modules like having a default.
 export default applyOffsets;
 

@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {applyOffsets} from '../../utility/calculations';
+import {applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -23,6 +23,7 @@ export default class BlueprintEditor {
 
     drawBlueprints(boat) {
 
+        const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
         // Coordinates for first panel
         // Get Coordinates for foreBeam
         applyOffsets(this.boat, this.boat.foreBeam, 'foreBeam');
