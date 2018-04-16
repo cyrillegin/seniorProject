@@ -130,6 +130,32 @@ export default class BlueprintEditor {
         const scy8 = y11 - Math.abs(this.boat.aftKeel.startControl[0]);
         const scx8 = x11 + Math.abs(this.boat.aftKeel.startControl[2]);
 
+        // Get coordinates for aft panel
+        this.applyOffsets(this.boat.aftBeamEdge, 'aftBeamEdge');
+        const y12 = y11 + 15;
+        const x12 = 15;
+        const y13 = Math.abs(this.boat.aftBeamEdge.start[2] - this.boat.aftBeamEdge.end[2]) * 2 + y12;
+        const x13 = Math.abs(this.boat.aftBeamEdge.start[0] - this.boat.aftBeamEdge.end[0]) * 2 + x12;
+
+        this.applyOffsets(this.boat.aftGunEdge, 'aftGunEdge');
+        const y14 = Math.abs(this.boat.aftBeamEdge.end[1] - this.boat.aftGunEdge.end[1]) + y12;
+        const x14 = x12 + Math.abs(this.boat.aftBeamEdge.end[0] - this.boat.aftGunEdge.end[0]);
+        const y15 = Math.abs(this.boat.aftGunEdge.start[2] - this.boat.aftGunEdge.end[2]) * 2 + y14;
+        const x15 = Math.abs(this.boat.aftGunEdge.start[0] - this.boat.aftGunEdge.end[0]) * 2 + x14;
+
+        // Get coorindates for fore panel
+        this.applyOffsets(this.boat.foreBeamEdge, 'foreBeamEdge');
+        const y16 = y15 + 15;
+        const x16 = 15;
+        const y17 = Math.abs(this.boat.foreBeamEdge.start[2] - this.boat.foreBeamEdge.end[2]) * 2 + y16;
+        const x17 = Math.abs(this.boat.foreBeamEdge.start[0] - this.boat.foreBeamEdge.end[0]) * 2 + x16;
+
+        this.applyOffsets(this.boat.foreGunEdge, 'foreGunEdge');
+        const y18 = Math.abs(this.boat.foreBeamEdge.end[1] - this.boat.foreGunEdge.end[1]) + y16;
+        const x18 = x16 + Math.abs(this.boat.foreBeamEdge.end[0] - this.boat.foreGunEdge.end[0]);
+        const y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + y18;
+        const x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + x18;
+
 
         // Coordinates put into usable structures for d3
         const beamFore = [
@@ -194,33 +220,94 @@ export default class BlueprintEditor {
             {x: 15, y: ecy1},
         ];
 
+        const panel1Label = [
+            {x: 15, y: y1 - 2}, {x: x2, y: y1 - 2},
+        ];
+
+        const panel1Line = [
+            {x: x2 + 2, y: y1}, {x: x2 + 2, y: y4},
+        ];
+
         const panel2Box = [
             {x: x6, y: y7}, {x: x8, y: y7},
             {x: x8, y: y10}, {x: x6, y: y10},
             {x: x6, y: y7},
         ];
 
+        const panel2Label = [
+            {x: x6, y: y7 - 2}, {x: x8, y: y7 - 2},
+        ];
+
+        const panel2Line = [
+            {x: x8 + 2, y: y7}, {x: x8 + 2, y: y10},
+        ];
+
+        const beamAftEdge = [
+            {x: x12, y: y12}, {x: x13, y: y13},
+            {x: x15, y: y15}, {x: x14, y: y14},
+            {x: x12, y: y12},
+        ];
+
+        const aftHeightLine = [
+            {x: x13 + 1, y: y13}, {x: x15 + 1, y: y15},
+        ];
+
+        const aftPanel = [
+            {x: x12, y: y12 - 1}, {x: x13, y: y12 - 1},
+        ];
+
+        const aftPanelTitle = [
+            {x: x12, y: y12 - 5}, {x: x13 + 15, y: y12 - 5},
+        ];
+
+        const aftPanelLine = [
+            {x: x14, y: y14 - 1}, {x: x15, y: y15 - 1},
+        ];
+
+        const gunForeEdge = [
+            {x: x16, y: y16}, {x: x17, y: y17},
+            {x: x19, y: y19}, {x: x18, y: y18},
+            {x: x16, y: y16},
+        ];
+
+        const foreHeightLine = [
+            {x: x17 + 1, y: y17}, {x: x19 + 1, y: y19},
+        ];
+
+        const forePanel = [
+            {x: x16, y: y16 - 1}, {x: x17, y: y17 - 1},
+        ];
+
+        const forePanelLine = [
+            {x: x18, y: y18 - 1}, {x: x19, y: y19 - 1},
+        ];
+
+        const forePanelTitle = [
+            {x: x16, y: y16 - 5}, {x: x17 + 15, y: y17 - 5},
+        ];
+
+        // Acquire dimensions
+        const panel1Length = Math.abs(15 - x2);
+        const panel1Height = Math.abs(y1 - y4);
+        const panel2Length = Math.abs(x6 - x8);
+        const panel2Height = Math.abs(y7 - y10);
+        const aftBeamLength = Math.abs(x12 - x13);
+        const aftGunLength = Math.abs(x14 - x15);
+        const foreBeamLength = Math.abs(x16 - x17);
+        const foreGunLength = Math.abs(x18 - x19);
+        const aftHeight = Number((Math.sqrt(Math.pow((Math.abs(x13 - x15)), 2) + Math.pow((Math.abs(y13 - y15)), 2))).toFixed(1));
+        const foreHeight = Number((Math.sqrt(Math.pow((Math.abs(x17 - x19)), 2) + Math.pow((Math.abs(y17 - y19)), 2))).toFixed(1));
+
+        const windowHeight = Math.abs(y1 - y19) * 20;
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', 700);
+            .attr('height', windowHeight);
 
 
         // Scale for svg window sizing
         const scale = 0.008;
-        /*
-        const svgText = this.canvas.append('text')
-            .attr('x', 15)
-            .attr('y', y1)
-            .text('Port and Starboard Panels');
-        console.log(svgText);
-
-        const svgText1 = this.canvas.append('text')
-            .attr('x', x6)
-            .attr('y', y7)
-            .text('Keel Panels');
-        console.log(svgText1); */
 
         // Function to create Bezier curves
         const lineFunction = d3.line()
@@ -238,14 +325,131 @@ export default class BlueprintEditor {
         this.canvas.append('path')
             .attr('d', lineFunction(panel1Box))
             .attr('stroke', 'blue')
-            .attr('stroke-width', 2)
+            .attr('stroke-width', 1)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunction(panel2Box))
             .attr('stroke', 'blue')
-            .attr('stroke-width', 2)
+            .attr('stroke-width', 1)
             .attr('fill', 'none');
+
+        // Create invisible lines for text
+        this.canvas.append('path')
+            .attr('id', 'Panel1')
+            .attr('d', lineFunction(panel1Label))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'Panel1Line')
+            .attr('d', lineFunction(panel1Line))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'Panel2')
+            .attr('d', lineFunction(panel2Label))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'Panel2Line')
+            .attr('d', lineFunction(panel2Line))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'aftPanelTitle')
+            .attr('d', lineFunction(aftPanelTitle))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'aftPanel')
+            .attr('d', lineFunction(aftPanel))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'aftHeight')
+            .attr('d', lineFunction(aftHeightLine))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'aftPanelLine')
+            .attr('d', lineFunction(aftPanelLine))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'forePanelTitle')
+            .attr('d', lineFunction(forePanelTitle))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'forePanel')
+            .attr('d', lineFunction(forePanel))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'foreHeight')
+            .attr('d', lineFunction(foreHeightLine))
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'forePanelLine')
+            .attr('d', lineFunction(forePanelLine))
+            .attr('fill', 'none');
+
+        // Insert text
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('xlink:href', '#Panel1')
+            .text('Port/Starboard panels');
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#Panel1')
+            .text(panel1Length);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#Panel1Line')
+            .text(panel1Height);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('xlink:href', '#Panel2')
+            .text('Keel Panels');
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#Panel2')
+            .text(panel2Length);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#Panel2Line')
+            .text(panel2Height);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('xlink:href', '#aftPanelTitle')
+            .text('Aft Panel');
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#aftPanel')
+            .text(aftBeamLength);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '40%')
+            .attr('xlink:href', '#aftHeight')
+            .text(aftHeight);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#aftPanelLine')
+            .text(aftGunLength);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('xlink:href', '#forePanelTitle')
+            .text('Fore Panel');
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#forePanel')
+            .text(foreBeamLength);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '40%')
+            .attr('xlink:href', '#foreHeight')
+            .text(foreHeight);
+        this.canvas.append('text')
+            .append('textPath')
+            .attr('startOffset', '50%')
+            .attr('xlink:href', '#forePanelLine')
+            .text(foreGunLength);
 
         // Create aft and fore beam curves
         this.canvas.append('path')
@@ -253,7 +457,6 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunc(beamAft))
             .attr('stroke', 'red')
@@ -266,7 +469,6 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunc(chineAf))
             .attr('stroke', 'red')
@@ -279,7 +481,6 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunction(foreCon))
             .attr('stroke', 'red')
@@ -292,7 +493,6 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunc(afChine))
             .attr('stroke', 'red')
@@ -305,7 +505,6 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunc(afKeel))
             .attr('stroke', 'red')
@@ -318,20 +517,40 @@ export default class BlueprintEditor {
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
-
         this.canvas.append('path')
             .attr('d', lineFunction(forKeelCon))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('d', lineFunction(beamAftEdge))
+            .attr('stroke', 'red')
+            .attr('stroke-width', 2)
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('d', lineFunction(gunForeEdge))
+            .attr('stroke', 'red')
+            .attr('stroke-width', 2)
+            .attr('fill', 'none')
+            .attr('id', 'gunForeEdge');
+    }
+
+    update(data) {
+        this.canvas.remove();
+        this.boat = JSON.parse(JSON.stringify(data));
+        this.drawBlueprints(this.boat);
     }
 
     $onInit() {
         // this.$timeout(() => {
         const data = this.boatParametersService.getBoat().then((data) => {
             this.boat = JSON.parse(JSON.stringify(data));
-            this.drawBlueprints(this.boat);
+            this.drawBlueprints(this.boat);/*
+            d3.select('#gunForeEdge').remove();
+            this.update(data); */
         });
+
+        // log to get past one of the linting errors
         console.log(data);
 
     }
