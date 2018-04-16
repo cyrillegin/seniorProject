@@ -15,12 +15,14 @@ import 'three/examples/js/controls/OrbitControls';
 // controller imports
 import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
-import initCamera from './controllers/camera.controller';
+import CameraController from './controllers/camera.controller';
 import MeshController from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
 
 export default class ThreeContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
@@ -33,8 +35,9 @@ export default class ThreeContainer {
         this.app.displayWireFrame = true;
         this.app.displayShaded = false;
         this.app = initLights(this.app);
-        this.app = initCamera(this.app);
 
+        this.cameraController = new CameraController();
+        this.app = this.cameraController.initCamera(this.app);
         this.meshController = new MeshController();
         this.curveController = new CurvesController();
 

@@ -12,6 +12,8 @@ const sidePanel = [
 
 export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;

@@ -30,6 +30,7 @@
         "electron": "electron ."
     },
     "dependencies": {
+        "@tweenjs/tween.js": "17.2.0",
         "@uirouter/angularjs": "1.0.15",
         "angular": "1.6.9",
         "angular-animate": "1.6.9",
@@ -37,16 +38,17 @@
         "angular-route": "1.6.9",
         "d3": "4.13.0",
         "electron": "1.8.4",
-        "font-awesome": "4.7.0",
         "jquery": "3.3.1",
         "nodemon": "1.15.1",
         "three": "0.90.0"
+    },
+    "optionalDependencies": {
+        "code-assess": "0.2.9"
     },
     "devDependencies": {
         "babel-istanbul": "0.12.2",
         "babel-plugin-angularjs-annotate": "0.8.2",
         "chai": "4.1.2",
-        "code-assess": "0.2.9",
         "mocha": "5.0.1",
         "babel-eslint": "8.2.1",
         "eslint": "4.18.0",
@@ -55,6 +57,7 @@
         "babel-cli": "6.26.0",
         "babel-core": "6.26.0",
         "babel-loader": "7.1.2",
+        "babel-register": "6.26.0",
         "babel-preset-env": "1.6.1",
         "body-parser": "1.18.2",
         "css-loader": "0.28.9",

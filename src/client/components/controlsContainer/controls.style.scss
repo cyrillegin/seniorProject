@@ -1,3 +1,5 @@
+@import './../../constants';
+
 .controls-heading {
     margin: 0 24px;
 }
@@ -20,10 +22,6 @@
     display: none;
 }
 
-.controls-icon-hidden {
-    transform: rotate(-90deg);
-}
-
 .controls-label {
     display: inline-block;
     margin-bottom: 8px;
@@ -44,6 +42,41 @@
     transition: 1s;
 }
 
-.carrot-icon {
+i {
+    border: solid $black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
     transition: .2s;
+}
+
+.down {
+    transform: rotate(45deg);
+}
+
+.controls-icon-hidden {
+    transform: rotate(-45deg);
+}
+
+
+.mui-button {
+    background: $white;
+    border: 0;
+    color: $black;
+    font-family: monospace;
+    font-size: 12pt;
+    height: 50px;
+    margin-left: 2.5%;
+    transition: .3s;
+    width: 45%;
+
+    &:hover {
+        box-shadow: 0 0 12px 0 $shadow;
+        cursor: pointer;
+        transform: scale(.97);
+    }
+}
+
+.hidden {
+    display: none;
 }

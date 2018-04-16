@@ -1,5 +1,7 @@
 export default class controlsContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
+        'ngInject';
+
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
@@ -33,11 +35,80 @@ export default class controlsContainer {
             };
         }, 500);
 
+	      this.mouseDown = false;
+        this.oldMouseY = null;
+        this.oldValue = null;
+
+        this.$scope.mDown = (e, key, part, axis) => {
+            this.mouseDown = true;
+            this.key = key.key;
+            this.part = part;
+            this.axis = axis;
+            this.startingMousePosition = e.originalEvent.clientX;
+        };
+
+        document.querySelector('body').addEventListener('mousemove', (e) => {
+            if (this.mouseDown) {
+                let control = `${this.key}-${this.part}-`;
+                if (this.axis === 0) {
+                    control += 'x';
+                } else if (this.axis === 1) {
+                    control += 'y';
+                } else {
+                    control += 'z';
+                }
+                const newValue = -(this.startingMousePosition - e.clientX) / 10;
+                this.$scope.data[this.key][this.part][this.axis] = newValue;
+                this.updateModel(control, newValue);
+            }
+        });
+
+        document.querySelector('body').addEventListener('mouseup', (e) => {
+            this.mouseDown = false;
+        });
+
         this.$scope.hover = (key) => {
             this.manipulateService.addHoverInput(key);
         };
+
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
+        };
+
+        this.$scope.SaveJson = () => {
+            const data = JSON.stringify(this.$scope.data);
+            const file = new Blob([data], {type: 'JSON'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.json';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        };
+
+        this.$scope.LoadJson = () => {
+            document.querySelector('#json-file-input').click();
+        };
+
+        document.querySelector('#json-file-input').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const obj = JSON.parse(event.target.result);
+                this.boatParametersService.updatePoint(obj);
+                this.$scope.data = obj;
+                this.$scope.$apply();
+                $('input').each((index, elem) => {
+                    if ($(elem).scope) {
+                        $(elem).scope()
+                            .$apply();
+                    }
+                });
+            };
+            reader.readAsText(e.target.files[0]);
         };
     }
 

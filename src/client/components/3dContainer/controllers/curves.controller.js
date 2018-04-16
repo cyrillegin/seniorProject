@@ -2,6 +2,7 @@ import mirrorAttributes from '../../../utility/mirror';
 
 export default class CurvesController {
     constructor() {
+        'ngInject';
         this.curveObjects = [];
     }
 
@@ -74,6 +75,7 @@ export default class CurvesController {
         // Add the newly created lines to the scene
         frameLines.forEach((line) => {
             app.scene.add(line);
+            this.curveObjects.push({line});
         });
 
         return frameLines;

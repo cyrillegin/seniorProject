@@ -36,8 +36,8 @@
         <div ng-repeat="frame in data.frames">
             <div class="controls-group">
                 <div class="controls-label">frame</div>
-                <input aria-label="frame-distance-{{$index}}" type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                <input aria-label="frame-distance-range-{{$index}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                <input aria-label="frame-distance-{{$index}}" type="number" max="{{data.length*2}}" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                <input aria-label="frame-distance-range-{{$index}}" max="{{data.length*2}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
         <div ng-repeat="(key, value) in data">
             <div ng-if="key != 'width' && key != 'height' && key != 'length' && value.controlable == true">
                 <div class="controls-label">
-                    <i class="fa fa-angle-down carrot-icon" ng-click="openMenu(key)" id="{{key}}-menu-icon" /> {{key}}
+                    <i class="down" ng-click="openMenu(key)" id="{{key}}-menu-icon" /> {{key}}
                 </div>
 
                 <div class="controls-group" id="{{key}}-menu">
@@ -77,13 +77,13 @@
                                     Start
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-x" type="number" class="controls-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" />
+                                    <input aria-label="{{key}}-start-x" type="number" class="controls-number-input" ng-model="value.start[0]" ng-change="changeValue('{{key}}-start-x')" ng-mousedown="mDown($event, {key}, 'start', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-y" type="number" class="controls-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" />
+                                    <input aria-label="{{key}}-start-y" type="number" class="controls-number-input" ng-model="value.start[1]" ng-change="changeValue('{{key}}-start-y')" ng-mousedown="mDown($event, {key}, 'start', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-z" id="{{key}}-start-z" type="number" class="controls-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" />
+                                    <input aria-label="{{key}}-start-z" type="number" class="controls-number-input" ng-model="value.start[2]" ng-change="changeValue('{{key}}-start-z')" ng-mousedown="mDown($event, {key}, 'start', 0)" />
                                 </td>
                             </tr>
                             <tr>
@@ -91,13 +91,13 @@
                                     Control
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-control-x" type="number" class="controls-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" />
+                                    <input aria-label="{{key}}-start-control-x" type="number" class="controls-number-input" ng-model="value.startControl[0]" ng-change="changeValue('{{key}}-startControl-x')" ng-mousedown="mDown($event, {key}, 'startControl', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-control-y" type="number" class="controls-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" />
+                                    <input aria-label="{{key}}-start-control-y" type="number" class="controls-number-input" ng-model="value.startControl[1]" ng-change="changeValue('{{key}}-startControl-y')" ng-mousedown="mDown($event, {key}, 'startControl', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-start-control-z" type="number" class="controls-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" />
+                                    <input aria-label="{{key}}-start-control-z" type="number" class="controls-number-input" ng-model="value.startControl[2]" ng-change="changeValue('{{key}}-startControl-z')" ng-mousedown="mDown($event, {key}, 'startControl', 0)" />
                                 </td>
                             </tr>
                             <tr>
@@ -105,13 +105,13 @@
                                     End
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-x" type="number" class="controls-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')" />
+                                    <input aria-label="{{key}}-end-x" type="number" class="controls-number-input" ng-model="value.end[0]" ng-change="changeValue('{{key}}-end-x')"  ng-mousedown="mDown($event, {key}, 'end', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-y" type="number" class="controls-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" />
+                                    <input aria-label="{{key}}-end-y" type="number" class="controls-number-input" ng-model="value.end[1]" ng-change="changeValue('{{key}}-end-y')" ng-mousedown="mDown($event, {key}, 'end', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-z" type="number" class="controls-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" />
+                                    <input aria-label="{{key}}-end-z" type="number" class="controls-number-input" ng-model="value.end[2]" ng-change="changeValue('{{key}}-end-z')" ng-mousedown="mDown($event, {key}, 'end', 0)" />
                                 </td>
                             </tr>
                             <tr>
@@ -119,13 +119,13 @@
                                     Control
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-control-x" type="number" class="controls-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" />
+                                    <input aria-label="{{key}}-end-control-x" type="number" class="controls-number-input" ng-model="value.endControl[0]" ng-change="changeValue('{{key}}-endControl-x')" ng-mousedown="mDown($event, {key}, 'endControl', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-control-y" type="number" class="controls-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" />
+                                    <input aria-label="{{key}}-end-control-y" type="number" class="controls-number-input" ng-model="value.endControl[1]" ng-change="changeValue('{{key}}-endControl-y')" ng-mousedown="mDown($event, {key}, 'endControl', 0)" />
                                 </td>
                                 <td>
-                                    <input aria-label="{{key}}-end-control-z" type="number" class="controls-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')" />
+                                    <input aria-label="{{key}}-end-control-z" type="number" class="controls-number-input" ng-model="value.endControl[2]" ng-change="changeValue('{{key}}-endControl-z')"  ng-mousedown="mDown($event, {key}, 'endControl', 0)" />
                                 </td>
                             </tr>
                         </tbody>
@@ -135,3 +135,10 @@
         </div>
     </div>
 </div>
+
+<hr />
+
+<button class="mui-button" ng-click="SaveJson()">Save JSON</button>
+
+<button class="mui-button" ng-click="LoadJson()">Load JSON</button>
+<input type="file" class="hidden" id="json-file-input" />
