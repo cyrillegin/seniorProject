@@ -4,6 +4,7 @@
 */
 import 'three';
 import 'three/examples/js/loaders/MTLLoader';
+import {applyOffsets} from '../../../utility/calculations';
 
 export default class MeshController {
     initMesh(app, boat) {
@@ -30,7 +31,7 @@ export default class MeshController {
             if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
                 return;
             }
-            this.boat[key] = this.applyOffsets(copiedBoat[key], key);
+            this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
         const face1 = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
@@ -118,47 +119,6 @@ export default class MeshController {
 
     showMesh(show) {
         this.mesh.visible = show;
-    }
-
-    // NOTE: This was copy/pasted from the curves controller.
-    // TODO: Move both functions to calculations.
-    applyOffsets(curve, key) {
-        // Define offsets
-        let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-        let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-        const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
-
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = this.boat.height;
-        }
-        if (key.toLowerCase().includes('mid')) {
-            lengthOffset = 0;
-        }
-
-        // Apply offsets
-        const curveCoordinates = curve;
-        if (! key.toLowerCase().includes('edge')) {
-            curveCoordinates.start[0] += widthOffset;
-            curveCoordinates.startControl[0] += widthOffset;
-        }
-        curveCoordinates.end[0] += widthOffset;
-        curveCoordinates.endControl[0] += widthOffset;
-
-        curveCoordinates.start[1] += heightOffset;
-        curveCoordinates.startControl[1] += heightOffset;
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = -heightOffset;
-        }
-        curveCoordinates.end[1] += heightOffset;
-        curveCoordinates.endControl[1] += heightOffset;
-
-        curveCoordinates.end[2] += lengthOffset;
-        curveCoordinates.endControl[2] += lengthOffset;
-        if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
-            curveCoordinates.start[2] += lengthOffset;
-            curveCoordinates.startControl[2] += lengthOffset;
-        }
-        return curveCoordinates;
     }
 }
 
