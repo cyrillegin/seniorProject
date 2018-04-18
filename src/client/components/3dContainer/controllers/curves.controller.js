@@ -1,5 +1,5 @@
 import mirrorAttributes from '../../../utility/mirror';
-import {casteljauPoint, applyOffsets} from '../../../utility/calculations';
+import {casteljauPoint, applyOffsets, casteljauFromY} from '../../../utility/calculations';
 
 export default class CurvesController {
     constructor() {
@@ -19,6 +19,7 @@ export default class CurvesController {
             const curveCoordinates = applyOffsets(this.boat, this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
         });
+
         return app;
     }
 
@@ -212,6 +213,7 @@ export default class CurvesController {
             frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
             frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-mirror-${index}`));
         });
+        casteljauFromY(boat.aftBeam, 20);
 
         // Add the newly created lines to the scene
         frameLines.forEach((line) => {

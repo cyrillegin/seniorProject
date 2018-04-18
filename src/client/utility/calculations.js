@@ -71,18 +71,16 @@ export function casteljauFromY(curve, distFromBack) {
     console.log(distFromBack);
     console.log('begin')
     // make a guess about t
+    const curveB = JSON.parse(JSON.stringify(curve));
     let t = 0.5;
     let withinBounds = false;
     let tries = 0;
-    // let result = casteljauPoint(curve, t);
     const bounds = 0.01;
-    while (withinBounds === false && tries < 10) {
+    while (withinBounds === false && tries < 3) {
         tries ++;
-        const curveB = JSON.parse(JSON.stringify(curve));
-        console.log(t)
         const result = casteljauPoint(curveB, t);
-
-        if (Math.abs(result.z - distFromBack) < bounds) {
+        console.log(Math.abs(result.z));
+        if (Math.abs(Math.abs(result.z) - distFromBack) < bounds) {
             console.log(`bounds found! tries: ${tries}, result: `, result);
             withinBounds = true;
         } else if (result.z - distFromBack > 0) {
