@@ -1,9 +1,9 @@
 # NMSU Senior Project Spring 2018
 
-### Authors: 
+### Authors:
 Cyrille Gindreau  
 Luis M  Perez  
-Tim Kraus
+Tim Kraus  
 Alec Gonzales
 
 ### Dependencies
@@ -13,7 +13,12 @@ https://nodejs.org/en/
 ### Setup
 Clone repo: `git clone https://github.com/cyrillegin/seniorProject.git`  
 Change into directory: `cd seniorProject`  
-Run setup command: `npm run setup` 
+Run setup command: `npm run setup`
+
+##### Run Electron
+Start server: `npm run start-server`  
+Start electron: `npm run electron`  
+
 
 ### Production build
 To create a development build:
