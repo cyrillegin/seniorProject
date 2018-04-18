@@ -3,7 +3,7 @@
   "height": 5,
   "length": 50,
   "frames": [{
-    "distanceFromBack": 25
+    "distanceFromBack": 40
   }],
   "aftBeam": {
     "controlable": true,

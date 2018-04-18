@@ -1,7 +1,10 @@
+const url = require('url');
+const path = require('path');
 const {app, BrowserWindow, Menu} = require('electron');
 
 let win = null;
-const DEBUG = false;
+let check = null;
+
 
 function createWindow() {
     // Initialize the window to our specified dimensions
@@ -9,6 +12,8 @@ function createWindow() {
         width: 1200,
         height: 800,
     });
+
+
     // Specify entry point
     win.loadURL('http://localhost:3000');
 
@@ -17,10 +22,6 @@ function createWindow() {
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
 
-    // Show dev tools
-    if (DEBUG === true) {
-        win.webContents.openDevTools();
-    }
 
     // Remove window once app is closed
     win.on('closed', () => {
@@ -52,29 +53,37 @@ app.on('activate', () => {
 // create menu template
 const mainMenuTemplate = [
     {label: 'File',
-        submenu: [{label: 'New Project'},
-            {label: 'Open Project',
-            // could not fix the lint error in these lines withour breaking the code also still working on it
-                accelerator: process.platform === 'darwin' ? 'Command+O' : 'Ctrl+O',
-                click() {
-                    const properties = ['multiSelections', 'createDirectory', 'openFile']; //eslint-disable-line
-                    const parentWindow = (process.platform === 'darwin') ? null : BrowserWindow.getFocusedWindow();//eslint-disable-line
-                },
-            },
+        submenu: [{label: 'New Project', click() {
+            check = new BrowserWindow({
+                width: 500,
+                height: 100,
+            });
 
-            {type: 'separator'},
-            {label: 'Save json'},
-            {label: 'Load json'},
-            {type: 'separator'},
-            {label: 'Save stl'},
-            {label: 'Save pdf'},
-            {type: 'separator'},
-            {label: 'Exit',
-                accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-                click() {
-                    app.quit();
-                },
-            }]}, // submenu
+            check.loadURL(url.format({
+                pathname: path.join(__dirname, 'saveCheck.html'),
+                protocol: 'file:',
+                slashes: true,
+            }));
+
+            check.setMenu(null);
+
+            check.show();
+        }},
+
+
+        {type: 'separator'},
+        {label: 'Save json'},
+        {label: 'Load json'},
+        {type: 'separator'},
+        {label: 'Save stl'},
+        {label: 'Save pdf'},
+        {type: 'separator'},
+        {label: 'Exit',
+            accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+            click() {
+                app.quit();
+            },
+        }]}, // submenu
     {label: 'Edit',
         submenu: [{role: 'undo'},
             {role: 'redo'},
@@ -86,8 +95,20 @@ const mainMenuTemplate = [
             {role: 'delete'},
             {role: 'selectall'}]}, // submenu
 
-    {label: 'import'},
-    {label: 'export'},
+
+    {label: 'View',
+        submenu: [
+            {role: 'reload'},
+            {role: 'forcereload'},
+            {role: 'toggledevtools'},
+            {type: 'separator'},
+            {role: 'resetzoom'},
+            {role: 'zoomin'},
+            {role: 'zoomout'},
+            {type: 'separator'},
+            {role: 'togglefullscreen'},
+        ]},
+
     {role: 'help',
         submenu: [{label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
