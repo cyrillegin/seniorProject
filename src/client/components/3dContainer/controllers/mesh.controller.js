@@ -34,28 +34,67 @@ export default class MeshController {
             this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        const face1 = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
-        const face2 = this.drawFace(this.boat.foreBeam, this.boat.foreChine);
-        const face3 = this.drawFace(this.boat.foreChine, this.boat.foreKeel);
-        const face4 = this.drawFace(this.boat.aftChine, this.boat.aftKeel);
-        const face5 = this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge);
-        const face6 = this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge);
-        face1.merge(face2);
-        face1.merge(face3);
-        face1.merge(face4);
-        face1.merge(face5);
-        face1.merge(face6);
+        const faces = [];
+        // base mesh to merge everything too
+        const initialFace = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
+        // Outer mesh
+        faces.push(this.drawFace(this.boat.foreBeam, this.boat.foreChine));
+        faces.push(this.drawFace(this.boat.foreChine, this.boat.foreKeel));
+        faces.push(this.drawFace(this.boat.aftChine, this.boat.aftKeel));
+        faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
+        faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
 
-        face1.mergeVertices();
-        face1.uvsNeedUpdate = true;
+        // define new boat for inner mesh.
+        const innerBoat = JSON.parse(JSON.stringify(boat));
+        innerBoat.width -= 1;
+        innerBoat.height -= 1;
+        innerBoat.length -= 1;
+        
+        Object.keys(innerBoat).forEach((key) => {
+            if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
+                return;
+            }
+            innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
+        });
+        innerBoat.aftBeam.start[1] += 1;
+        innerBoat.aftBeam.end[1] += 1;
+        innerBoat.foreBeam.start[1] += 1;
+        innerBoat.foreBeam.end[1] += 1;
+        innerBoat.aftBeamEdge.start[1] += 1;
+        innerBoat.aftBeamEdge.end[1] += 1;
+        innerBoat.foreBeamEdge.start[1] += 1;
+        innerBoat.foreBeamEdge.end[1] += 1;
+        
 
-        const mirror = face1.clone();
+        // Add inner mesh.
+        faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
+        faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
+        faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
+        faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
+        faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
+        faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+
+        // Add trim (The part that attaches the inner boat to the outer boat)
+        faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
+        faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
+        faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
+        faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+
+        // Merge faces
+        faces.forEach((face) => {
+            initialFace.merge(face);
+        });
+
+        initialFace.mergeVertices();
+        initialFace.uvsNeedUpdate = true;
+
+        const mirror = initialFace.clone();
         mirror.scale(-1, 1, 1);
         mirror.mergeVertices();
         mirror.uvsNeedUpdate = true;
-        face1.merge(mirror);
+        initialFace.merge(mirror);
 
-        return face1;
+        return initialFace;
     }
 
     drawFace(curveA, curveB) {
