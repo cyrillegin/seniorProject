@@ -64,7 +64,37 @@ export function casteljauPoint(curve, t) {
     return new THREE.Vector3(Px, Py, Pz);
 }
 
-export function casteljauFromY() {}
+// Inverse of casteljau's algorithem, takes in a curve and a y dimension and Returns
+// the t value from use in the casteljauPoint function.
+export function casteljauFromY(curve, distFromBack) {
+    console.log(curve);
+    console.log(distFromBack);
+    console.log('begin')
+    // make a guess about t
+    let t = 0.5;
+    let withinBounds = false;
+    let tries = 0;
+    // let result = casteljauPoint(curve, t);
+    const bounds = 0.01;
+    while (withinBounds === false && tries < 10) {
+        tries ++;
+        const curveB = JSON.parse(JSON.stringify(curve));
+        console.log(t)
+        const result = casteljauPoint(curveB, t);
+
+        if (Math.abs(result.z - distFromBack) < bounds) {
+            console.log(`bounds found! tries: ${tries}, result: `, result);
+            withinBounds = true;
+        } else if (result.z - distFromBack > 0) {
+            console.log('go up');
+            t = t + (0.5 / (tries + 1) ** 2);
+        } else {
+            console.log('go down');
+            t = t - (0.5 / (tries + 1) ** 2);
+        }
+    }
+    return t;
+}
 
 export function conver3dTo2dCoordinates() {}
 
