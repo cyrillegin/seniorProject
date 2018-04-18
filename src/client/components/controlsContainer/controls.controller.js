@@ -35,7 +35,7 @@ export default class controlsContainer {
             };
         }, 500);
 
-	      this.mouseDown = false;
+        this.mouseDown = false;
         this.oldMouseY = null;
         this.oldValue = null;
 
@@ -47,6 +47,7 @@ export default class controlsContainer {
             this.startingMousePosition = e.originalEvent.clientX;
         };
 
+        
         document.querySelector('body').addEventListener('mousemove', (e) => {
             if (this.mouseDown) {
                 let control = `${this.key}-${this.part}-`;
@@ -74,6 +75,8 @@ export default class controlsContainer {
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
         };
+        
+        this.$scope.checkbox = document.getElementById("controlPointBox");
     }
 
     updateModel(control, newValue) {
@@ -226,8 +229,11 @@ export default class controlsContainer {
                 this.$scope.data.foreGunEdge.start[2] = this.$scope.data.foreKeel.end[2];
                 this.$scope.data.foreKeelFrame.end[2] = this.$scope.data.foreKeel.end[2];
                 break;
+                
+            
         }
         this.boatParametersService.updatePoint(current);
+        console.log("Checkbox: ", this.$scope.checkbox.checked)
     }
 
     moveCurve(curve, axis, value) {
@@ -236,5 +242,30 @@ export default class controlsContainer {
         curve.end[axis] = value;
         curve.endControl[axis] = value;
         return curve;
+    }
+    
+    getCollinearPoint(a, b, c) {
+        //makes C collinear to line made by AB
+        //store the original BC distance
+        magBC = getMagnitude(b, c);
+        
+        //get AB direction 
+        dirAB = Vector3(b.x - a.x, b.y - a.y, b.z - a.z);
+        
+        //get AB unit Vector3
+        magAB = getMagnitude(a, b);
+        unitVecAB = Vector3(dirAB.x / magAB, dirAB.y / magAB, dirAB.z / magAB);
+        
+        //get final point by scaling unitVecAB by magAB and offsetting it by b's position
+        newPoint = Vector3(unitVecAB.x * magBC + b.x, unitVecAB.y * magBC + b.y, unitVecAB.z * magBC + b.z);
+        return newPoint;
+    }
+    
+    getMagnitude(start, end) {
+        xComponent = end.x - start.x;
+        yComponent = end.y - start.y;
+        zComponent = end.z - start.z;
+        
+        return Math.sqrt(Math.pow(xComponent, 2) + Math.pow(yComponent, 2) + Math.pow(zComponent, 2));
     }
 }
