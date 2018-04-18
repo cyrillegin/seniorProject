@@ -19,7 +19,6 @@ export default class CurvesController {
             const curveCoordinates = applyOffsets(this.boat, this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
         });
-
         return app;
     }
 

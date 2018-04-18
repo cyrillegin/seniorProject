@@ -64,8 +64,8 @@ export function casteljauPoint(curve, t) {
     return new THREE.Vector3(Px, Py, Pz);
 }
 
-// Inverse of casteljau's algorithem, takes in a curve and a y dimension and Returns
-// the t value from use in the casteljauPoint function.
+// Inverse of casteljau's algorithem, takes in a curve and a distance from the back
+// of the boat and Returns the t value for use in the casteljauPoint function.
 export function casteljauFromY(curve, distFromBack) {
     // make a guess about t
     const curveB = JSON.parse(JSON.stringify(curve));
