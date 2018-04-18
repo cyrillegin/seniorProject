@@ -67,28 +67,23 @@ export function casteljauPoint(curve, t) {
 // Inverse of casteljau's algorithem, takes in a curve and a y dimension and Returns
 // the t value from use in the casteljauPoint function.
 export function casteljauFromY(curve, distFromBack) {
-    console.log(curve);
-    console.log(distFromBack);
-    console.log('begin')
     // make a guess about t
     const curveB = JSON.parse(JSON.stringify(curve));
     let t = 0.5;
     let withinBounds = false;
     let tries = 0;
     const bounds = 0.01;
-    while (withinBounds === false) {
+    // Use a high try cut off because this rarly ever occurs, tipical try counts are around
+    // 10-15. We use 50 for situations when withinBounds will never be successful, for
+    // example, when the frame could go off of the boat when the beam hangs over the chine.
+    while (withinBounds === false && tries < 50) {
         tries ++;
         const result = casteljauPoint(curveB, t);
-        console.log(t)
-        console.log(Math.abs(result.z));
         if (Math.abs(Math.abs(result.z) - distFromBack) < bounds) {
-            console.log(`bounds found! tries: ${tries}, result: `, result);
             withinBounds = true;
         } else if (Math.abs(result.z) - distFromBack < 0) {
-            console.log('go up');
             t = t + (0.5 / (tries + 1));
         } else {
-            console.log('go down');
             t = t - (0.5 / (tries + 1));
         }
         // Some funky stuff happens around the mid section so
