@@ -76,19 +76,28 @@ export function casteljauFromY(curve, distFromBack) {
     let withinBounds = false;
     let tries = 0;
     const bounds = 0.01;
-    while (withinBounds === false && tries < 3) {
+    while (withinBounds === false) {
         tries ++;
         const result = casteljauPoint(curveB, t);
+        console.log(t)
         console.log(Math.abs(result.z));
         if (Math.abs(Math.abs(result.z) - distFromBack) < bounds) {
             console.log(`bounds found! tries: ${tries}, result: `, result);
             withinBounds = true;
-        } else if (result.z - distFromBack > 0) {
+        } else if (Math.abs(result.z) - distFromBack < 0) {
             console.log('go up');
-            t = t + (0.5 / (tries + 1) ** 2);
+            t = t + (0.5 / (tries + 1));
         } else {
             console.log('go down');
-            t = t - (0.5 / (tries + 1) ** 2);
+            t = t - (0.5 / (tries + 1));
+        }
+        // Some funky stuff happens around the mid section so
+        // we make sure that t never goes out of bounds.
+        if (t < 0) {
+            t = 0.1;
+        }
+        if (t > 1) {
+            t = 0.9;
         }
     }
     return t;
