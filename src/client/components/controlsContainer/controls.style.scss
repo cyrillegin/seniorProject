@@ -57,3 +57,26 @@ i {
 .controls-icon-hidden {
     transform: rotate(-45deg);
 }
+
+
+.mui-button {
+    background: $white;
+    border: 0;
+    color: $black;
+    font-family: monospace;
+    font-size: 12pt;
+    height: 50px;
+    margin-left: 2.5%;
+    transition: .3s;
+    width: 45%;
+
+    &:hover {
+        box-shadow: 0 0 12px 0 $shadow;
+        cursor: pointer;
+        transform: scale(.97);
+    }
+}
+
+.hidden {
+    display: none;
+}
