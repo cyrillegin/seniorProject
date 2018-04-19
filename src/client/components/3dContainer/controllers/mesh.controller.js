@@ -4,6 +4,8 @@
 */
 import 'three';
 import 'three/examples/js/loaders/MTLLoader';
+import 'three/examples/js/exporters/OBJExporter';
+import 'three/examples/js/exporters/STLExporter';
 import {applyOffsets} from '../../../utility/calculations';
 
 export default class MeshController {
@@ -15,6 +17,7 @@ export default class MeshController {
 
         app.mesh = this.mesh;
         app.scene.add(this.mesh);
+        this.setupIO();
         return app;
     }
 
@@ -49,13 +52,15 @@ export default class MeshController {
         innerBoat.width -= 1;
         innerBoat.height -= 1;
         innerBoat.length -= 1;
-        
+
         Object.keys(innerBoat).forEach((key) => {
             if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
                 return;
             }
             innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
         });
+        // we add on to all the top y values to offset the -1 in height.
+        // This will make it so that our trim later on will be perfectly horizontal.
         innerBoat.aftBeam.start[1] += 1;
         innerBoat.aftBeam.end[1] += 1;
         innerBoat.foreBeam.start[1] += 1;
@@ -64,7 +69,6 @@ export default class MeshController {
         innerBoat.aftBeamEdge.end[1] += 1;
         innerBoat.foreBeamEdge.start[1] += 1;
         innerBoat.foreBeamEdge.end[1] += 1;
-        
 
         // Add inner mesh.
         faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
@@ -158,6 +162,41 @@ export default class MeshController {
 
     showMesh(show) {
         this.mesh.visible = show;
+    }
+
+    setupIO() {
+        document.querySelector('#save-obj').addEventListener('click', (e) => {
+            console.log('obj');
+            const exporter = new THREE.OBJExporter();
+            const data = exporter.parse(this.mesh);
+            const file = new Blob([data], {type: 'OBJ'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.obj';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        });
+        document.querySelector('#save-stl').addEventListener('click', (e) => {
+            console.log('save stl');
+            const exporter = new THREE.STLExporter();
+            const data = exporter.parse(this.mesh);
+            const file = new Blob([data], {type: 'STL'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.stl';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        })
     }
 }
 
