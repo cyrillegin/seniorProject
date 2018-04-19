@@ -4,6 +4,8 @@
 */
 import 'three';
 import 'three/examples/js/loaders/MTLLoader';
+import 'three/examples/js/exporters/OBJExporter';
+import 'three/examples/js/exporters/STLExporter';
 import {applyOffsets} from '../../../utility/calculations';
 
 export default class MeshController {
@@ -15,6 +17,7 @@ export default class MeshController {
 
         app.mesh = this.mesh;
         app.scene.add(this.mesh);
+        this.setupIO();
         return app;
     }
 
@@ -34,28 +37,68 @@ export default class MeshController {
             this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        const face1 = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
-        const face2 = this.drawFace(this.boat.foreBeam, this.boat.foreChine);
-        const face3 = this.drawFace(this.boat.foreChine, this.boat.foreKeel);
-        const face4 = this.drawFace(this.boat.aftChine, this.boat.aftKeel);
-        const face5 = this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge);
-        const face6 = this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge);
-        face1.merge(face2);
-        face1.merge(face3);
-        face1.merge(face4);
-        face1.merge(face5);
-        face1.merge(face6);
+        const faces = [];
+        // base mesh to merge everything too
+        const initialFace = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
+        // Outer mesh
+        faces.push(this.drawFace(this.boat.foreBeam, this.boat.foreChine));
+        faces.push(this.drawFace(this.boat.foreChine, this.boat.foreKeel));
+        faces.push(this.drawFace(this.boat.aftChine, this.boat.aftKeel));
+        faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
+        faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
 
-        face1.mergeVertices();
-        face1.uvsNeedUpdate = true;
+        // define new boat for inner mesh.
+        const innerBoat = JSON.parse(JSON.stringify(boat));
+        innerBoat.width -= 1;
+        innerBoat.height -= 1;
+        innerBoat.length -= 1;
 
-        const mirror = face1.clone();
+        Object.keys(innerBoat).forEach((key) => {
+            if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
+                return;
+            }
+            innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
+        });
+        // we add on to all the top y values to offset the -1 in height.
+        // This will make it so that our trim later on will be perfectly horizontal.
+        innerBoat.aftBeam.start[1] += 1;
+        innerBoat.aftBeam.end[1] += 1;
+        innerBoat.foreBeam.start[1] += 1;
+        innerBoat.foreBeam.end[1] += 1;
+        innerBoat.aftBeamEdge.start[1] += 1;
+        innerBoat.aftBeamEdge.end[1] += 1;
+        innerBoat.foreBeamEdge.start[1] += 1;
+        innerBoat.foreBeamEdge.end[1] += 1;
+
+        // Add inner mesh.
+        faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
+        faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
+        faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
+        faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
+        faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
+        faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+
+        // Add trim (The part that attaches the inner boat to the outer boat)
+        faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
+        faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
+        faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
+        faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+
+        // Merge faces
+        faces.forEach((face) => {
+            initialFace.merge(face);
+        });
+
+        initialFace.mergeVertices();
+        initialFace.uvsNeedUpdate = true;
+
+        const mirror = initialFace.clone();
         mirror.scale(-1, 1, 1);
         mirror.mergeVertices();
         mirror.uvsNeedUpdate = true;
-        face1.merge(mirror);
+        initialFace.merge(mirror);
 
-        return face1;
+        return initialFace;
     }
 
     drawFace(curveA, curveB) {
@@ -120,62 +163,40 @@ export default class MeshController {
     showMesh(show) {
         this.mesh.visible = show;
     }
+
+    setupIO() {
+        // NOTE: due to the nature of face creation, every other face is 'backwards'.
+        // In the display, we set double sided to true so that we don't notice.
+        // Most 3d applications and 3d printers will also notice this and autocorrect.
+        document.querySelector('#save-obj').addEventListener('click', (e) => {
+            const exporter = new THREE.OBJExporter();
+            const data = exporter.parse(this.mesh);
+            const file = new Blob([data], {type: 'OBJ'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.obj';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        });
+        document.querySelector('#save-stl').addEventListener('click', (e) => {
+            const exporter = new THREE.STLExporter();
+            const data = exporter.parse(this.mesh);
+            const file = new Blob([data], {type: 'STL'});
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = 'boat.stl';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+        });
+    }
 }
-
-
-// The following is what was used to load the canoe. Leaving it here as reference.
-//
-// function initMesh(app) {
-//     // TODO: look into async/await for this.
-//     return new Promise((resolve, reject) => {
-//         loadMaterial('canoe.mtl')
-//             .then((material) => {
-//                 loadMesh('models/canoe.obj', material)
-//                     .then((boat) => {
-//                         boat.position.set(0, 0, 0);
-//                         app.scene.add(boat);
-//                         app.meshes.main = boat;
-//                         resolve(app);
-//                     });
-//             });
-//     });
-// }
-//
-// function loadMesh(file, material) {
-//     return new Promise((resolve, reject) => {
-//         const objLoader = new THREE.OBJLoader();
-//         objLoader.setMaterials(material);
-//         objLoader.load(
-//             file,
-//             (object) => {
-//                 resolve(object);
-//             },
-//             // called when loading is in progresses
-//             (xhr) => {
-//                 // console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
-//             },
-//             // called when loading has errors
-//             (error) => {
-//                 console.log('An error happened');
-//                 reject(error);
-//             },
-//         );
-//     });
-// }
-//
-// // wrapper for loading materials onto objects.
-// function loadMaterial(file) {
-//     return new Promise((resolve, reject) => {
-//         const mtlLoader = new THREE.MTLLoader();
-//         mtlLoader.setBaseUrl('models/');
-//         mtlLoader.setPath('models/');
-//         mtlLoader.setTexturePath('models/');
-//         mtlLoader.load(file, (materials) => {
-//             materials.preload();
-//             materials.materials.initialShadingGroup.color = new THREE.Color(1, 1, 1);
-//             resolve(materials);
-//         });
-//     });
-// }
-//
-// export default initMesh;
