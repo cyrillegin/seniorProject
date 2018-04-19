@@ -196,7 +196,7 @@ export default class MeshController {
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
             }, 0);
-        })
+        });
     }
 }
 
