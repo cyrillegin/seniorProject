@@ -6,7 +6,7 @@ import 'three';
 import 'three/examples/js/loaders/MTLLoader';
 import 'three/examples/js/exporters/OBJExporter';
 import 'three/examples/js/exporters/STLExporter';
-import {applyOffsets} from '../../../utility/calculations';
+import {applyOffsets, casteljauPoint} from '../../../utility/calculations';
 
 export default class MeshController {
     initMesh(app, boat) {
@@ -39,13 +39,22 @@ export default class MeshController {
 
         const faces = [];
         // base mesh to merge everything too
-        const initialFace = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
+        let parts = this.splitCurve(this.boat.aftBeam, this.boat.aftChine);
+        // parts = parts.concat(this.splitCurve(this.boat.foreBeam, this.boat.foreChine));
+        // parts = parts.concat(this.splitCurve(this.boat.foreChine, this.boat.foreKeel));
+        // parts = parts.concat(this.splitCurve(this.boat.aftChine, this.boat.aftKeel));
+        
+        const firstElement = parts.pop();
+        const initialFace = this.drawFace(firstElement);
+
+        for (let i = 1; i < parts.length; i ++) {
+            faces.push(this.drawFace(parts[i]));
+        }
         // Outer mesh
-        faces.push(this.drawFace(this.boat.foreBeam, this.boat.foreChine));
-        faces.push(this.drawFace(this.boat.foreChine, this.boat.foreKeel));
-        faces.push(this.drawFace(this.boat.aftChine, this.boat.aftKeel));
-        faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
-        faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
+        
+        // 
+        // faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
+        // faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
 
         // define new boat for inner mesh.
         const innerBoat = JSON.parse(JSON.stringify(boat));
@@ -71,18 +80,18 @@ export default class MeshController {
         innerBoat.foreBeamEdge.end[1] += 1;
 
         // Add inner mesh.
-        faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
-        faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
-        faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
-        faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
-        faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
-        faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+        // faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
+        // faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
+        // faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
+        // faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
+        // faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
+        // faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
 
         // Add trim (The part that attaches the inner boat to the outer boat)
-        faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
-        faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
-        faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
-        faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+        // faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
+        // faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
+        // faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
+        // faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
 
         // Merge faces
         faces.forEach((face) => {
@@ -101,20 +110,54 @@ export default class MeshController {
         return initialFace;
     }
 
-    drawFace(curveA, curveB) {
+    splitCurve(curveA, curveB) {
+        const parts = [{
+            start: [
+                [curveA.start[0], curveA.start[1], curveA.start[2]],
+                [curveA.end[0], curveA.end[1], curveA.end[2]],
+            ],
+            end: [
+                [curveB.start[0], curveB.start[1], curveB.start[2]],
+                [curveB.end[0], curveB.end[1], curveB.end[2]],
+            ],
+        }];
+        const itterations = 4;
+        let lastA = casteljauPoint(curveA, 0);
+        let lastB = casteljauPoint(curveB, 0);
+        for (let i = 1; i < itterations + 1; i++) {
+
+            const currentA = casteljauPoint(curveA, 1 / itterations * i);
+            const currentB = casteljauPoint(curveB, 1 / itterations * i);
+            parts.push({
+                start: [
+                    [lastA.x, lastA.y, lastA.z],
+                    [currentA.x, currentA.y, currentA.z],
+                ],
+                end: [
+                    [lastB.x, lastB.y, lastB.z],
+                    [currentB.x, currentB.y, currentB.z],
+                ],
+            });
+            lastA = currentA;
+            lastB = currentB;
+        }
+        return parts;
+    }
+
+    drawFace(slice) {
         const geometry = new THREE.Geometry();
         const normal = new THREE.Vector3(0, 0, 0);
         geometry.vertices.push(
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
-            new THREE.Vector3(curveA.start[0], curveA.start[1], curveA.start[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
+            new THREE.Vector3(slice.start[0][0], slice.start[0][1], slice.start[0][2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
         );
         geometry.faces.push(new THREE.Face3(0, 1, 2, normal));
 
         geometry.vertices.push(
-            new THREE.Vector3(curveB.end[0], curveB.end[1], curveB.end[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
+            new THREE.Vector3(slice.end[1][0], slice.end[1][1], slice.end[1][2]),
         );
         geometry.faces.push(new THREE.Face3(3, 4, 5, normal));
 

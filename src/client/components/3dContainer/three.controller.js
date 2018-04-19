@@ -33,7 +33,7 @@ export default class ThreeContainer {
         this.app = initScene(document.querySelector('#canvas'));
         this.app.displayVerticies = true;
         this.app.displayWireFrame = true;
-        this.app.displayShaded = false;
+        this.app.displayShaded = true;
         this.app = initLights(this.app);
 
         this.cameraController = new CameraController();
