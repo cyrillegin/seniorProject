@@ -1,5 +1,5 @@
-const url = require('url');
-const path = require('path');
+// const url = require('url');
+// const path = require('path');
 const {app, BrowserWindow, Menu} = require('electron');
 
 let win = null;
