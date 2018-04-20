@@ -39,7 +39,7 @@ export default class MeshController {
 
         const faces = [];
 
-        // base mesh to merge everything too
+        // Base mesh to merge everything too
         let parts = this.splitCurve(this.boat.aftBeam, this.boat.aftChine);
 
         // Outer mesh
@@ -75,7 +75,7 @@ export default class MeshController {
             }
             innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
         });
-        // we add on to all the top y values to offset the -1 in height.
+        // We add on to all the top y values to offset the -1 in height.
         // This will make it so that our trim later on will be perfectly horizontal.
         innerBoat.aftBeam.start[1] += 1;
         innerBoat.aftBeam.end[1] += 1;
@@ -115,7 +115,6 @@ export default class MeshController {
         nextParts.shift();
         parts = parts.concat(nextParts);
 
-
         // Add trim (The part that attaches the inner boat to the outer boat)
         nextParts = this.splitCurve(innerBoat.aftBeam, this.boat.aftBeam);
         nextParts.shift();
@@ -132,7 +131,6 @@ export default class MeshController {
         nextParts = this.splitCurve(innerBoat.foreBeamEdge, this.boat.foreBeamEdge);
         nextParts.shift();
         parts = parts.concat(nextParts);
-
 
         // Draw mesh.
         const firstElement = parts.pop();
@@ -170,7 +168,7 @@ export default class MeshController {
                 [curveB.end[0], curveB.end[1], curveB.end[2]],
             ],
         }];
-        const itterations = 4;
+        const itterations = 8;
         let lastA = casteljauPoint(curveA, 0);
         let lastB = casteljauPoint(curveB, 0);
         for (let i = 1; i < itterations + 1; i++) {
