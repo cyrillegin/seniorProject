@@ -37,12 +37,10 @@ export default class MeshController {
             this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        const faces = [];
-
-        // Base mesh to merge everything too
-        let parts = this.splitCurve(this.boat.aftBeam, this.boat.aftChine);
+        let parts = []
 
         // Outer mesh
+        parts = parts.concat(this.splitCurve(this.boat.aftBeam, this.boat.aftChine));
         parts = parts.concat(this.splitCurve(this.boat.foreBeam, this.boat.foreChine));
         parts = parts.concat(this.splitCurve(this.boat.foreChine, this.boat.foreKeel));
         parts = parts.concat(this.splitCurve(this.boat.aftChine, this.boat.aftKeel));
@@ -89,7 +87,7 @@ export default class MeshController {
         // Draw mesh.
         const firstElement = parts.pop();
         const initialFace = this.drawFace(firstElement);
-
+        const faces = [];
         for (let i = 0; i < parts.length; i ++) {
             faces.push(this.drawFace(parts[i]));
         }
@@ -204,33 +202,26 @@ export default class MeshController {
         // Most 3d applications and 3d printers will also notice this and autocorrect.
         document.querySelector('#save-obj').addEventListener('click', (e) => {
             const exporter = new THREE.OBJExporter();
-            const data = exporter.parse(this.mesh);
-            const file = new Blob([data], {type: 'OBJ'});
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(file);
-            a.href = url;
-            a.download = 'boat.obj';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
+            this.downloadFile(exporter, 'OBJ');
         });
         document.querySelector('#save-stl').addEventListener('click', (e) => {
             const exporter = new THREE.STLExporter();
-            const data = exporter.parse(this.mesh);
-            const file = new Blob([data], {type: 'STL'});
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(file);
-            a.href = url;
-            a.download = 'boat.stl';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
+            this.downloadFile(exporter, 'STL');
         });
+    }
+
+    downloadFile(exporter, type) {
+        const data = exporter.parse(this.mesh);
+        const file = new Blob([data], {type});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = `boat.${type.toLowerCase()}`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
