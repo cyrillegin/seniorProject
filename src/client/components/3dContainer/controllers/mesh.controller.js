@@ -37,7 +37,7 @@ export default class MeshController {
             this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        let parts = []
+        let parts = [];
 
         // Outer mesh
         parts = parts.concat(this.splitCurve(this.boat.aftBeam, this.boat.aftChine));
