@@ -6,7 +6,7 @@ import 'three';
 import 'three/examples/js/loaders/MTLLoader';
 import 'three/examples/js/exporters/OBJExporter';
 import 'three/examples/js/exporters/STLExporter';
-import {applyOffsets} from '../../../utility/calculations';
+import {applyOffsets, casteljauPoint} from '../../../utility/calculations';
 
 export default class MeshController {
     initMesh(app, boat) {
@@ -37,17 +37,17 @@ export default class MeshController {
             this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        const faces = [];
-        // base mesh to merge everything too
-        const initialFace = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
-        // Outer mesh
-        faces.push(this.drawFace(this.boat.foreBeam, this.boat.foreChine));
-        faces.push(this.drawFace(this.boat.foreChine, this.boat.foreKeel));
-        faces.push(this.drawFace(this.boat.aftChine, this.boat.aftKeel));
-        faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
-        faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
+        let parts = [];
 
-        // define new boat for inner mesh.
+        // Outer mesh
+        parts = parts.concat(this.splitCurve(this.boat.aftBeam, this.boat.aftChine));
+        parts = parts.concat(this.splitCurve(this.boat.foreBeam, this.boat.foreChine));
+        parts = parts.concat(this.splitCurve(this.boat.foreChine, this.boat.foreKeel));
+        parts = parts.concat(this.splitCurve(this.boat.aftChine, this.boat.aftKeel));
+        parts = parts.concat(this.splitCurve(this.boat.aftBeamEdge, this.boat.aftGunEdge));
+        parts = parts.concat(this.splitCurve(this.boat.foreBeamEdge, this.boat.foreGunEdge));
+
+        // Define new boat for inner mesh.
         const innerBoat = JSON.parse(JSON.stringify(boat));
         innerBoat.width -= 1;
         innerBoat.height -= 1;
@@ -59,7 +59,7 @@ export default class MeshController {
             }
             innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
         });
-        // we add on to all the top y values to offset the -1 in height.
+        // We add on to all the top y values to offset the -1 in height.
         // This will make it so that our trim later on will be perfectly horizontal.
         innerBoat.aftBeam.start[1] += 1;
         innerBoat.aftBeam.end[1] += 1;
@@ -71,18 +71,26 @@ export default class MeshController {
         innerBoat.foreBeamEdge.end[1] += 1;
 
         // Add inner mesh.
-        faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
-        faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
-        faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
-        faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
-        faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
-        faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeam, innerBoat.aftChine));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeam, innerBoat.foreChine));
+        parts = parts.concat(this.splitCurve(innerBoat.foreChine, innerBoat.foreKeel));
+        parts = parts.concat(this.splitCurve(innerBoat.aftChine, innerBoat.aftKeel));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
 
         // Add trim (The part that attaches the inner boat to the outer boat)
-        faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
-        faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
-        faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
-        faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeam, this.boat.aftBeam));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeam, this.boat.foreBeam));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+
+        // Draw mesh.
+        const firstElement = parts.pop();
+        const initialFace = this.drawFace(firstElement);
+        const faces = [];
+        for (let i = 0; i < parts.length; i ++) {
+            faces.push(this.drawFace(parts[i]));
+        }
 
         // Merge faces
         faces.forEach((face) => {
@@ -101,20 +109,44 @@ export default class MeshController {
         return initialFace;
     }
 
-    drawFace(curveA, curveB) {
+    splitCurve(curveA, curveB) {
+        const parts = [];
+        const itterations = 8;
+        let lastA = casteljauPoint(curveA, 0);
+        let lastB = casteljauPoint(curveB, 0);
+        for (let i = 1; i < itterations + 1; i++) {
+            const currentA = casteljauPoint(curveA, 1 / itterations * i);
+            const currentB = casteljauPoint(curveB, 1 / itterations * i);
+            parts.push({
+                start: [
+                    [lastA.x, lastA.y, lastA.z],
+                    [currentA.x, currentA.y, currentA.z],
+                ],
+                end: [
+                    [lastB.x, lastB.y, lastB.z],
+                    [currentB.x, currentB.y, currentB.z],
+                ],
+            });
+            lastA = currentA;
+            lastB = currentB;
+        }
+        return parts;
+    }
+
+    drawFace(slice) {
         const geometry = new THREE.Geometry();
         const normal = new THREE.Vector3(0, 0, 0);
         geometry.vertices.push(
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
-            new THREE.Vector3(curveA.start[0], curveA.start[1], curveA.start[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
+            new THREE.Vector3(slice.start[0][0], slice.start[0][1], slice.start[0][2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
         );
         geometry.faces.push(new THREE.Face3(0, 1, 2, normal));
 
         geometry.vertices.push(
-            new THREE.Vector3(curveB.end[0], curveB.end[1], curveB.end[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
+            new THREE.Vector3(slice.end[1][0], slice.end[1][1], slice.end[1][2]),
         );
         geometry.faces.push(new THREE.Face3(3, 4, 5, normal));
 
@@ -170,33 +202,26 @@ export default class MeshController {
         // Most 3d applications and 3d printers will also notice this and autocorrect.
         document.querySelector('#save-obj').addEventListener('click', (e) => {
             const exporter = new THREE.OBJExporter();
-            const data = exporter.parse(this.mesh);
-            const file = new Blob([data], {type: 'OBJ'});
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(file);
-            a.href = url;
-            a.download = 'boat.obj';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
+            this.downloadFile(exporter, 'OBJ');
         });
         document.querySelector('#save-stl').addEventListener('click', (e) => {
             const exporter = new THREE.STLExporter();
-            const data = exporter.parse(this.mesh);
-            const file = new Blob([data], {type: 'STL'});
-            const a = document.createElement('a');
-            const url = URL.createObjectURL(file);
-            a.href = url;
-            a.download = 'boat.stl';
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
+            this.downloadFile(exporter, 'STL');
         });
+    }
+
+    downloadFile(exporter, type) {
+        const data = exporter.parse(this.mesh);
+        const file = new Blob([data], {type});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = `boat.${type.toLowerCase()}`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
