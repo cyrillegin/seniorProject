@@ -38,25 +38,32 @@ export default class MeshController {
         });
 
         const faces = [];
+
         // base mesh to merge everything too
         let parts = this.splitCurve(this.boat.aftBeam, this.boat.aftChine);
-        // parts = parts.concat(this.splitCurve(this.boat.foreBeam, this.boat.foreChine));
-        // parts = parts.concat(this.splitCurve(this.boat.foreChine, this.boat.foreKeel));
-        // parts = parts.concat(this.splitCurve(this.boat.aftChine, this.boat.aftKeel));
-        
-        const firstElement = parts.pop();
-        const initialFace = this.drawFace(firstElement);
 
-        for (let i = 1; i < parts.length; i ++) {
-            faces.push(this.drawFace(parts[i]));
-        }
         // Outer mesh
-        
-        // 
-        // faces.push(this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge));
-        // faces.push(this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge));
+        let nextParts = this.splitCurve(this.boat.foreBeam, this.boat.foreChine);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
 
-        // define new boat for inner mesh.
+        nextParts = this.splitCurve(this.boat.foreChine, this.boat.foreKeel);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(this.boat.aftChine, this.boat.aftKeel);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(this.boat.aftBeamEdge, this.boat.aftGunEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(this.boat.foreBeamEdge, this.boat.foreGunEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        // Define new boat for inner mesh.
         const innerBoat = JSON.parse(JSON.stringify(boat));
         innerBoat.width -= 1;
         innerBoat.height -= 1;
@@ -79,19 +86,61 @@ export default class MeshController {
         innerBoat.foreBeamEdge.start[1] += 1;
         innerBoat.foreBeamEdge.end[1] += 1;
 
+        nextParts = this.splitCurve(this.boat.foreBeamEdge, this.boat.foreGunEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
         // Add inner mesh.
-        // faces.push(this.drawFace(innerBoat.aftBeam, innerBoat.aftChine));
-        // faces.push(this.drawFace(innerBoat.foreBeam, innerBoat.foreChine));
-        // faces.push(this.drawFace(innerBoat.foreChine, innerBoat.foreKeel));
-        // faces.push(this.drawFace(innerBoat.aftChine, innerBoat.aftKeel));
-        // faces.push(this.drawFace(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
-        // faces.push(this.drawFace(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+        nextParts = this.splitCurve(innerBoat.aftBeam, innerBoat.aftChine);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.foreBeam, innerBoat.foreChine);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.foreChine, innerBoat.foreKeel);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.aftChine, innerBoat.aftKeel);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.aftBeamEdge, innerBoat.aftGunEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.foreBeamEdge, innerBoat.foreGunEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
 
         // Add trim (The part that attaches the inner boat to the outer boat)
-        // faces.push(this.drawFace(innerBoat.aftBeam, this.boat.aftBeam));
-        // faces.push(this.drawFace(innerBoat.foreBeam, this.boat.foreBeam));
-        // faces.push(this.drawFace(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
-        // faces.push(this.drawFace(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+        nextParts = this.splitCurve(innerBoat.aftBeam, this.boat.aftBeam);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.foreBeam, this.boat.foreBeam);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.aftBeamEdge, this.boat.aftBeamEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+        nextParts = this.splitCurve(innerBoat.foreBeamEdge, this.boat.foreBeamEdge);
+        nextParts.shift();
+        parts = parts.concat(nextParts);
+
+
+        // Draw mesh.
+        const firstElement = parts.pop();
+        const initialFace = this.drawFace(firstElement);
+
+        for (let i = 1; i < parts.length; i ++) {
+            faces.push(this.drawFace(parts[i]));
+        }
 
         // Merge faces
         faces.forEach((face) => {
@@ -125,7 +174,6 @@ export default class MeshController {
         let lastA = casteljauPoint(curveA, 0);
         let lastB = casteljauPoint(curveB, 0);
         for (let i = 1; i < itterations + 1; i++) {
-
             const currentA = casteljauPoint(curveA, 1 / itterations * i);
             const currentB = casteljauPoint(curveB, 1 / itterations * i);
             parts.push({
