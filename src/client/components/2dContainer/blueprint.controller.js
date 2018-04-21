@@ -21,7 +21,7 @@ export default class BlueprintEditor {
         this.boatParametersService = boatParametersService;
     }
 
-    drawBlueprints(boat) {
+    getCoords(boat) {
 
         const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
         // Coordinates for first panel
@@ -130,147 +130,154 @@ export default class BlueprintEditor {
 
 
         // Coordinates put into usable structures for d3
-        const beamFore = [
-            {x: 15, y: 20}, {x: scx1, y: scy1},
-            {x: ecx1, y: ecy1}, {x: x1, y: y1},
-        ];
+        const struct = {
+            panel1Box: [
+                {x: 15, y: y1}, {x: x2, y: y1},
+                {x: x2, y: y4}, {x: 15, y: y4},
+                {x: 15, y: ecy1},
+            ],
 
-        const beamAft = [
-            {x: x1, y: y1}, {x: scx2, y: scy2},
-            {x: ecx2, y: ecy2}, {x: x2, y: y2},
-        ];
+            panel2Box: [
+                {x: x6, y: y7}, {x: x8, y: y7},
+                {x: x8, y: y10}, {x: x6, y: y10},
+                {x: x6, y: y7},
+            ],
 
-        const chineFor = [
-            {x: x3, y: y3}, {x: ecx3, y: ecy3},
-            {x: scx3, y: scy3}, {x: x4, y: y4},
-        ];
+            panel1Label: [
+                {x: 15, y: y1 - 2}, {x: x2, y: y1 - 2},
+            ],
 
-        const chineAf = [
-            {x: x4, y: y4}, {x: scx4, y: scy4},
-            {x: ecx4, y: ecy4}, {x: x5, y: y5},
-        ];
+            panel1Line: [
+                {x: x2 + 2, y: y1}, {x: x2 + 2, y: y4},
+            ],
 
-        const foreCon = [
-            {x: 15, y: 20}, {x: x3, y: y3},
-        ];
+            panel2Label: [
+                {x: x6, y: y7 - 2}, {x: x8, y: y7 - 2},
+            ],
 
-        const sternCon = [
-            {x: x2, y: y2}, {x: x5, y: y5},
-        ];
+            panel2Line: [
+                {x: x8 + 2, y: y7}, {x: x8 + 2, y: y10},
+            ],
 
-        const forChine = [
-            {x: x6, y: y6}, {x: ecx5, y: ecy5},
-            {x: scx5, y: scy5}, {x: x7, y: y7},
-        ];
+            aftPanelTitle: [
+                {x: x12, y: y12 - 5}, {x: x13 + 15, y: y12 - 5},
+            ],
 
-        const afChine = [
-            {x: x7, y: y7}, {x: scx6, y: scy6},
-            {x: ecx6, y: ecy6}, {x: x8, y: y8},
-        ];
+            aftPanel: [
+                {x: x12, y: y12 - 1}, {x: x13, y: y12 - 1},
+            ],
 
-        const forKeel = [
-            {x: x9, y: y9}, {x: ecx7, y: ecy7},
-            {x: scx7, y: scy7}, {x: x10, y: y10},
-        ];
+            aftHeightLine: [
+                {x: x13 + 1, y: y13}, {x: x15 + 1, y: y15},
+            ],
 
-        const afKeel = [
-            {x: x10, y: y10}, {x: scx8, y: scy8},
-            {x: ecx8, y: ecy8}, {x: x11, y: y11},
-        ];
+            aftPanelLine: [
+                {x: x14, y: y14 - 1}, {x: x15, y: y15 - 1},
+            ],
 
-        const forKeelCon = [
-            {x: x6, y: y6}, {x: x9, y: y9},
-        ];
+            forePanelTitle: [
+                {x: x16, y: y16 - 5}, {x: x17 + 15, y: y17 - 5},
+            ],
 
-        const aftKeelCon = [
-            {x: x8, y: y8}, {x: x11, y: y11},
-        ];
+            forePanel: [
+                {x: x16, y: y16 - 1}, {x: x17, y: y17 - 1},
+            ],
 
-        const panel1Box = [
-            {x: 15, y: y1}, {x: x2, y: y1},
-            {x: x2, y: y4}, {x: 15, y: y4},
-            {x: 15, y: ecy1},
-        ];
+            foreHeightLine: [
+                {x: x17 + 1, y: y17}, {x: x19 + 1, y: y19},
+            ],
 
-        const panel1Label = [
-            {x: 15, y: y1 - 2}, {x: x2, y: y1 - 2},
-        ];
+            forePanelLine: [
+                {x: x18, y: y18 - 1}, {x: x19, y: y19 - 1},
+            ],
 
-        const panel1Line = [
-            {x: x2 + 2, y: y1}, {x: x2 + 2, y: y4},
-        ];
+            beamFore: [
+                {x: 15, y: 20}, {x: scx1, y: scy1},
+                {x: ecx1, y: ecy1}, {x: x1, y: y1},
+            ],
 
-        const panel2Box = [
-            {x: x6, y: y7}, {x: x8, y: y7},
-            {x: x8, y: y10}, {x: x6, y: y10},
-            {x: x6, y: y7},
-        ];
+            beamAft: [
+                {x: x1, y: y1}, {x: scx2, y: scy2},
+                {x: ecx2, y: ecy2}, {x: x2, y: y2},
+            ],
 
-        const panel2Label = [
-            {x: x6, y: y7 - 2}, {x: x8, y: y7 - 2},
-        ];
+            chineFor: [
+                {x: x3, y: y3}, {x: ecx3, y: ecy3},
+                {x: scx3, y: scy3}, {x: x4, y: y4},
+            ],
 
-        const panel2Line = [
-            {x: x8 + 2, y: y7}, {x: x8 + 2, y: y10},
-        ];
+            chineAf: [
+                {x: x4, y: y4}, {x: scx4, y: scy4},
+                {x: ecx4, y: ecy4}, {x: x5, y: y5},
+            ],
 
-        const beamAftEdge = [
-            {x: x12, y: y12}, {x: x13, y: y13},
-            {x: x15, y: y15}, {x: x14, y: y14},
-            {x: x12, y: y12},
-        ];
+            sternCon: [
+                {x: x2, y: y2}, {x: x5, y: y5},
+            ],
 
-        const aftHeightLine = [
-            {x: x13 + 1, y: y13}, {x: x15 + 1, y: y15},
-        ];
+            foreCon: [
+                {x: 15, y: 20}, {x: x3, y: y3},
+            ],
 
-        const aftPanel = [
-            {x: x12, y: y12 - 1}, {x: x13, y: y12 - 1},
-        ];
+            forChine: [
+                {x: x6, y: y6}, {x: ecx5, y: ecy5},
+                {x: scx5, y: scy5}, {x: x7, y: y7},
+            ],
 
-        const aftPanelTitle = [
-            {x: x12, y: y12 - 5}, {x: x13 + 15, y: y12 - 5},
-        ];
+            afChine: [
+                {x: x7, y: y7}, {x: scx6, y: scy6},
+                {x: ecx6, y: ecy6}, {x: x8, y: y8},
+            ],
 
-        const aftPanelLine = [
-            {x: x14, y: y14 - 1}, {x: x15, y: y15 - 1},
-        ];
+            forKeel: [
+                {x: x9, y: y9}, {x: ecx7, y: ecy7},
+                {x: scx7, y: scy7}, {x: x10, y: y10},
+            ],
 
-        const gunForeEdge = [
-            {x: x16, y: y16}, {x: x17, y: y17},
-            {x: x19, y: y19}, {x: x18, y: y18},
-            {x: x16, y: y16},
-        ];
+            afKeel: [
+                {x: x10, y: y10}, {x: scx8, y: scy8},
+                {x: ecx8, y: ecy8}, {x: x11, y: y11},
+            ],
 
-        const foreHeightLine = [
-            {x: x17 + 1, y: y17}, {x: x19 + 1, y: y19},
-        ];
+            aftKeelCon: [
+                {x: x8, y: y8}, {x: x11, y: y11},
+            ],
 
-        const forePanel = [
-            {x: x16, y: y16 - 1}, {x: x17, y: y17 - 1},
-        ];
+            forKeelCon: [
+                {x: x6, y: y6}, {x: x9, y: y9},
+            ],
 
-        const forePanelLine = [
-            {x: x18, y: y18 - 1}, {x: x19, y: y19 - 1},
-        ];
+            beamAftEdge: [
+                {x: x12, y: y12}, {x: x13, y: y13},
+                {x: x15, y: y15}, {x: x14, y: y14},
+                {x: x12, y: y12},
+            ],
 
-        const forePanelTitle = [
-            {x: x16, y: y16 - 5}, {x: x17 + 15, y: y17 - 5},
-        ];
+            gunForeEdge: [
+                {x: x16, y: y16}, {x: x17, y: y17},
+                {x: x19, y: y19}, {x: x18, y: y18},
+                {x: x16, y: y16},
+            ],
 
+        };
+        return struct;
+    }
+
+    drawBlueprints(boat) {
+        const coords = this.getCoords(boat);
         // Acquire dimensions
-        const panel1Length = Math.abs(15 - x2);
-        const panel1Height = Math.abs(y1 - y4);
-        const panel2Length = Math.abs(x6 - x8);
-        const panel2Height = Math.abs(y7 - y10);
-        const aftBeamLength = Math.abs(x12 - x13);
-        const aftGunLength = Math.abs(x14 - x15);
-        const foreBeamLength = Math.abs(x16 - x17);
-        const foreGunLength = Math.abs(x18 - x19);
-        const aftHeight = Number((Math.sqrt(Math.pow((Math.abs(x13 - x15)), 2) + Math.pow((Math.abs(y13 - y15)), 2))).toFixed(1));
-        const foreHeight = Number((Math.sqrt(Math.pow((Math.abs(x17 - x19)), 2) + Math.pow((Math.abs(y17 - y19)), 2))).toFixed(1));
+        const panel1Length = Math.abs(15 - coords.beamAft[3].x);
+        const panel1Height = Math.abs(coords.beamFore[3].y - coords.chineFor[3].y);
+        const panel2Length = Math.abs(coords.forChine[0].x - coords.afChine[3].x);
+        const panel2Height = Math.abs(coords.afChine[0].y - coords.forKeel[3].y);
+        const aftBeamLength = Math.abs(coords.beamAftEdge[0].x - coords.beamAftEdge[1].x);
+        const aftGunLength = Math.abs(coords.beamAftEdge[3].x - coords.beamAftEdge[2].x);
+        const foreBeamLength = Math.abs(coords.gunForeEdge[0].x - coords.gunForeEdge[1].x);
+        const foreGunLength = Math.abs(coords.gunForeEdge[3].x - coords.gunForeEdge[2].x);
+        const aftHeight = Number((Math.sqrt(Math.pow((Math.abs(coords.beamAftEdge[1].x - coords.beamAftEdge[2].x)), 2) + Math.pow((Math.abs(coords.beamAftEdge[1].y - coords.beamAftEdge[2].y)), 2))).toFixed(1));
+        const foreHeight = Number((Math.sqrt(Math.pow((Math.abs(coords.gunForeEdge[1].x - coords.gunForeEdge[2].x)), 2) + Math.pow((Math.abs(coords.gunForeEdge[1].y - coords.gunForeEdge[2].y)), 2))).toFixed(1));
 
-        const windowHeight = Math.abs(y1 - y19) * 30;
+        const windowHeight = Math.abs(coords.beamFore[3].y - coords.gunForeEdge[2].y) * 30;
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
@@ -292,15 +299,25 @@ export default class BlueprintEditor {
             .x((d) => (d.x) * elem.clientWidth * scale)
             .y((d) => (d.y) * elem.clientWidth * scale)
             .curve(d3.curveBasis);
-
+        /*
+            Object.keys(coords).forEach((key) => {
+                if (key === 'panel1Box' || key === 'panel2Box') {
+                  this.canvas.append('path')
+                      .attr('d', lineFunction(coords.key))
+                      .attr('stroke', 'blue')
+                      .attr('stroke-width', 1)
+                      .attr('fill', 'none');
+                }
+            })
+          } */
         // Create dimensional boxes
         this.canvas.append('path')
-            .attr('d', lineFunction(panel1Box))
+            .attr('d', lineFunction(coords.panel1Box))
             .attr('stroke', 'blue')
             .attr('stroke-width', 1)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunction(panel2Box))
+            .attr('d', lineFunction(coords.panel2Box))
             .attr('stroke', 'blue')
             .attr('stroke-width', 1)
             .attr('fill', 'none');
@@ -308,51 +325,51 @@ export default class BlueprintEditor {
         // Create invisible lines for text
         this.canvas.append('path')
             .attr('id', 'Panel1')
-            .attr('d', lineFunction(panel1Label))
+            .attr('d', lineFunction(coords.panel1Label))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'Panel1Line')
-            .attr('d', lineFunction(panel1Line))
+            .attr('d', lineFunction(coords.panel1Line))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'Panel2')
-            .attr('d', lineFunction(panel2Label))
+            .attr('d', lineFunction(coords.panel2Label))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'Panel2Line')
-            .attr('d', lineFunction(panel2Line))
+            .attr('d', lineFunction(coords.panel2Line))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'aftPanelTitle')
-            .attr('d', lineFunction(aftPanelTitle))
+            .attr('d', lineFunction(coords.aftPanelTitle))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'aftPanel')
-            .attr('d', lineFunction(aftPanel))
+            .attr('d', lineFunction(coords.aftPanel))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'aftHeight')
-            .attr('d', lineFunction(aftHeightLine))
+            .attr('d', lineFunction(coords.aftHeightLine))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'aftPanelLine')
-            .attr('d', lineFunction(aftPanelLine))
+            .attr('d', lineFunction(coords.aftPanelLine))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'forePanelTitle')
-            .attr('d', lineFunction(forePanelTitle))
+            .attr('d', lineFunction(coords.forePanelTitle))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'forePanel')
-            .attr('d', lineFunction(forePanel))
+            .attr('d', lineFunction(coords.forePanel))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'foreHeight')
-            .attr('d', lineFunction(foreHeightLine))
+            .attr('d', lineFunction(coords.foreHeightLine))
             .attr('fill', 'none');
         this.canvas.append('path')
             .attr('id', 'forePanelLine')
-            .attr('d', lineFunction(forePanelLine))
+            .attr('d', lineFunction(coords.forePanelLine))
             .attr('fill', 'none');
 
         // Insert text
@@ -425,82 +442,82 @@ export default class BlueprintEditor {
 
         // Create aft and fore beam curves
         this.canvas.append('path')
-            .attr('d', lineFunc(beamFore))
+            .attr('d', lineFunc(coords.beamFore))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunc(beamAft))
+            .attr('d', lineFunc(coords.beamAft))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create fore and aft chine curves
         this.canvas.append('path')
-            .attr('d', lineFunc(chineFor))
+            .attr('d', lineFunc(coords.chineFor))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunc(chineAf))
+            .attr('d', lineFunc(coords.chineAf))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create connections between chine and beam curves
         this.canvas.append('path')
-            .attr('d', lineFunction(sternCon))
+            .attr('d', lineFunction(coords.sternCon))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunction(foreCon))
+            .attr('d', lineFunction(coords.foreCon))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create for and aft chine curve (mirror along x-axis)
         this.canvas.append('path')
-            .attr('d', lineFunc(forChine))
+            .attr('d', lineFunc(coords.forChine))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunc(afChine))
+            .attr('d', lineFunc(coords.afChine))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create for and aft keel curves
         this.canvas.append('path')
-            .attr('d', lineFunc(forKeel))
+            .attr('d', lineFunc(coords.forKeel))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunc(afKeel))
+            .attr('d', lineFunc(coords.afKeel))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
         // Create connection between chine and keel curves
         this.canvas.append('path')
-            .attr('d', lineFunction(aftKeelCon))
+            .attr('d', lineFunction(coords.aftKeelCon))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunction(forKeelCon))
+            .attr('d', lineFunction(coords.forKeelCon))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunction(beamAftEdge))
+            .attr('d', lineFunction(coords.beamAftEdge))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
         this.canvas.append('path')
-            .attr('d', lineFunction(gunForeEdge))
+            .attr('d', lineFunction(coords.gunForeEdge))
             .attr('stroke', 'red')
             .attr('stroke-width', 2)
             .attr('fill', 'none')
