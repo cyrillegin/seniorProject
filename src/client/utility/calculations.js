@@ -64,7 +64,39 @@ export function casteljauPoint(curve, t) {
     return new THREE.Vector3(Px, Py, Pz);
 }
 
-export function casteljauFromY() {}
+// Inverse of casteljau's algorithem, takes in a curve and a distance from the back
+// of the boat and Returns the t value for use in the casteljauPoint function.
+export function casteljauFromY(curve, distFromBack) {
+    // make a guess about t
+    const curveB = JSON.parse(JSON.stringify(curve));
+    let t = 0.5;
+    let withinBounds = false;
+    let tries = 0;
+    const bounds = 0.01;
+    // Use a high try cut off because this rarly ever occurs, tipical try counts are around
+    // 10-15. We use 50 for situations when withinBounds will never be successful, for
+    // example, when the frame could go off of the boat when the beam hangs over the chine.
+    while (withinBounds === false && tries < 50) {
+        tries ++;
+        const result = casteljauPoint(curveB, t);
+        if (Math.abs(Math.abs(result.z) - distFromBack) < bounds) {
+            withinBounds = true;
+        } else if (Math.abs(result.z) - distFromBack < 0) {
+            t = t + (0.5 / (tries + 1));
+        } else {
+            t = t - (0.5 / (tries + 1));
+        }
+        // Some funky stuff happens around the mid section so
+        // we make sure that t never goes out of bounds.
+        if (t < 0) {
+            t = 0.1;
+        }
+        if (t > 1) {
+            t = 0.9;
+        }
+    }
+    return t;
+}
 
 export function conver3dTo2dCoordinates() {}
 
