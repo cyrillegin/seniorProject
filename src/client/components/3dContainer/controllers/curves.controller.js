@@ -1,5 +1,5 @@
 import mirrorAttributes from '../../../utility/mirror';
-import {casteljauPoint, applyOffsets} from '../../../utility/calculations';
+import {casteljauPoint, applyOffsets, casteljauFromY} from '../../../utility/calculations';
 
 export default class CurvesController {
     constructor() {
@@ -235,25 +235,31 @@ export default class CurvesController {
     }
 
     findLocation(boat, frame) {
-        let T;
         let beamCurve;
         let chineCurve;
         let keelCurve;
+        let t1;
+        let t2;
+        let t3;
         if (frame.distanceFromBack < boat.length) {
-            T = (boat.length - frame.distanceFromBack) / boat.length;
             beamCurve = boat.aftBeam;
             chineCurve = boat.aftChine;
             keelCurve = boat.aftKeel;
+            t1 = casteljauFromY(beamCurve, boat.length - frame.distanceFromBack);
+            t2 = casteljauFromY(chineCurve, boat.length - frame.distanceFromBack);
+            t3 = casteljauFromY(keelCurve, boat.length - frame.distanceFromBack);
         } else {
-            T = (frame.distanceFromBack - boat.length) / boat.length;
             beamCurve = boat.foreBeam;
             chineCurve = boat.foreChine;
             keelCurve = boat.foreKeel;
+            t1 = casteljauFromY(beamCurve, frame.distanceFromBack - boat.length);
+            t2 = casteljauFromY(chineCurve, frame.distanceFromBack - boat.length);
+            t3 = casteljauFromY(keelCurve, frame.distanceFromBack - boat.length);
         }
 
-        const locationA = casteljauPoint(beamCurve, T);
-        const locationB = casteljauPoint(chineCurve, T);
-        const locationC = casteljauPoint(keelCurve, T);
+        const locationA = casteljauPoint(beamCurve, t1);
+        const locationB = casteljauPoint(chineCurve, t2);
+        const locationC = casteljauPoint(keelCurve, t3);
         return {locationA, locationB, locationC};
     }
 
