@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {casteljauPoint, casteljauFromY, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -47,6 +47,9 @@ export default class BlueprintEditor {
         return vals;
     } */
 
+    drawReference(boat) {
+
+    }
     getCoords(boat) {
         const yMaths = {};
         const xMaths = {};
@@ -121,7 +124,7 @@ export default class BlueprintEditor {
         yMaths.y10 = yMaths.y9 + (this.boat.foreKeel.end[0] - this.boat.foreKeel.start[0]);
         xMaths.x10 = xMaths.x9 + (this.boat.foreKeel.end[2] - this.boat.foreKeel.start[2]);
         yMaths.scy7 = yMaths.y9 - Math.abs(this.boat.foreKeel.startControl[0]);
-        xMaths.scx7 = xMaths.x9 - Math.abs(this.boat.foreKeel.startControl[2]);
+        xMaths.scx7 = xMaths.x9 + Math.abs(this.boat.foreKeel.startControl[2]);
 
         // Get coordinates for aftKeel
         applyOffsets(this.boat, this.boat.aftKeel, 'aftKeel');
@@ -130,7 +133,7 @@ export default class BlueprintEditor {
         yMaths.ecy8 = yMaths.y11 - this.boat.aftKeel.endControl[0];
         xMaths.ecx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.endControl[2]);
         yMaths.scy8 = yMaths.y11 - Math.abs(this.boat.aftKeel.startControl[0]);
-        xMaths.scx8 = xMaths.x11 + Math.abs(this.boat.aftKeel.startControl[2]);
+        xMaths.scx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.startControl[2]);
 
         // Get coordinates for aft panel
         applyOffsets(this.boat, this.boat.aftBeamEdge, 'aftBeamEdge');
