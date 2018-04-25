@@ -1,3 +1,4 @@
+import vector3 from "../../classes/vector3.class.js"
 export default class controlsContainer {
     constructor($scope, $timeout, boatParametersService, manipulateService) {
         'ngInject';
@@ -76,7 +77,9 @@ export default class controlsContainer {
             this.manipulateService.removeHoverInput(key);
         };
         
-        this.$scope.checkbox = document.getElementById("controlPointBox");
+        this.$scope.collinearBeam = document.getElementById("collinearBeam");
+        this.$scope.collinearChine = document.getElementById("collinearChine");
+        this.$scope.collinearKeel = document.getElementById("collinearKeel");
     }
 
     updateModel(control, newValue) {
@@ -229,11 +232,100 @@ export default class controlsContainer {
                 this.$scope.data.foreGunEdge.start[2] = this.$scope.data.foreKeel.end[2];
                 this.$scope.data.foreKeelFrame.end[2] = this.$scope.data.foreKeel.end[2];
                 break;
-                
             
+            case 'aftBeam-startControl-x':
+            case 'aftBeam-startControl-y':
+            case 'aftBeam-startControl-z':
+                if (this.$scope.collinearBeam.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.aftBeam.startControl[0], this.$scope.data.aftBeam.startControl[1], this.$scope.data.aftBeam.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.aftBeam.start[0], this.$scope.data.aftBeam.start[1], this.$scope.data.aftBeam.start[2]);
+                    var endPoint = new vector3(this.$scope.data.foreBeam.startControl[0], this.$scope.data.foreBeam.startControl[1], this.$scope.data.foreBeam.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.foreBeam.startControl[0] = newPoint.x;
+                    this.$scope.data.foreBeam.startControl[1] = newPoint.y;
+                    this.$scope.data.foreBeam.startControl[2] = newPoint.z;
+                }
+                break;
+                
+            case 'foreBeam-startControl-x':
+            case 'foreBeam-startControl-y':
+            case 'foreBeam-startControl-z':
+                if (this.$scope.collinearBeam.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.foreBeam.startControl[0], this.$scope.data.foreBeam.startControl[1], this.$scope.data.foreBeam.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.foreBeam.start[0], this.$scope.data.foreBeam.start[1], this.$scope.data.foreBeam.start[2]);
+                    var endPoint = new vector3(this.$scope.data.aftBeam.startControl[0], this.$scope.data.aftBeam.startControl[1], this.$scope.data.aftBeam.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.aftBeam.startControl[0] = newPoint.x;
+                    this.$scope.data.aftBeam.startControl[1] = newPoint.y;
+                    this.$scope.data.aftBeam.startControl[2] = newPoint.z;
+                }
+                break
+                
+            case 'aftChine-startControl-x':
+            case 'aftChine-startControl-y':
+            case 'aftChine-startControl-z':
+                if (this.$scope.collinearChine.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.aftChine.startControl[0], this.$scope.data.aftChine.startControl[1], this.$scope.data.aftChine.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.aftChine.start[0], this.$scope.data.aftChine.start[1], this.$scope.data.aftChine.start[2]);
+                    var endPoint = new vector3(this.$scope.data.foreChine.startControl[0], this.$scope.data.foreChine.startControl[1], this.$scope.data.foreChine.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.foreChine.startControl[0] = newPoint.x;
+                    this.$scope.data.foreChine.startControl[1] = newPoint.y;
+                    this.$scope.data.foreChine.startControl[2] = newPoint.z;
+                }
+                break;
+                
+            case 'foreChine-startControl-x':
+            case 'foreChine-startControl-y':
+            case 'foreChine-startControl-z':
+                if (this.$scope.collinearChine.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.foreChine.startControl[0], this.$scope.data.foreChine.startControl[1], this.$scope.data.foreChine.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.foreChine.start[0], this.$scope.data.foreChine.start[1], this.$scope.data.foreChine.start[2]);
+                    var endPoint = new vector3(this.$scope.data.aftChine.startControl[0], this.$scope.data.aftChine.startControl[1], this.$scope.data.aftChine.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.aftChine.startControl[0] = newPoint.x;
+                    this.$scope.data.aftChine.startControl[1] = newPoint.y;
+                    this.$scope.data.aftChine.startControl[2] = newPoint.z;
+                }
+                break
+                
+            case 'aftKeel-startControl-x':
+            case 'aftKeel-startControl-y':
+            case 'aftKeel-startControl-z':
+                if (this.$scope.collinearKeel.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.aftKeel.startControl[0], this.$scope.data.aftKeel.startControl[1], this.$scope.data.aftKeel.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.aftKeel.start[0], this.$scope.data.aftKeel.start[1], this.$scope.data.aftKeel.start[2]);
+                    var endPoint = new vector3(this.$scope.data.foreKeel.startControl[0], this.$scope.data.foreKeel.startControl[1], this.$scope.data.foreKeel.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.foreKeel.startControl[0] = newPoint.x;
+                    this.$scope.data.foreKeel.startControl[1] = newPoint.y;
+                    this.$scope.data.foreKeel.startControl[2] = newPoint.z;
+                }
+                break;
+                
+            case 'foreKeel-startControl-x':
+            case 'foreKeel-startControl-y':
+            case 'foreKeel-startControl-z':
+                if (this.$scope.collinearKeel.checked == true) {
+                    var startPoint = new vector3(this.$scope.data.foreKeel.startControl[0], this.$scope.data.foreKeel.startControl[1], this.$scope.data.foreKeel.startControl[2]);
+                    var midPoint = new vector3(this.$scope.data.foreKeel.start[0], this.$scope.data.foreKeel.start[1], this.$scope.data.foreKeel.start[2]);
+                    var endPoint = new vector3(this.$scope.data.aftKeel.startControl[0], this.$scope.data.aftKeel.startControl[1], this.$scope.data.aftKeel.startControl[2]);
+                    var newPoint = this.getCollinearPoint(startPoint, midPoint, endPoint);
+                    
+                    this.$scope.data.aftKeel.startControl[0] = newPoint.x;
+                    this.$scope.data.aftKeel.startControl[1] = newPoint.y;
+                    this.$scope.data.aftKeel.startControl[2] = newPoint.z;
+                }
+                break
         }
         this.boatParametersService.updatePoint(current);
-        console.log("Checkbox: ", this.$scope.checkbox.checked)
+        //console.log("Checkbox: ", this.$scope.checkbox.checked, control)
+        
     }
 
     moveCurve(curve, axis, value) {
@@ -247,25 +339,15 @@ export default class controlsContainer {
     getCollinearPoint(a, b, c) {
         //makes C collinear to line made by AB
         //store the original BC distance
-        magBC = getMagnitude(b, c);
+        var magBC = Math.sqrt(Math.pow(c.x, 2) + Math.pow(c.y, 2) + Math.pow(c.z, 2));
         
-        //get AB direction 
-        dirAB = Vector3(b.x - a.x, b.y - a.y, b.z - a.z);
+        //get the AB unit vector
+        var dirAB = new vector3(a.x * -1, a.y * -1, a.z * -1);
+        var magAB = Math.sqrt(Math.pow(a.x, 2) + Math.pow(a.y, 2) + Math.pow(a.z, 2));
+        var unitVecAB = new vector3(dirAB.x / magAB, dirAB.y / magAB, dirAB.z / magAB);
         
-        //get AB unit Vector3
-        magAB = getMagnitude(a, b);
-        unitVecAB = Vector3(dirAB.x / magAB, dirAB.y / magAB, dirAB.z / magAB);
-        
-        //get final point by scaling unitVecAB by magAB and offsetting it by b's position
-        newPoint = Vector3(unitVecAB.x * magBC + b.x, unitVecAB.y * magBC + b.y, unitVecAB.z * magBC + b.z);
+        //multiply BC magnitude by AB unit vector to get final position
+        var newPoint = new vector3(unitVecAB.x * magBC, unitVecAB.y * magBC, unitVecAB.z * magBC);
         return newPoint;
-    }
-    
-    getMagnitude(start, end) {
-        xComponent = end.x - start.x;
-        yComponent = end.y - start.y;
-        zComponent = end.z - start.z;
-        
-        return Math.sqrt(Math.pow(xComponent, 2) + Math.pow(yComponent, 2) + Math.pow(zComponent, 2));
     }
 }
