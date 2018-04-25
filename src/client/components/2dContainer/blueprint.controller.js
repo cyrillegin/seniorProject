@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {casteljauPoint, casteljauFromY, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {findLocation, casteljauPoint, casteljauFromY, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -46,15 +46,44 @@ export default class BlueprintEditor {
         console.log(vals);
         return vals;
     } */
+    /* Deal with this shit later as well. Does not update as boat changes for some reason
+    getReference(boat) {
+        const refPoints = {};
+        const t = casteljauFromY(boat.foreBeam, boat.length * 0.75);
+        refPoints.forePoint = casteljauPoint(boat.foreBeam, t);
+        console.log(refPoints.forePoint);
+        refPoints.forePoint.x = Number(Math.abs(refPoints.forePoint.x).toFixed(1));
+        refPoints.forePoint.z = Number(Math.abs(refPoints.forePoint.z).toFixed(1)) + boat.length / 4;
+        console.log(refPoints.forePoint);
+        return refPoints;
+    } */
 
-    drawReference(boat) {
-
+    getFrameCoords(boat, frame) {
+        return findLocation(boat, frame);
     }
+
+    // Implementation of the Pythagorean Theorem to obtain diagonal distances
+    pythagorean(x1, x2, y1, y2) {
+        return Number((Math.sqrt(Math.pow((Math.abs(x1 - x2)), 2) + Math.pow((Math.abs(y1 - y2)), 2))).toFixed(1));
+    }
+
     getCoords(boat) {
         const yMaths = {};
         const xMaths = {};
+        let location1;
+        let location2;
+        let location3;
+        // const refPoints = this.getReference(boat);
 
         const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
+        boat.frames.forEach((frame, index) => {
+            const {locationA, locationB, locationC} = findLocation(boat, frame);
+            location1 = locationA;
+            location2 = locationB;
+            location3 = locationC;
+        });
+
+
         // Coordinates for first panel
         // Get Coordinates for foreBeam
         applyOffsets(this.boat, this.boat.foreBeam, 'foreBeam');
@@ -98,7 +127,7 @@ export default class BlueprintEditor {
         // this.getBoundingSize(yMaths, 0, 25);
         // Coordinates for second second panel
         // Get coordinates for foreChine (mirror along x-asix)
-        yMaths.y6 = Math.abs(this.boat.foreBeam.end[1] - this.boat.foreChine.end[1]) + yMaths.scy4 + 10;
+        yMaths.y6 = yMaths.y4 + 20;
         xMaths.x6 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
         yMaths.ecy5 = yMaths.y6 - Math.abs(this.boat.foreChine.endControl[0]);
         xMaths.ecx5 = Math.abs(this.boat.foreChine.endControl[2]) + xMaths.x6;
@@ -161,7 +190,22 @@ export default class BlueprintEditor {
         yMaths.y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + yMaths.y18;
         xMaths.x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + xMaths.x18;
 
+        yMaths.y21 = yMaths.y19 + 15;
+        xMaths.x21 = 15;
+        xMaths.x22 = Math.abs(location1.x - location2.x) + xMaths.x21;
+        yMaths.y22 = Math.abs(location1.y - location2.y) + yMaths.y21;
+        xMaths.x23 = Math.abs(location2.x - location3.x) + xMaths.x22;
+        yMaths.y23 = Math.abs(location2.y - location3.y) + yMaths.y22;
+        console.log(location1.y);
+        console.log(location2.y);
+        console.log(location1);
+        console.log(location2);
+        console.log(location3);
 
+        /* Get reference points
+        yMaths.y20 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - Math.abs(refPoints.forePoint.x)) - 20);
+        xMaths.x20 = Math.abs(this.boat.foreBeam.start[2] - refPoints.forePoint.z) + 15 - 1.6;
+*/
         // Coordinates put into usable structures for d3
         const struct = {
             panel1Box: {
@@ -172,7 +216,7 @@ export default class BlueprintEditor {
                 points: [
                     {x: 15, y: yMaths.y1}, {x: xMaths.x2, y: yMaths.y1},
                     {x: xMaths.x2, y: yMaths.y4}, {x: 15, y: yMaths.y4},
-                    {x: 15, y: yMaths.ecy1},
+                    {x: 15, y: yMaths.y1},
                 ]},
 
             panel2Box: {
@@ -355,6 +399,16 @@ export default class BlueprintEditor {
                     {x: xMaths.x2, y: yMaths.y2}, {x: xMaths.x5, y: yMaths.y5},
                 ]},
 
+            sternCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'sternConn',
+                points: [
+                    {x: xMaths.x5 - 1, y: yMaths.y5}, {x: xMaths.x2 - 1, y: yMaths.y2},
+                ]},
+
             foreCon: {
                 line: true,
                 color: 'red',
@@ -362,6 +416,16 @@ export default class BlueprintEditor {
                 text: false,
                 points: [
                     {x: 15, y: 20}, {x: xMaths.x3, y: yMaths.y3},
+                ]},
+
+            foreCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'foreConn',
+                points: [
+                    {x: 15 + 1, y: 20}, {x: xMaths.x3 + 1, y: yMaths.y3},
                 ]},
 
             forChine: {
@@ -413,6 +477,16 @@ export default class BlueprintEditor {
                     {x: xMaths.x8, y: yMaths.y8}, {x: xMaths.x11, y: yMaths.y11},
                 ]},
 
+            aftKeelCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'sternConn1',
+                points: [
+                    {x: xMaths.x11 - 1, y: yMaths.y11}, {x: xMaths.x8 - 1, y: yMaths.y8},
+                ]},
+
             forKeelCon: {
                 line: true,
                 color: 'red',
@@ -420,6 +494,16 @@ export default class BlueprintEditor {
                 text: false,
                 points: [
                     {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.x9, y: yMaths.y9},
+                ]},
+
+            forKeelCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'foreConn1',
+                points: [
+                    {x: xMaths.x6 + 1, y: yMaths.y6}, {x: xMaths.x9 + 1, y: yMaths.y9},
                 ]},
 
             beamAftEdge: {
@@ -443,13 +527,33 @@ export default class BlueprintEditor {
                     {x: xMaths.x19, y: yMaths.y19}, {x: xMaths.x18, y: yMaths.y18},
                     {x: xMaths.x16, y: yMaths.y16},
                 ]},
+/*
+            refPoint1: {
+                line: true,
+                color: 'black',
+                width: 2,
+                text: false,
+                variable: 'refPoint1',
+                points: [
+                    {x: xMaths.x20, y: yMaths.y20}, {x: xMaths.x20, y: yMaths.y1},
+                ]},*/
 
+            frame1: {
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: xMaths.x21, y: yMaths.y21}, {x: xMaths.x22, y: yMaths.y22},
+                    {x: xMaths.x23, y: yMaths.y23},
+                ]},
         };
         return struct;
     }
 
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
+        //const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
@@ -461,10 +565,19 @@ export default class BlueprintEditor {
             aftGunLength: Math.abs(coords.beamAftEdge.points[3].x - coords.beamAftEdge.points[2].x),
             foreBeamLength: Math.abs(coords.gunForeEdge.points[0].x - coords.gunForeEdge.points[1].x),
             foreGunLength: Math.abs(coords.gunForeEdge.points[3].x - coords.gunForeEdge.points[2].x),
-            aftHeight: Number((Math.sqrt(Math.pow((Math.abs(coords.beamAftEdge.points[1].x - coords.beamAftEdge.points[2].x)), 2)
-                + Math.pow((Math.abs(coords.beamAftEdge.points[1].y - coords.beamAftEdge.points[2].y)), 2))).toFixed(1)),
-            foreHeight: Number((Math.sqrt(Math.pow((Math.abs(coords.gunForeEdge.points[1].x - coords.gunForeEdge.points[2].x)), 2)
-                + Math.pow((Math.abs(coords.gunForeEdge.points[1].y - coords.gunForeEdge.points[2].y)), 2))).toFixed(1)),
+            aftHeight: this.pythagorean(coords.beamAftEdge.points[1].x, coords.beamAftEdge.points[2].x,
+                coords.beamAftEdge.points[1].y, coords.beamAftEdge.points[2].y),
+            foreHeight: this.pythagorean(coords.gunForeEdge.points[1].x, coords.gunForeEdge.points[2].x,
+                coords.gunForeEdge.points[1].y, coords.gunForeEdge.points[2].y),
+            foreConn: this.pythagorean(coords.beamFore.points[0].x, coords.chineFor.points[0].x,
+                coords.beamFore.points[0].y, coords.chineFor.points[0].y),
+            sternConn: this.pythagorean(coords.beamAft.points[3].x, coords.chineAf.points[3].x,
+                coords.beamAft.points[3].y, coords.chineAf.points[3].y),
+            foreConn1: this.pythagorean(coords.forChine.points[0].x, coords.forKeel.points[0].x,
+                coords.forChine.points[0].y, coords.forKeel.points[0].y),
+            sternConn1: this.pythagorean(coords.afChine.points[3].x, coords.afKeel.points[3].x,
+                coords.afChine.points[3].y, coords.afKeel.points[3].y),
+            //  refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
         const windowHeight = Math.abs(coords.beamFore.points[3].y - coords.gunForeEdge.points[2].y) * 30;
         const elem = $('#blueprint-container')[0];
@@ -549,6 +662,9 @@ export default class BlueprintEditor {
                 }
             }
         });
+
+      //  const test = this.getReference(boat);
+        //console.log(test);
     }
 
     update() {
