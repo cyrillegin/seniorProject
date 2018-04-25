@@ -197,9 +197,7 @@ export default class MeshController {
     }
 
     deleteMesh(app) {
-        console.log('removing')
         const mesh = app.scene.getObjectByName(this.mesh.name);
-        console.log(this.mesh)
         app.scene.remove(mesh);
         return app;
     }
