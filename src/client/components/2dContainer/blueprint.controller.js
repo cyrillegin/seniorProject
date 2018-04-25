@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {findLocation, casteljauPoint, casteljauFromY, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -9,6 +9,7 @@ const sidePanel = [
     {x: 250, y: 150}, {x: 1, y: 170},
     {x: 1, y: 170}, {x: 1, y: 1},
 ];
+casteljauPoint, casteljauFromY
 */
 
 
@@ -58,8 +59,231 @@ export default class BlueprintEditor {
         return refPoints;
     } */
 
-    getFrameCoords(boat, frame) {
-        return findLocation(boat, frame);
+    getFrameCoords(boat, lastY) {
+        let currY = lastY;
+        let i = 1;
+        let location1;
+        let location2;
+        let location3;
+
+        const frames = {
+            frame1: {
+                count: 1,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame2: {
+                count: 2,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame3: {
+                count: 3,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame4: {
+                count: 4,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame5: {
+                count: 5,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame6: {
+                count: 6,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame7: {
+                count: 7,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame8: {
+                count: 8,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame9: {
+                count: 9,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame10: {
+                count: 10,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame11: {
+                count: 11,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame12: {
+                count: 12,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame13: {
+                count: 13,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame14: {
+                count: 14,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame15: {
+                count: 15,
+                empty: true,
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {}, {}, {}, {}, {},
+                ],
+            },
+        };
+
+        let count = 0;
+        boat.frames.forEach((frame, index) => {
+            const {locationA, locationB, locationC} = findLocation(boat, frame);
+            location1 = locationA;
+            location2 = locationB;
+            location3 = locationC;
+            Object.keys(frames).forEach((key) => {
+                if (frames[key].count === i) {
+                    frames[key].points[0].x = 15;
+                    frames[key].points[0].y = currY + 15;
+                    frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
+                    frames[key].points[1].y = Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) + frames[key].points[0].y;
+                    frames[key].points[2].x = Math.abs(location2.x - location3.x) + frames[key].points[1].x;
+                    frames[key].points[2].y = Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) + frames[key].points[1].y;
+                    frames[key].points[3].x = Math.abs(location2.x - location3.x) + frames[key].points[2].x;
+                    frames[key].points[3].y = Math.abs(Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) - frames[key].points[2].y);
+                    frames[key].points[4].x = Math.abs(location1.x - location2.x) + frames[key].points[3].x;
+                    frames[key].points[4].y = Math.abs(Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) - frames[key].points[3].y);
+                    currY = frames[key].points[4].y + 10;
+                    count++;
+                }
+            });
+            i++;
+        });
+
+        i = 0;
+        Object.keys(frames).forEach((key) => {
+            if (i < count) {
+                frames[key].empty = false;
+            } else {
+                return;
+            }
+            i++;
+        });
+        return frames;
+
     }
 
     // Implementation of the Pythagorean Theorem to obtain diagonal distances
@@ -74,15 +298,13 @@ export default class BlueprintEditor {
         let location2;
         let location3;
         // const refPoints = this.getReference(boat);
-
-        const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
         boat.frames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             location1 = locationA;
             location2 = locationB;
             location3 = locationC;
         });
-
+        const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
 
         // Coordinates for first panel
         // Get Coordinates for foreBeam
@@ -193,14 +415,9 @@ export default class BlueprintEditor {
         yMaths.y21 = yMaths.y19 + 15;
         xMaths.x21 = 15;
         xMaths.x22 = Math.abs(location1.x - location2.x) + xMaths.x21;
-        yMaths.y22 = Math.abs(location1.y - location2.y) + yMaths.y21;
+        yMaths.y22 = Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) + yMaths.y21;
         xMaths.x23 = Math.abs(location2.x - location3.x) + xMaths.x22;
-        yMaths.y23 = Math.abs(location2.y - location3.y) + yMaths.y22;
-        console.log(location1.y);
-        console.log(location2.y);
-        console.log(location1);
-        console.log(location2);
-        console.log(location3);
+        yMaths.y23 = Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) + yMaths.y22;
 
         /* Get reference points
         yMaths.y20 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - Math.abs(refPoints.forePoint.x)) - 20);
@@ -527,7 +744,17 @@ export default class BlueprintEditor {
                     {x: xMaths.x19, y: yMaths.y19}, {x: xMaths.x18, y: yMaths.y18},
                     {x: xMaths.x16, y: yMaths.y16},
                 ]},
-/*
+
+            frameTitle: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'title',
+                points: [
+                    {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
+                ]},
+            /*
             refPoint1: {
                 line: true,
                 color: 'black',
@@ -536,24 +763,16 @@ export default class BlueprintEditor {
                 variable: 'refPoint1',
                 points: [
                     {x: xMaths.x20, y: yMaths.y20}, {x: xMaths.x20, y: yMaths.y1},
-                ]},*/
+                ]}, */
 
-            frame1: {
-                line: true,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x21, y: yMaths.y21}, {x: xMaths.x22, y: yMaths.y22},
-                    {x: xMaths.x23, y: yMaths.y23},
-                ]},
         };
         return struct;
     }
 
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
-        //const refPoints = this.getReference(boat);
+        const frames = this.getFrameCoords(boat, coords.gunForeEdge.points[2].y);
+        // const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
@@ -658,13 +877,59 @@ export default class BlueprintEditor {
                             .append('textPath')
                             .attr('xlink:href', label)
                             .text('Fore Panel');
+                    } else if (key === 'frameTitle') {
+                        this.canvas.append('text')
+                            .append('textPath')
+                            .attr('xlink:href', label)
+                            .text('Frames');
                     }
                 }
             }
         });
 
-      //  const test = this.getReference(boat);
-        //console.log(test);
+        Object.keys(frames).forEach((key) => {
+        /*  if (coords[key].color === 'invisible') {
+                if (coords[key].line === true) {
+                    this.canvas.append('path')
+                        .attr('id', key)
+                        .attr('d', lineFunction(coords[key].points))
+                        .attr('stroke-width', coords[key].width)
+                        .attr('fill', 'none');
+                }
+            } else */if (frames[key].line === true && frames[key].empty === false) {
+                this.canvas.append('path')
+                    .attr('id', key)
+                    .attr('d', lineFunction(frames[key].points))
+                    .attr('stroke', frames[key].color)
+                    .attr('stroke-width', frames[key].width)
+                    .attr('fill', 'none');
+            }/*
+            if (coords[key].text === true) {
+                const label = `#${key}`;
+                const label1 = coords[key].variable;
+                if (coords[key].variable in variables) {
+                    if (key === 'panel1Label') {
+                        this.canvas.append('text')
+                            .append('textPath')
+                            .attr('xlink:href', label)
+                            .text('Port/Starboard Panels');
+                    } else if (key === 'panel2Label') {
+                        this.canvas.append('text')
+                            .append('textPath')
+                            .attr('xlink:href', label)
+                            .text('Keel Panels');
+                    }
+                    this.canvas.append('text')
+                        .append('textPath')
+                        .attr('startOffset', '50%')
+                        .attr('xlink:href', label)
+                        .text(variables[label1]);
+                }
+            } */
+        });
+
+        //  const test = this.getReference(boat);
+        // console.log(test);
     }
 
     update() {
