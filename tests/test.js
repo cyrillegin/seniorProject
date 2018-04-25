@@ -1,3 +1,4 @@
 console.log('running tests');
 
-import './manipulate.test.js'; //eslint-disable-line
+import './utility.test.js'; //eslint-disable-line
+import './3dContainer.controllers.test.js';
