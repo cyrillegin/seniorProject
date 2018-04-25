@@ -1,7 +1,8 @@
 import {assert} from 'chai';
 import applyOffsets from '../src/client/utility/calculations.js';
+import casteljauPoint from '../src/client/utility/calculations.js';
+import casteljauFromY from '../src/client/utility/calculations.js';
 import mirrorX from '../src/client/utility/mirror.js';
-
 
 
 describe('calculations.js', () => {
@@ -42,9 +43,10 @@ const boat = {
       foreBeamRight : Curve,
   };
 
-const keyAft = 'aft';
-const keyBeam = 'beam';
-const keyKeel = 'keel';
+  const keyAft = 'aft';
+  const keyBeam = 'beam';
+  const keyKeel = 'keel';
+  const t = 0;
 
    it('applyOffsets, Key=aft', () => {
        assert.isNotNull(applyOffsets(boat, Curve, keyAft));
@@ -58,8 +60,12 @@ const keyKeel = 'keel';
        assert.isNotNull(applyOffsets(boat, Curve, keyKeel));
      });
 
+   it.skip('casteljauPoint', () => {
+       assert.isNotNull(casteljauPoint(Curve, t));
+    });
+
    it.skip('casteljauFromY', () => {
-       assert.isNotNull(casteljauFromY(Curve, 0));
+       assert.isNotNull(casteljauFromY(Curve, t));
     });
 
    it.skip('conver3dTo2dCoordinates', () => {
@@ -67,6 +73,7 @@ const keyKeel = 'keel';
     });
 
 });
+
 
 describe('mirror.js', () => {
 
