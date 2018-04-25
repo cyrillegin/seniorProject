@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {casteljauPoint, casteljauFromY, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -47,18 +47,19 @@ export default class BlueprintEditor {
         console.log(vals);
         return vals;
     } */
-    /* Deal with this shit later as well. Does not update as boat changes for some reason
+    // Deal with this shit later as well. Does not update as boat changes for some reason
     getReference(boat) {
         const refPoints = {};
         const t = casteljauFromY(boat.foreBeam, boat.length * 0.75);
         refPoints.forePoint = casteljauPoint(boat.foreBeam, t);
-        console.log(refPoints.forePoint);
+      //  console.log(refPoints.forePoint);
         refPoints.forePoint.x = Number(Math.abs(refPoints.forePoint.x).toFixed(1));
         refPoints.forePoint.z = Number(Math.abs(refPoints.forePoint.z).toFixed(1)) + boat.length / 4;
-        console.log(refPoints.forePoint);
+      //  console.log(refPoints.forePoint);
         return refPoints;
-    } */
+    }
 
+    // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
         let currY = lastY;
         let i = 1;
@@ -66,6 +67,7 @@ export default class BlueprintEditor {
         let location2;
         let location3;
 
+        // Structure containing the info required to print the frames
         const frames = {
             frame1: {
                 count: 1,
@@ -248,31 +250,34 @@ export default class BlueprintEditor {
             },
         };
 
+        // Find the location of each frame and insert their offsets into the structure
         let count = 0;
         boat.frames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             location1 = locationA;
             location2 = locationB;
             location3 = locationC;
+          //  console.log(location1, location2, location3);
             Object.keys(frames).forEach((key) => {
                 if (frames[key].count === i) {
                     frames[key].points[0].x = 15;
                     frames[key].points[0].y = currY + 15;
                     frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
-                    frames[key].points[1].y = Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) + frames[key].points[0].y;
+                    frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
                     frames[key].points[2].x = Math.abs(location2.x - location3.x) + frames[key].points[1].x;
-                    frames[key].points[2].y = Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) + frames[key].points[1].y;
+                    frames[key].points[2].y = Math.abs(location2.y - location3.y) + frames[key].points[1].y;
                     frames[key].points[3].x = Math.abs(location2.x - location3.x) + frames[key].points[2].x;
-                    frames[key].points[3].y = Math.abs(Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) - frames[key].points[2].y);
+                    frames[key].points[3].y = Math.abs(Math.abs(location2.y - location3.y) - frames[key].points[2].y);
                     frames[key].points[4].x = Math.abs(location1.x - location2.x) + frames[key].points[3].x;
-                    frames[key].points[4].y = Math.abs(Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) - frames[key].points[3].y);
-                    currY = frames[key].points[4].y + 10;
+                    frames[key].points[4].y = Math.abs(Math.abs(location1.y - location2.y) - frames[key].points[3].y);
+                    currY = frames[key].points[2].y;
                     count++;
                 }
             });
             i++;
         });
 
+        // Mark which frames are used
         i = 0;
         Object.keys(frames).forEach((key) => {
             if (i < count) {
@@ -291,13 +296,14 @@ export default class BlueprintEditor {
         return Number((Math.sqrt(Math.pow((Math.abs(x1 - x2)), 2) + Math.pow((Math.abs(y1 - y2)), 2))).toFixed(1));
     }
 
+    // Acquire the coordinates of the panels
     getCoords(boat) {
         const yMaths = {};
         const xMaths = {};
         let location1;
         let location2;
         let location3;
-        // const refPoints = this.getReference(boat);
+       const refPoints = this.getReference(boat);
         boat.frames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             location1 = locationA;
@@ -419,10 +425,11 @@ export default class BlueprintEditor {
         xMaths.x23 = Math.abs(location2.x - location3.x) + xMaths.x22;
         yMaths.y23 = Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) + yMaths.y22;
 
-        /* Get reference points
+      //   Get reference points
         yMaths.y20 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - Math.abs(refPoints.forePoint.x)) - 20);
         xMaths.x20 = Math.abs(this.boat.foreBeam.start[2] - refPoints.forePoint.z) + 15 - 1.6;
-*/
+        console.log(refPoints.forePoint);
+
         // Coordinates put into usable structures for d3
         const struct = {
             panel1Box: {
@@ -754,7 +761,7 @@ export default class BlueprintEditor {
                 points: [
                     {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
                 ]},
-            /*
+
             refPoint1: {
                 line: true,
                 color: 'black',
@@ -763,7 +770,7 @@ export default class BlueprintEditor {
                 variable: 'refPoint1',
                 points: [
                     {x: xMaths.x20, y: yMaths.y20}, {x: xMaths.x20, y: yMaths.y1},
-                ]}, */
+                ]},
 
         };
         return struct;
@@ -772,7 +779,7 @@ export default class BlueprintEditor {
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
         const frames = this.getFrameCoords(boat, coords.gunForeEdge.points[2].y);
-        // const refPoints = this.getReference(boat);
+        const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
@@ -796,14 +803,14 @@ export default class BlueprintEditor {
                 coords.forChine.points[0].y, coords.forKeel.points[0].y),
             sternConn1: this.pythagorean(coords.afChine.points[3].x, coords.afKeel.points[3].x,
                 coords.afChine.points[3].y, coords.afKeel.points[3].y),
-            //  refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
+              refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
         const windowHeight = Math.abs(coords.beamFore.points[3].y - coords.gunForeEdge.points[2].y) * 30;
         const elem = $('#blueprint-container')[0];
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
-            .attr('height', windowHeight / 2);
+            .attr('height', windowHeight);
 
 
         // Scale for svg window sizing
@@ -928,8 +935,8 @@ export default class BlueprintEditor {
             } */
         });
 
-        //  const test = this.getReference(boat);
-        // console.log(test);
+          const test = this.getReference(boat);
+         // console.log(test);
     }
 
     update() {
