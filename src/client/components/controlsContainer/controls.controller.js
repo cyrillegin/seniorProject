@@ -76,12 +76,10 @@ export default class controlsContainer {
         this.$scope.unhover = (key) => {
             this.manipulateService.removeHoverInput(key);
         };
-//<<<<<<< HEAD
         
         this.$scope.collinearBeam = document.getElementById("collinearBeam");
         this.$scope.collinearChine = document.getElementById("collinearChine");
         this.$scope.collinearKeel = document.getElementById("collinearKeel");
-//=======
 
         this.$scope.SaveJson = () => {
             const data = JSON.stringify(this.$scope.data);
@@ -118,7 +116,6 @@ export default class controlsContainer {
             };
             reader.readAsText(e.target.files[0]);
         };
-//>>>>>>> dev
     }
 
     updateModel(control, newValue) {
