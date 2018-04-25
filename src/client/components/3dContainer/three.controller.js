@@ -55,6 +55,9 @@ export default class ThreeContainer {
                     () => this.boatParametersService.checkUpdate(), // what we're watching.
                     (newVal, oldVal, scope) => { // what we do if there's been a change.
                         this.updateCurves();
+                        this.meshController.deleteMesh(this.app);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.app = this.meshController.initMesh(this.app, newBoat);
                     });
 
                 this.$scope.$watch(
