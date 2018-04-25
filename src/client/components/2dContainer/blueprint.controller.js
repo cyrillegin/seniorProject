@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {casteljauPoint, casteljauFromY, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -21,43 +21,6 @@ export default class BlueprintEditor {
         this.$timeout = $timeout;
         this.boatParametersService = boatParametersService;
     }
-    /* I'll deal with this shit later
-    getBoundingSize(Maths, index0, index1) {
-        const copy = Maths;
-        let maxDiff = 0;
-        const vals = {
-            minVal: '',
-            maxVal: '',
-        };
-        Object.keys(Maths).forEach((key) => {
-            Object.keys(copy).forEach((key1) => {
-                if (Math.abs(Maths[key] - copy[key1]) > maxDiff) {
-                    maxDiff = Math.abs(Maths[key] - copy[key1]);
-                    console.log(maxDiff);
-                    if (Maths[key] < Maths[key1]) {
-                        vals.minVal = key;
-                        vals.maxVal = key1;
-                    } else {
-                        vals.minVal = key1;
-                        vals.maxVal = key;
-                    }
-                }
-            });
-        });
-        console.log(vals);
-        return vals;
-    } */
-    // Deal with this shit later as well. Does not update as boat changes for some reason
-    getReference(boat) {
-        const refPoints = {};
-        const t = casteljauFromY(boat.foreBeam, boat.length * 0.75);
-        refPoints.forePoint = casteljauPoint(boat.foreBeam, t);
-      //  console.log(refPoints.forePoint);
-        refPoints.forePoint.x = Number(Math.abs(refPoints.forePoint.x).toFixed(1));
-        refPoints.forePoint.z = Number(Math.abs(refPoints.forePoint.z).toFixed(1)) + boat.length / 4;
-      //  console.log(refPoints.forePoint);
-        return refPoints;
-    }
 
     // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
@@ -75,9 +38,24 @@ export default class BlueprintEditor {
                 line: true,
                 color: 'red',
                 width: 2,
-                text: false,
+                text: true,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame1Side: {
+                count: 1,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -88,8 +66,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame2Side: {
+                count: 2,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -100,8 +93,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame3Side: {
+                count: 3,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -112,8 +120,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame4Side: {
+                count: 4,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -124,8 +147,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame5Side: {
+                count: 5,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -136,8 +174,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame6Side: {
+                count: 6,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -148,8 +201,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame7Side: {
+                count: 7,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -160,8 +228,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame8Side: {
+                count: 8,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -172,8 +255,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame9Side: {
+                count: 9,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -184,8 +282,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame10Side: {
+                count: 10,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -196,8 +309,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame11Side: {
+                count: 11,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -208,8 +336,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame12Side: {
+                count: 12,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -220,8 +363,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame13Side: {
+                count: 13,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -232,8 +390,23 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame14Side: {
+                count: 14,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
 
@@ -244,33 +417,62 @@ export default class BlueprintEditor {
                 color: 'red',
                 width: 2,
                 text: false,
+                size: 0,
                 points: [
                     {}, {}, {}, {}, {},
+                ],
+            },
+
+            frame15Side: {
+                count: 15,
+                empty: true,
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: false,
+                size: 0,
+                variable: 'frameSide',
+                points: [
+                    {}, {},
                 ],
             },
         };
 
         // Find the location of each frame and insert their offsets into the structure
         let count = 0;
+        let startY;
         boat.frames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             location1 = locationA;
             location2 = locationB;
             location3 = locationC;
-          //  console.log(location1, location2, location3);
+            //  console.log(location1, location2, location3);
             Object.keys(frames).forEach((key) => {
                 if (frames[key].count === i) {
-                    frames[key].points[0].x = 15;
-                    frames[key].points[0].y = currY + 15;
-                    frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
-                    frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
-                    frames[key].points[2].x = Math.abs(location2.x - location3.x) + frames[key].points[1].x;
-                    frames[key].points[2].y = Math.abs(location2.y - location3.y) + frames[key].points[1].y;
-                    frames[key].points[3].x = Math.abs(location2.x - location3.x) + frames[key].points[2].x;
-                    frames[key].points[3].y = Math.abs(Math.abs(location2.y - location3.y) - frames[key].points[2].y);
-                    frames[key].points[4].x = Math.abs(location1.x - location2.x) + frames[key].points[3].x;
-                    frames[key].points[4].y = Math.abs(Math.abs(location1.y - location2.y) - frames[key].points[3].y);
-                    currY = frames[key].points[2].y;
+                    // const prevY = currY;
+                    if (frames[key].color !== 'invisible') {
+                        frames[key].points[0].x = 15;
+                        startY = currY + 15;
+                        frames[key].points[0].y = startY;
+                        frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
+                        frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
+                        frames[key].points[2].x = Math.abs(location2.x - location3.x) + frames[key].points[1].x;
+                        frames[key].points[2].y = Math.abs(location2.y - location3.y) + frames[key].points[1].y;
+                        frames[key].points[3].x = Math.abs(location2.x - location3.x) + frames[key].points[2].x;
+                        frames[key].points[3].y = Math.abs(Math.abs(location2.y - location3.y) - frames[key].points[2].y);
+                        frames[key].points[4].x = Math.abs(location1.x - location2.x) + frames[key].points[3].x;
+                        frames[key].points[4].y = Math.abs(Math.abs(location1.y - location2.y) - frames[key].points[3].y);
+                        currY = frames[key].points[2].y;
+                        frames[key].size = this.pythagorean(frames[key].points[2].x, frames[key].points[1].x, frames[key].points[2].y, frames[key].points[1].y) * 2;
+                    } else {
+                        if (frames[key].variable === 'frameSide') {
+                            frames[key].points[0].x = 16;
+                            frames[key].points[0].y = startY;
+                            frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
+                            frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
+                            frames[key].size = this.pythagorean(frames[key].points[0].x, frames[key].points[1].x, frames[key].points[0].y, frames[key].points[1].y) * 2;
+                        }
+                    }
                     count++;
                 }
             });
@@ -282,6 +484,7 @@ export default class BlueprintEditor {
         Object.keys(frames).forEach((key) => {
             if (i < count) {
                 frames[key].empty = false;
+                frames[key].text = true;
             } else {
                 return;
             }
@@ -300,16 +503,8 @@ export default class BlueprintEditor {
     getCoords(boat) {
         const yMaths = {};
         const xMaths = {};
-        let location1;
-        let location2;
-        let location3;
-       const refPoints = this.getReference(boat);
-        boat.frames.forEach((frame, index) => {
-            const {locationA, locationB, locationC} = findLocation(boat, frame);
-            location1 = locationA;
-            location2 = locationB;
-            location3 = locationC;
-        });
+
+        // const refPoints = this.getReference(boat);
         const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
 
         // Coordinates for first panel
@@ -418,17 +613,10 @@ export default class BlueprintEditor {
         yMaths.y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + yMaths.y18;
         xMaths.x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + xMaths.x18;
 
-        yMaths.y21 = yMaths.y19 + 15;
-        xMaths.x21 = 15;
-        xMaths.x22 = Math.abs(location1.x - location2.x) + xMaths.x21;
-        yMaths.y22 = Math.abs(this.boat.aftBeam.start[1] - this.boat.aftChine.start[1]) + yMaths.y21;
-        xMaths.x23 = Math.abs(location2.x - location3.x) + xMaths.x22;
-        yMaths.y23 = Math.abs(this.boat.aftChine.start[1] - this.boat.aftKeel.start[1]) + yMaths.y22;
-
-      //   Get reference points
+        /*   Get reference points
         yMaths.y20 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - Math.abs(refPoints.forePoint.x)) - 20);
         xMaths.x20 = Math.abs(this.boat.foreBeam.start[2] - refPoints.forePoint.z) + 15 - 1.6;
-        console.log(refPoints.forePoint);
+        console.log(refPoints.forePoint); */
 
         // Coordinates put into usable structures for d3
         const struct = {
@@ -761,7 +949,7 @@ export default class BlueprintEditor {
                 points: [
                     {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
                 ]},
-
+            /*
             refPoint1: {
                 line: true,
                 color: 'black',
@@ -770,7 +958,7 @@ export default class BlueprintEditor {
                 variable: 'refPoint1',
                 points: [
                     {x: xMaths.x20, y: yMaths.y20}, {x: xMaths.x20, y: yMaths.y1},
-                ]},
+                ]}, */
 
         };
         return struct;
@@ -779,7 +967,7 @@ export default class BlueprintEditor {
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
         const frames = this.getFrameCoords(boat, coords.gunForeEdge.points[2].y);
-        const refPoints = this.getReference(boat);
+        // const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
@@ -803,7 +991,7 @@ export default class BlueprintEditor {
                 coords.forChine.points[0].y, coords.forKeel.points[0].y),
             sternConn1: this.pythagorean(coords.afChine.points[3].x, coords.afKeel.points[3].x,
                 coords.afChine.points[3].y, coords.afKeel.points[3].y),
-              refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
+            // refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
         const windowHeight = Math.abs(coords.beamFore.points[3].y - coords.gunForeEdge.points[2].y) * 30;
         const elem = $('#blueprint-container')[0];
@@ -895,48 +1083,35 @@ export default class BlueprintEditor {
         });
 
         Object.keys(frames).forEach((key) => {
-        /*  if (coords[key].color === 'invisible') {
-                if (coords[key].line === true) {
+            if (frames[key].color === 'invisible') {
+                if (frames[key].line === true && frames[key].text === true) {
                     this.canvas.append('path')
                         .attr('id', key)
-                        .attr('d', lineFunction(coords[key].points))
-                        .attr('stroke-width', coords[key].width)
+                        .attr('d', lineFunction(frames[key].points))
+                        .attr('stroke-width', frames[key].width)
                         .attr('fill', 'none');
                 }
-            } else */if (frames[key].line === true && frames[key].empty === false) {
+            } else if (frames[key].line === true && frames[key].empty === false) {
                 this.canvas.append('path')
                     .attr('id', key)
                     .attr('d', lineFunction(frames[key].points))
                     .attr('stroke', frames[key].color)
                     .attr('stroke-width', frames[key].width)
                     .attr('fill', 'none');
-            }/*
-            if (coords[key].text === true) {
+            }
+            if (frames[key].text === true) {
                 const label = `#${key}`;
-                const label1 = coords[key].variable;
-                if (coords[key].variable in variables) {
-                    if (key === 'panel1Label') {
-                        this.canvas.append('text')
-                            .append('textPath')
-                            .attr('xlink:href', label)
-                            .text('Port/Starboard Panels');
-                    } else if (key === 'panel2Label') {
-                        this.canvas.append('text')
-                            .append('textPath')
-                            .attr('xlink:href', label)
-                            .text('Keel Panels');
-                    }
-                    this.canvas.append('text')
-                        .append('textPath')
-                        .attr('startOffset', '50%')
-                        .attr('xlink:href', label)
-                        .text(variables[label1]);
-                }
-            } */
+                this.canvas.append('text')
+                    .append('textPath')
+                    .attr('startOffset', '50%')
+                    .attr('xlink:href', label)
+                    .text(frames[key].size);
+            }
+
         });
 
-          const test = this.getReference(boat);
-         // console.log(test);
+        // const test = this.getReference(boat);
+        // console.log(test);
     }
 
     update() {
