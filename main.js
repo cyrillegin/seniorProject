@@ -1,9 +1,20 @@
-// const url = require('url');
-// const path = require('path');
+const url = require('url');
+const path = require('path');
+const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
 
 let win = null;
 let check = null;
+
+
+child = exec('nodemon --ignore /client/ --exec babel-node src/server',
+    (error, stdout, stderr) => {
+        console.log(`stdout: ${ stdout}`);
+        console.log(`stderr: ${ stderr}`);
+        if (error !== null) {
+            console.lo`exec error: ${ error}`;
+        }
+    });
 
 
 function createWindow() {
@@ -17,6 +28,11 @@ function createWindow() {
     // Specify entry point
     win.loadURL('http://localhost:3000');
 
+    /* win.loadURL(url.format({
+        pathname: path.join(__dirname, 'electron.html'),
+        protocol: 'file:',
+        slashes: true,
+    })); */
 
     // build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
