@@ -38,6 +38,7 @@ export function applyOffsets(boat, curve, key) {
 // https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
 // Takes a curve and a percent along the curve and returns the 3d coordinates of that point in a vector3
 export function casteljauPoint(curve, t) {
+  var THREE = require('three');
     // Step 1
     const Ax = ((1 - t) * curve.start[0]) + (t * (curve.start[0] + curve.startControl[0]));
     const Ay = ((1 - t) * curve.start[1]) + (t * (curve.start[1] + curve.startControl[1]));

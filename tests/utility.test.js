@@ -7,6 +7,8 @@ import mirrorX from '../src/client/utility/mirror.js';
 
 describe('calculations.js', () => {
 
+  var THREE = require('three'); 
+
   const Curve = {
     start : [0,0,0],
     end : [0,0,0],

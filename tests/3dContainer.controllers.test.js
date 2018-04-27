@@ -2,6 +2,8 @@ import {assert} from 'chai';
 import CurvesController from '../src/client/components/3dContainer/controllers/curves.controller.js'; //THREE not defined ERROR
 //import MeshController from '../src/client/components/3dContainer/controllers/mesh.controller.js'; THREE not defined ERROR
 
+// Currently not required to test
+
 describe('curves.controller.js', () => {
 
   const curveAttributes = {
