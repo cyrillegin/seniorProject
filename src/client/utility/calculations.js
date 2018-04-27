@@ -98,6 +98,35 @@ export function casteljauFromY(curve, distFromBack) {
     return t;
 }
 
+export function findLocation(boat, frame) {
+    let beamCurve;
+    let chineCurve;
+    let keelCurve;
+    let t1;
+    let t2;
+    let t3;
+    if (frame.distanceFromBack < boat.length) {
+        beamCurve = boat.aftBeam;
+        chineCurve = boat.aftChine;
+        keelCurve = boat.aftKeel;
+        t1 = casteljauFromY(beamCurve, boat.length - frame.distanceFromBack);
+        t2 = casteljauFromY(chineCurve, boat.length - frame.distanceFromBack);
+        t3 = casteljauFromY(keelCurve, boat.length - frame.distanceFromBack);
+    } else {
+        beamCurve = boat.foreBeam;
+        chineCurve = boat.foreChine;
+        keelCurve = boat.foreKeel;
+        t1 = casteljauFromY(beamCurve, frame.distanceFromBack - boat.length);
+        t2 = casteljauFromY(chineCurve, frame.distanceFromBack - boat.length);
+        t3 = casteljauFromY(keelCurve, frame.distanceFromBack - boat.length);
+    }
+
+    const locationA = casteljauPoint(beamCurve, t1);
+    const locationB = casteljauPoint(chineCurve, t2);
+    const locationC = casteljauPoint(keelCurve, t3);
+    return {locationA, locationB, locationC};
+}
+
 export function conver3dTo2dCoordinates() {}
 
 // es6 modules like having a default.
