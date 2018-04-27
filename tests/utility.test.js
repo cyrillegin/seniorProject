@@ -1,7 +1,7 @@
 import {assert} from 'chai';
-import applyOffsets from '../src/client/utility/calculations.js';
-import casteljauPoint from '../src/client/utility/calculations.js';
-import casteljauFromY from '../src/client/utility/calculations.js';
+import {applyOffsets} from '../src/client/utility/calculations.js';
+import {casteljauPoint} from '../src/client/utility/calculations.js';
+import {casteljauFromY} from '../src/client/utility/calculations.js';
 import mirrorX from '../src/client/utility/mirror.js';
 
 
@@ -60,11 +60,11 @@ const boat = {
        assert.isNotNull(applyOffsets(boat, Curve, keyKeel));
      });
 
-   it.skip('casteljauPoint', () => {
+   it('casteljauPoint', () => {
        assert.isNotNull(casteljauPoint(Curve, t));
     });
 
-   it.skip('casteljauFromY', () => {
+   it('casteljauFromY', () => {
        assert.isNotNull(casteljauFromY(Curve, t));
     });
 
