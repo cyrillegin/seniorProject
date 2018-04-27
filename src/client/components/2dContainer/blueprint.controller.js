@@ -24,11 +24,6 @@ export default class BlueprintEditor {
 
     // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
-        let currY = lastY;
-        let i = 1;
-        let location1;
-        let location2;
-        let location3;
 
         // Structure containing the info required to print the frames
         const frames = {
@@ -439,14 +434,12 @@ export default class BlueprintEditor {
         };
 
         // Find the location of each frame and insert their offsets into the structure
+        let currY = lastY;
+        let i = 1;
         let count = 0;
         let startY;
         boat.frames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
-            location1 = locationA;
-            location2 = locationB;
-            location3 = locationC;
-            //  console.log(location1, location2, location3);
             Object.keys(frames).forEach((key) => {
                 if (frames[key].count === i) {
                     // const prevY = currY;
@@ -454,22 +447,22 @@ export default class BlueprintEditor {
                         frames[key].points[0].x = 15;
                         startY = currY + 15;
                         frames[key].points[0].y = startY;
-                        frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
-                        frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
-                        frames[key].points[2].x = Math.abs(location2.x - location3.x) + frames[key].points[1].x;
-                        frames[key].points[2].y = Math.abs(location2.y - location3.y) + frames[key].points[1].y;
-                        frames[key].points[3].x = Math.abs(location2.x - location3.x) + frames[key].points[2].x;
-                        frames[key].points[3].y = Math.abs(Math.abs(location2.y - location3.y) - frames[key].points[2].y);
-                        frames[key].points[4].x = Math.abs(location1.x - location2.x) + frames[key].points[3].x;
-                        frames[key].points[4].y = Math.abs(Math.abs(location1.y - location2.y) - frames[key].points[3].y);
+                        frames[key].points[1].x = Math.abs(locationA.x - locationB.x) + frames[key].points[0].x;
+                        frames[key].points[1].y = Math.abs(locationA.y - locationB.y) + frames[key].points[0].y;
+                        frames[key].points[2].x = Math.abs(locationB.x - locationC.x) + frames[key].points[1].x;
+                        frames[key].points[2].y = Math.abs(locationB.y - locationC.y) + frames[key].points[1].y;
+                        frames[key].points[3].x = Math.abs(locationB.x - locationC.x) + frames[key].points[2].x;
+                        frames[key].points[3].y = Math.abs(Math.abs(locationB.y - locationC.y) - frames[key].points[2].y);
+                        frames[key].points[4].x = Math.abs(locationA.x - locationB.x) + frames[key].points[3].x;
+                        frames[key].points[4].y = Math.abs(Math.abs(locationA.y - locationB.y) - frames[key].points[3].y);
                         currY = frames[key].points[2].y;
                         frames[key].size = this.pythagorean(frames[key].points[2].x, frames[key].points[1].x, frames[key].points[2].y, frames[key].points[1].y) * 2;
                     } else {
                         if (frames[key].variable === 'frameSide') {
                             frames[key].points[0].x = 16;
                             frames[key].points[0].y = startY;
-                            frames[key].points[1].x = Math.abs(location1.x - location2.x) + frames[key].points[0].x;
-                            frames[key].points[1].y = Math.abs(location1.y - location2.y) + frames[key].points[0].y;
+                            frames[key].points[1].x = Math.abs(locationA.x - locationB.x) + frames[key].points[0].x;
+                            frames[key].points[1].y = Math.abs(locationA.y - locationB.y) + frames[key].points[0].y;
                             frames[key].size = this.pythagorean(frames[key].points[0].x, frames[key].points[1].x, frames[key].points[0].y, frames[key].points[1].y) * 2;
                         }
                     }
