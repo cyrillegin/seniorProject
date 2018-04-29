@@ -15,7 +15,7 @@ import 'three/examples/js/controls/OrbitControls';
 // controller imports
 import initScene from './controllers/scene.controller';
 import initLights from './controllers/lights.controller';
-import initCamera from './controllers/camera.controller';
+import CameraController from './controllers/camera.controller';
 import MeshController from './controllers/mesh.controller';
 import CurvesController from './controllers/curves.controller';
 
@@ -35,8 +35,9 @@ export default class ThreeContainer {
         this.app.displayWireFrame = true;
         this.app.displayShaded = false;
         this.app = initLights(this.app);
-        this.app = initCamera(this.app);
 
+        this.cameraController = new CameraController();
+        this.app = this.cameraController.initCamera(this.app);
         this.meshController = new MeshController();
         this.curveController = new CurvesController();
 
@@ -54,6 +55,9 @@ export default class ThreeContainer {
                     () => this.boatParametersService.checkUpdate(), // what we're watching.
                     (newVal, oldVal, scope) => { // what we do if there's been a change.
                         this.updateCurves();
+                        this.meshController.deleteMesh(this.app);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.app = this.meshController.initMesh(this.app, newBoat);
                     });
 
                 this.$scope.$watch(
@@ -62,7 +66,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHover(this.app, newBoat[newVal], newVal);
                     });
                 this.$scope.$watch(
                     () => this.manipulateService.getUnHoverInput(), // what we're watching.
@@ -70,7 +75,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHoverOff(this.app, newBoat[newVal], newVal);
                     });
             })
             .catch((error) => {

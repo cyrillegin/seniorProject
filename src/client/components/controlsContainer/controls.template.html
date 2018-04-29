@@ -36,8 +36,8 @@
         <div ng-repeat="frame in data.frames">
             <div class="controls-group">
                 <div class="controls-label">frame</div>
-                <input aria-label="frame-distance-{{$index}}" type="number" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
-                <input aria-label="frame-distance-range-{{$index}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
+                <input aria-label="frame-distance-{{$index}}" type="number" max="{{data.length*2}}" class="controls-number-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" /> in.
+                <input aria-label="frame-distance-range-{{$index}}" max="{{data.length*2}}" type="range" class="controls-slide-input" ng-model="frame.distanceFromBack" ng-change="changeValue('$index-distanceFromBack')" />
             </div>
         </div>
     </div>
@@ -49,8 +49,8 @@
     <div class="controls-input">
         <div ng-repeat="(key, value) in data">
             <div ng-if="key != 'width' && key != 'height' && key != 'length' && value.controlable == true">
-                <div class="controls-label">
-                    <i class="down" ng-click="openMenu(key)" id="{{key}}-menu-icon" /> {{key}}
+                <div class="controls-label" ng-click="openMenu(key)">
+                    <i class="down" id="{{key}}-menu-icon" /> {{key}}
                 </div>
 
                 <div class="controls-group" id="{{key}}-menu">
@@ -135,3 +135,15 @@
         </div>
     </div>
 </div>
+
+<hr />
+
+<button class="mui-button" ng-click="SaveJson()">Save JSON</button>
+
+<button class="mui-button" ng-click="LoadJson()">Load JSON</button>
+
+<button class="mui-button" id="save-obj">Save OBJ</button>
+
+<button class="mui-button" id="save-stl">Save STL</button>
+
+<input type="file" class="hidden" id="json-file-input" />

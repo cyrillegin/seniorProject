@@ -1,4 +1,5 @@
 import mirrorAttributes from '../../../utility/mirror';
+import {casteljauPoint, applyOffsets, casteljauFromY} from '../../../utility/calculations';
 
 export default class CurvesController {
     constructor() {
@@ -15,131 +16,10 @@ export default class CurvesController {
             if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
                 return;
             }
-
-            const curveCoordinates = this.applyOffsets(this.boat[key], key);
+            const curveCoordinates = applyOffsets(this.boat, this.boat[key], key);
             this.curveObjects.push(this.drawCurve(app, curveCoordinates, key));
         });
-
         return app;
-    }
-
-    updateFrames(app, boat) {
-        this.removeFrames(app);
-        const boatCopy = JSON.parse(JSON.stringify(boat));
-        Object.keys(boatCopy).forEach((key) => {
-            if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
-                return;
-            }
-            boatCopy[key] = this.applyOffsets(boatCopy[key], key);
-        });
-        this.drawFrames(app, boatCopy);
-    }
-
-    removeFrames(app) {
-        // 15 is the max number of frames allowable. We can't use boat.frames.length
-        // because that number could be lower than the actual number of frames in the scene.
-        // ie: i had 12 frames, now I want 11.
-        for (let i = 0; i < 15; i++) {
-            const frameA = app.scene.getObjectByName(`beam-chine-frame-${i}`);
-            app.scene.remove(frameA);
-            const frameB = app.scene.getObjectByName(`chine-keel-frame-${i}`);
-            app.scene.remove(frameB);
-            const frameC = app.scene.getObjectByName(`beam-chine-frame-mirror-${i}`);
-            app.scene.remove(frameC);
-            const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${i}`);
-            app.scene.remove(frameD);
-        }
-    }
-
-    drawFrames(app, boat) {
-        if (Object.keys(boat).length < 5) {
-            return;
-        }
-        const frameLines = [];
-        boat.frames.forEach((frame, index) => {
-            // calculate frames, returns a beam point, a chine point, and the keel point
-            const {locationA, locationB, locationC} = this.findLocation(boat, frame);
-
-            // Draws a line from the beam to the chine
-            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
-            // Draws a line from the chine to the keel
-            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
-
-            // Draw mirror.
-            locationA.x = -locationA.x;
-            locationB.x = -locationB.x;
-            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
-            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-mirror-${index}`));
-        });
-
-        // Add the newly created lines to the scene
-        frameLines.forEach((line) => {
-            app.scene.add(line);
-        });
-
-        return frameLines;
-    }
-
-    drawLine(start, end, name) {
-        const material = new THREE.LineBasicMaterial({color: 0x9400D3});
-        const geometry = new THREE.Geometry();
-        geometry.vertices.push(new THREE.Vector3(start.x, start.y, start.z));
-        geometry.vertices.push(new THREE.Vector3(end.x, end.y, end.z));
-        const line = new THREE.Line(geometry, material);
-        line.name = name;
-        return line;
-    }
-
-    findLocation(boat, frame) {
-        let T;
-        let beamCurve;
-        let chineCurve;
-        let keelCurve;
-        if (frame.distanceFromBack < boat.length) {
-            T = (boat.length - frame.distanceFromBack) / boat.length;
-            beamCurve = boat.aftBeam;
-            chineCurve = boat.aftChine;
-            keelCurve = boat.aftKeel;
-        } else {
-            T = (frame.distanceFromBack - boat.length) / boat.length;
-            beamCurve = boat.foreBeam;
-            chineCurve = boat.foreChine;
-            keelCurve = boat.foreKeel;
-        }
-
-        const locationA = this.casteljauPoint(beamCurve, T);
-        const locationB = this.casteljauPoint(chineCurve, T);
-        const locationC = this.casteljauPoint(keelCurve, T);
-        return {locationA, locationB, locationC};
-    }
-
-    // Implementation of casteljau's algorithem, adapted from 2d to 3d from
-    // https://stackoverflow.com/questions/14174252/how-to-find-out-y-coordinate-of-specific-point-in-bezier-curve-in-canvas
-    casteljauPoint(curve, t) {
-        // Step 1
-        const Ax = ((1 - t) * curve.start[0]) + (t * (curve.start[0] + curve.startControl[0]));
-        const Ay = ((1 - t) * curve.start[1]) + (t * (curve.start[1] + curve.startControl[1]));
-        const Az = ((1 - t) * curve.start[2]) + (t * (curve.start[2] + curve.startControl[2]));
-        const Bx = ((1 - t) * (curve.start[0] + curve.startControl[0])) + (t * (curve.end[0] + curve.endControl[0]));
-        const By = ((1 - t) * (curve.start[1] + curve.startControl[1])) + (t * (curve.end[1] + curve.endControl[1]));
-        const Bz = ((1 - t) * (curve.start[2] + curve.startControl[2])) + (t * (curve.end[2] + curve.endControl[2]));
-        const Cx = ((1 - t) * (curve.end[0] + curve.endControl[0])) + (t * curve.end[0]);
-        const Cy = ((1 - t) * (curve.end[1] + curve.endControl[1])) + (t * curve.end[1]);
-        const Cz = ((1 - t) * (curve.end[2] + curve.endControl[2])) + (t * curve.end[2]);
-
-        // Step 2
-        const Dx = ((1 - t) * Ax) + (t * Bx);
-        const Dy = ((1 - t) * Ay) + (t * By);
-        const Dz = ((1 - t) * Az) + (t * Bz);
-        const Ex = ((1 - t) * Bx) + (t * Cx);
-        const Ey = ((1 - t) * By) + (t * Cy);
-        const Ez = ((1 - t) * Bz) + (t * Cz);
-
-        // Step 3
-        const Px = ((1 - t) * Dx) + (t * Ex);
-        const Py = ((1 - t) * Dy) + (t * Ey);
-        const Pz = ((1 - t) * Dz) + (t * Ez);
-        return new THREE.Vector3(Px, Py, Pz);
     }
 
     drawCurve(app, curveCoordinates, key) {
@@ -187,77 +67,6 @@ export default class CurvesController {
             curveObject.endControlPoint = endControlPoint;
         }
         return curveObject;
-    }
-
-    applyOffsets(curve, key) {
-        // Define offsets
-        let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-        let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-        const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
-
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = this.boat.height;
-        }
-        if (key.toLowerCase().includes('mid')) {
-            lengthOffset = 0;
-        }
-
-        // Apply offsets
-        const curveCoordinates = curve;
-        if (! key.toLowerCase().includes('edge')) {
-            curveCoordinates.start[0] += widthOffset;
-        }
-        curveCoordinates.end[0] += widthOffset;
-
-        curveCoordinates.start[1] += heightOffset;
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = -heightOffset;
-        }
-        curveCoordinates.end[1] += heightOffset;
-
-        curveCoordinates.end[2] += lengthOffset;
-        if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
-            curveCoordinates.start[2] += lengthOffset;
-        }
-        return curveCoordinates;
-    }
-
-    deleteCurve(app, update) {
-        const curve = app.scene.getObjectByName(`curve-${update.key}`);
-        app.scene.remove(curve);
-        const mirror = app.scene.getObjectByName(`curve-mirror-${update.key}`);
-        app.scene.remove(mirror);
-        const startControl = app.scene.getObjectByName(`curve-start-${update.key}`);
-        app.scene.remove(startControl);
-        const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
-        app.scene.remove(endControl);
-        const start = app.scene.getObjectByName(`start-point-${update.key}`);
-        app.scene.remove(start);
-        const end = app.scene.getObjectByName(`end-point-${update.key}`);
-        app.scene.remove(end);
-        const startPoint = app.scene.getObjectByName(`start-control-${update.key}`);
-        app.scene.remove(startPoint);
-        const endPoint = app.scene.getObjectByName(`end-control-${update.key}`);
-        app.scene.remove(endPoint);
-        return app;
-    }
-
-    onHandleHover(app, curve, key) {
-        this.deleteCurve(app, {key});
-        this.curveColor = 0x00ff00;
-        const curveCopy = JSON.parse(JSON.stringify(curve));
-        const curveCoordinates = this.applyOffsets(curveCopy, key);
-        const newCurve = this.drawCurve(app, curveCoordinates, key);
-        this.curveObjects.push(newCurve);
-    }
-
-    onHandleHoverOff(app, curve, key) {
-        this.deleteCurve(app, {key});
-        this.curveColor = 0xff0000;
-        const curveCopy = JSON.parse(JSON.stringify(curve));
-        const curveCoordinates = this.applyOffsets(curveCopy, key);
-        const newCurve = this.drawCurve(app, curveCoordinates, key);
-        this.curveObjects.push(newCurve);
     }
 
     buildCurve(curveAttributes, key) {
@@ -327,11 +136,146 @@ export default class CurvesController {
         return line;
     }
 
+    drawLine(start, end, name) {
+        const material = new THREE.LineBasicMaterial({color: 0x9400D3});
+        const geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(start.x, start.y, start.z));
+        geometry.vertices.push(new THREE.Vector3(end.x, end.y, end.z));
+        const line = new THREE.Line(geometry, material);
+        line.name = name;
+        return line;
+    }
+
+    deleteCurve(app, update) {
+        const curve = app.scene.getObjectByName(`curve-${update.key}`);
+        app.scene.remove(curve);
+        const mirror = app.scene.getObjectByName(`curve-mirror-${update.key}`);
+        app.scene.remove(mirror);
+        const startControl = app.scene.getObjectByName(`curve-start-${update.key}`);
+        app.scene.remove(startControl);
+        const endControl = app.scene.getObjectByName(`curve-end-${update.key}`);
+        app.scene.remove(endControl);
+        const start = app.scene.getObjectByName(`start-point-${update.key}`);
+        app.scene.remove(start);
+        const end = app.scene.getObjectByName(`end-point-${update.key}`);
+        app.scene.remove(end);
+        const startPoint = app.scene.getObjectByName(`start-control-${update.key}`);
+        app.scene.remove(startPoint);
+        const endPoint = app.scene.getObjectByName(`end-control-${update.key}`);
+        app.scene.remove(endPoint);
+        return app;
+    }
+
+    onHandleHover(app, curve, key) {
+        this.deleteCurve(app, {key});
+        this.curveColor = 0x00ff00;
+        const curveCopy = JSON.parse(JSON.stringify(curve));
+        const curveCoordinates = applyOffsets(this.boat, curveCopy, key);
+        const newCurve = this.drawCurve(app, curveCoordinates, key);
+        this.curveObjects.push(newCurve);
+    }
+
+    onHandleHoverOff(app, curve, key) {
+        this.deleteCurve(app, {key});
+        this.curveColor = 0xff0000;
+        const curveCopy = JSON.parse(JSON.stringify(curve));
+        const curveCoordinates = applyOffsets(this.boat, curveCopy, key);
+        const newCurve = this.drawCurve(app, curveCoordinates, key);
+        this.curveObjects.push(newCurve);
+    }
+
     showCurves(show) {
         this.curveObjects.forEach((curveObject) => {
             Object.keys(curveObject).forEach((piece) => {
                 curveObject[piece].visible = show;
             });
         });
+    }
+
+    drawFrames(app, boat) {
+        if (Object.keys(boat).length < 5) {
+            return;
+        }
+        const frameLines = [];
+        boat.frames.forEach((frame, index) => {
+            // calculate frames, returns a beam point, a chine point, and the keel point
+            const {locationA, locationB, locationC} = this.findLocation(boat, frame);
+
+            // Draws a line from the beam to the chine
+            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-${index}`));
+            // Draws a line from the chine to the keel
+            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-${index}`));
+
+            // Draw mirror.
+            locationA.x = -locationA.x;
+            locationB.x = -locationB.x;
+            frameLines.push(this.drawLine(locationA, locationB, `beam-chine-frame-mirror-${index}`));
+            frameLines.push(this.drawLine(locationB, locationC, `chine-keel-frame-mirror-${index}`));
+        });
+
+        // Add the newly created lines to the scene
+        frameLines.forEach((line) => {
+            app.scene.add(line);
+            this.curveObjects.push({line});
+        });
+
+        return frameLines;
+    }
+
+    updateFrames(app, boat) {
+        this.removeFrames(app);
+        const boatCopy = JSON.parse(JSON.stringify(boat));
+        Object.keys(boatCopy).forEach((key) => {
+            if (key === 'width' || key === 'height' || key === 'length' || key === 'frames') {
+                return;
+            }
+            boatCopy[key] = applyOffsets(this.boat, boatCopy[key], key);
+        });
+        this.drawFrames(app, boatCopy);
+    }
+
+    findLocation(boat, frame) {
+        let beamCurve;
+        let chineCurve;
+        let keelCurve;
+        let t1;
+        let t2;
+        let t3;
+        if (frame.distanceFromBack < boat.length) {
+            beamCurve = boat.aftBeam;
+            chineCurve = boat.aftChine;
+            keelCurve = boat.aftKeel;
+            t1 = casteljauFromY(beamCurve, boat.length - frame.distanceFromBack);
+            t2 = casteljauFromY(chineCurve, boat.length - frame.distanceFromBack);
+            t3 = casteljauFromY(keelCurve, boat.length - frame.distanceFromBack);
+        } else {
+            beamCurve = boat.foreBeam;
+            chineCurve = boat.foreChine;
+            keelCurve = boat.foreKeel;
+            t1 = casteljauFromY(beamCurve, frame.distanceFromBack - boat.length);
+            t2 = casteljauFromY(chineCurve, frame.distanceFromBack - boat.length);
+            t3 = casteljauFromY(keelCurve, frame.distanceFromBack - boat.length);
+        }
+
+        const locationA = casteljauPoint(beamCurve, t1);
+        const locationB = casteljauPoint(chineCurve, t2);
+        const locationC = casteljauPoint(keelCurve, t3);
+        return {locationA, locationB, locationC};
+    }
+
+    removeFrames(app) {
+        // 15 is the max number of frames allowable. We can't use boat.frames.length
+        // because that number could be lower than the actual number of frames in the scene.
+        // ie: i had 12 frames, now I want 11.
+        for (let i = 0; i < 15; i++) {
+            const frameA = app.scene.getObjectByName(`beam-chine-frame-${i}`);
+            app.scene.remove(frameA);
+            const frameB = app.scene.getObjectByName(`chine-keel-frame-${i}`);
+            app.scene.remove(frameB);
+            const frameC = app.scene.getObjectByName(`beam-chine-frame-mirror-${i}`);
+            app.scene.remove(frameC);
+            const frameD = app.scene.getObjectByName(`chine-keel-frame-mirror-${i}`);
+            app.scene.remove(frameD);
+        }
     }
 }

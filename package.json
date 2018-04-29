@@ -33,6 +33,7 @@
         "build-win32": "electron-packager . Boat Builder --platform win32 --overwrite"
     },
     "dependencies": {
+        "@tweenjs/tween.js": "17.2.0",
         "@uirouter/angularjs": "1.0.15",
         "angular": "1.6.9",
         "angular-animate": "1.6.9",
@@ -61,7 +62,7 @@
         "chai": "4.1.2",
         "css-loader": "0.28.9",
         "dotenv": "5.0.0",
-        "electron-packager": "^12.0.1",
+        "electron-packager": "12.0.1",
         "eslint": "4.18.0",
         "eslint-plugin-import": "2.8.0",
         "exports-loader": "0.7.0",

@@ -12,7 +12,7 @@ child = exec('nodemon --ignore /client/ --exec babel-node src/server',
         console.log(`stdout: ${ stdout}`);
         console.log(`stderr: ${ stderr}`);
         if (error !== null) {
-            console.lo`exec error: ${ error}`;
+            console.log(`exec error: ${ error}`);
         }
     });
 
