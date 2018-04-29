@@ -4,6 +4,9 @@
 */
 import 'three';
 import 'three/examples/js/loaders/MTLLoader';
+import 'three/examples/js/exporters/OBJExporter';
+import 'three/examples/js/exporters/STLExporter';
+import {applyOffsets, casteljauPoint} from '../../../utility/calculations';
 
 export default class MeshController {
     initMesh(app, boat) {
@@ -11,9 +14,10 @@ export default class MeshController {
         const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
         this.mesh = new THREE.Mesh(uvedGeometry, material);
+        this.mesh.name = 'boat-mesh';
 
-        app.mesh = this.mesh;
         app.scene.add(this.mesh);
+        this.setupIO();
         return app;
     }
 
@@ -30,47 +34,119 @@ export default class MeshController {
             if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
                 return;
             }
-            this.boat[key] = this.applyOffsets(copiedBoat[key], key);
+            this.boat[key] = applyOffsets(this.boat, copiedBoat[key], key);
         });
 
-        const face1 = this.drawFace(this.boat.aftBeam, this.boat.aftChine);
-        const face2 = this.drawFace(this.boat.foreBeam, this.boat.foreChine);
-        const face3 = this.drawFace(this.boat.foreChine, this.boat.foreKeel);
-        const face4 = this.drawFace(this.boat.aftChine, this.boat.aftKeel);
-        const face5 = this.drawFace(this.boat.aftBeamEdge, this.boat.aftGunEdge);
-        const face6 = this.drawFace(this.boat.foreBeamEdge, this.boat.foreGunEdge);
-        face1.merge(face2);
-        face1.merge(face3);
-        face1.merge(face4);
-        face1.merge(face5);
-        face1.merge(face6);
+        let parts = [];
 
-        face1.mergeVertices();
-        face1.uvsNeedUpdate = true;
+        // Outer mesh
+        parts = parts.concat(this.splitCurve(this.boat.aftBeam, this.boat.aftChine));
+        parts = parts.concat(this.splitCurve(this.boat.foreBeam, this.boat.foreChine));
+        parts = parts.concat(this.splitCurve(this.boat.foreChine, this.boat.foreKeel));
+        parts = parts.concat(this.splitCurve(this.boat.aftChine, this.boat.aftKeel));
+        parts = parts.concat(this.splitCurve(this.boat.aftBeamEdge, this.boat.aftGunEdge));
+        parts = parts.concat(this.splitCurve(this.boat.foreBeamEdge, this.boat.foreGunEdge));
 
-        const mirror = face1.clone();
+        // Define new boat for inner mesh.
+        const innerBoat = JSON.parse(JSON.stringify(boat));
+        innerBoat.width -= 1;
+        innerBoat.height -= 1;
+        innerBoat.length -= 1;
+
+        Object.keys(innerBoat).forEach((key) => {
+            if (['width', 'height', 'length', 'frames'].indexOf(key) > -1) {
+                return;
+            }
+            innerBoat[key] = applyOffsets(innerBoat, innerBoat[key], key);
+        });
+        // We add on to all the top y values to offset the -1 in height.
+        // This will make it so that our trim later on will be perfectly horizontal.
+        innerBoat.aftBeam.start[1] += 1;
+        innerBoat.aftBeam.end[1] += 1;
+        innerBoat.foreBeam.start[1] += 1;
+        innerBoat.foreBeam.end[1] += 1;
+        innerBoat.aftBeamEdge.start[1] += 1;
+        innerBoat.aftBeamEdge.end[1] += 1;
+        innerBoat.foreBeamEdge.start[1] += 1;
+        innerBoat.foreBeamEdge.end[1] += 1;
+
+        // Add inner mesh.
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeam, innerBoat.aftChine));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeam, innerBoat.foreChine));
+        parts = parts.concat(this.splitCurve(innerBoat.foreChine, innerBoat.foreKeel));
+        parts = parts.concat(this.splitCurve(innerBoat.aftChine, innerBoat.aftKeel));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeamEdge, innerBoat.aftGunEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeamEdge, innerBoat.foreGunEdge));
+
+        // Add trim (The part that attaches the inner boat to the outer boat)
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeam, this.boat.aftBeam));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeam, this.boat.foreBeam));
+        parts = parts.concat(this.splitCurve(innerBoat.aftBeamEdge, this.boat.aftBeamEdge));
+        parts = parts.concat(this.splitCurve(innerBoat.foreBeamEdge, this.boat.foreBeamEdge));
+
+        // Draw mesh.
+        const firstElement = parts.pop();
+        const initialFace = this.drawFace(firstElement);
+        const faces = [];
+        for (let i = 0; i < parts.length; i ++) {
+            faces.push(this.drawFace(parts[i]));
+        }
+
+        // Merge faces
+        faces.forEach((face) => {
+            initialFace.merge(face);
+        });
+
+        initialFace.mergeVertices();
+        initialFace.uvsNeedUpdate = true;
+
+        const mirror = initialFace.clone();
         mirror.scale(-1, 1, 1);
         mirror.mergeVertices();
         mirror.uvsNeedUpdate = true;
-        face1.merge(mirror);
-
-        return face1;
+        initialFace.merge(mirror);
+        initialFace.name = 'boat-mesh';
+        return initialFace;
     }
 
-    drawFace(curveA, curveB) {
+    splitCurve(curveA, curveB) {
+        const parts = [];
+        const itterations = 8;
+        let lastA = casteljauPoint(curveA, 0);
+        let lastB = casteljauPoint(curveB, 0);
+        for (let i = 1; i < itterations + 1; i++) {
+            const currentA = casteljauPoint(curveA, 1 / itterations * i);
+            const currentB = casteljauPoint(curveB, 1 / itterations * i);
+            parts.push({
+                start: [
+                    [lastA.x, lastA.y, lastA.z],
+                    [currentA.x, currentA.y, currentA.z],
+                ],
+                end: [
+                    [lastB.x, lastB.y, lastB.z],
+                    [currentB.x, currentB.y, currentB.z],
+                ],
+            });
+            lastA = currentA;
+            lastB = currentB;
+        }
+        return parts;
+    }
+
+    drawFace(slice) {
         const geometry = new THREE.Geometry();
         const normal = new THREE.Vector3(0, 0, 0);
         geometry.vertices.push(
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
-            new THREE.Vector3(curveA.start[0], curveA.start[1], curveA.start[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
+            new THREE.Vector3(slice.start[0][0], slice.start[0][1], slice.start[0][2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
         );
         geometry.faces.push(new THREE.Face3(0, 1, 2, normal));
 
         geometry.vertices.push(
-            new THREE.Vector3(curveB.end[0], curveB.end[1], curveB.end[2]),
-            new THREE.Vector3(curveB.start[0], curveB.start[1], curveB.start[2]),
-            new THREE.Vector3(curveA.end[0], curveA.end[1], curveA.end[2]),
+            new THREE.Vector3(slice.start[1][0], slice.start[1][1], slice.start[1][2]),
+            new THREE.Vector3(slice.end[0][0], slice.end[0][1], slice.end[0][2]),
+            new THREE.Vector3(slice.end[1][0], slice.end[1][1], slice.end[1][2]),
         );
         geometry.faces.push(new THREE.Face3(3, 4, 5, normal));
 
@@ -120,102 +196,38 @@ export default class MeshController {
         this.mesh.visible = show;
     }
 
-    // NOTE: This was copy/pasted from the curves controller.
-    // TODO: Move both functions to calculations.
-    applyOffsets(curve, key) {
-        // Define offsets
-        let lengthOffset = key.toLowerCase().includes('aft') ? -this.boat.length : this.boat.length;
-        let heightOffset = key.toLowerCase().includes('beam') ? this.boat.height : -this.boat.height;
-        const widthOffset = key.toLowerCase().includes('keel') ? 0 : this.boat.width;
+    deleteMesh(app) {
+        const mesh = app.scene.getObjectByName(this.mesh.name);
+        app.scene.remove(mesh);
+        return app;
+    }
 
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = this.boat.height;
-        }
-        if (key.toLowerCase().includes('mid')) {
-            lengthOffset = 0;
-        }
+    setupIO() {
+        // NOTE: due to the nature of face creation, every other face is 'backwards'.
+        // In the display, we set double sided to true so that we don't notice.
+        // Most 3d applications and 3d printers will also notice this and autocorrect.
+        document.querySelector('#save-obj').addEventListener('click', (e) => {
+            const exporter = new THREE.OBJExporter();
+            this.downloadFile(exporter, 'OBJ');
+        });
+        document.querySelector('#save-stl').addEventListener('click', (e) => {
+            const exporter = new THREE.STLExporter();
+            this.downloadFile(exporter, 'STL');
+        });
+    }
 
-        // Apply offsets
-        const curveCoordinates = curve;
-        if (! key.toLowerCase().includes('edge')) {
-            curveCoordinates.start[0] += widthOffset;
-            curveCoordinates.startControl[0] += widthOffset;
-        }
-        curveCoordinates.end[0] += widthOffset;
-        curveCoordinates.endControl[0] += widthOffset;
-
-        curveCoordinates.start[1] += heightOffset;
-        curveCoordinates.startControl[1] += heightOffset;
-        if (key.toLowerCase().includes('frame')) {
-            heightOffset = -heightOffset;
-        }
-        curveCoordinates.end[1] += heightOffset;
-        curveCoordinates.endControl[1] += heightOffset;
-
-        curveCoordinates.end[2] += lengthOffset;
-        curveCoordinates.endControl[2] += lengthOffset;
-        if (key.toLowerCase().includes('edge') || key.toLowerCase().includes('frame')) {
-            curveCoordinates.start[2] += lengthOffset;
-            curveCoordinates.startControl[2] += lengthOffset;
-        }
-        return curveCoordinates;
+    downloadFile(exporter, type) {
+        const data = exporter.parse(this.mesh);
+        const file = new Blob([data], {type});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = `boat.${type.toLowerCase()}`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
-
-
-// The following is what was used to load the canoe. Leaving it here as reference.
-//
-// function initMesh(app) {
-//     // TODO: look into async/await for this.
-//     return new Promise((resolve, reject) => {
-//         loadMaterial('canoe.mtl')
-//             .then((material) => {
-//                 loadMesh('models/canoe.obj', material)
-//                     .then((boat) => {
-//                         boat.position.set(0, 0, 0);
-//                         app.scene.add(boat);
-//                         app.meshes.main = boat;
-//                         resolve(app);
-//                     });
-//             });
-//     });
-// }
-//
-// function loadMesh(file, material) {
-//     return new Promise((resolve, reject) => {
-//         const objLoader = new THREE.OBJLoader();
-//         objLoader.setMaterials(material);
-//         objLoader.load(
-//             file,
-//             (object) => {
-//                 resolve(object);
-//             },
-//             // called when loading is in progresses
-//             (xhr) => {
-//                 // console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`);
-//             },
-//             // called when loading has errors
-//             (error) => {
-//                 console.log('An error happened');
-//                 reject(error);
-//             },
-//         );
-//     });
-// }
-//
-// // wrapper for loading materials onto objects.
-// function loadMaterial(file) {
-//     return new Promise((resolve, reject) => {
-//         const mtlLoader = new THREE.MTLLoader();
-//         mtlLoader.setBaseUrl('models/');
-//         mtlLoader.setPath('models/');
-//         mtlLoader.setTexturePath('models/');
-//         mtlLoader.load(file, (materials) => {
-//             materials.preload();
-//             materials.materials.initialShadingGroup.color = new THREE.Color(1, 1, 1);
-//             resolve(materials);
-//         });
-//     });
-// }
-//
-// export default initMesh;

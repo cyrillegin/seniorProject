@@ -55,6 +55,9 @@ export default class ThreeContainer {
                     () => this.boatParametersService.checkUpdate(), // what we're watching.
                     (newVal, oldVal, scope) => { // what we do if there's been a change.
                         this.updateCurves();
+                        this.meshController.deleteMesh(this.app);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.app = this.meshController.initMesh(this.app, newBoat);
                     });
 
                 this.$scope.$watch(
@@ -63,7 +66,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHover(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHover(this.app, newBoat[newVal], newVal);
                     });
                 this.$scope.$watch(
                     () => this.manipulateService.getUnHoverInput(), // what we're watching.
@@ -71,7 +75,8 @@ export default class ThreeContainer {
                         if (newVal === null || newVal === undefined) {
                             return;
                         }
-                        this.curveController.onHandleHoverOff(this.app, data[newVal], newVal);
+                        const newBoat = this.boatParametersService.getBoat();
+                        this.curveController.onHandleHoverOff(this.app, newBoat[newVal], newVal);
                     });
             })
             .catch((error) => {

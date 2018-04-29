@@ -52,8 +52,8 @@
     <div class="controls-input">
         <div ng-repeat="(key, value) in data">
             <div ng-if="key != 'width' && key != 'height' && key != 'length' && value.controlable == true">
-                <div class="controls-label">
-                    <i class="down" ng-click="openMenu(key)" id="{{key}}-menu-icon" /> {{key}}
+                <div class="controls-label" ng-click="openMenu(key)">
+                    <i class="down" id="{{key}}-menu-icon" /> {{key}}
                 </div>
 
                 <div class="controls-group" id="{{key}}-menu">
@@ -144,4 +144,9 @@
 <button class="mui-button" ng-click="SaveJson()">Save JSON</button>
 
 <button class="mui-button" ng-click="LoadJson()">Load JSON</button>
+
+<button class="mui-button" id="save-obj">Save OBJ</button>
+
+<button class="mui-button" id="save-stl">Save STL</button>
+
 <input type="file" class="hidden" id="json-file-input" />
