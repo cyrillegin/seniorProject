@@ -65,6 +65,28 @@ export function casteljauPoint(curve, t) {
     return new THREE.Vector3(Px, Py, Pz);
 }
 
+// 2D implementation of casteljau's algorithm
+export function casteljauPoint2D(curve, t) {
+    // Step 1
+    const Ax = ((1 - t) * curve.points[0].x) + (t * (curve.points[0].x + curve.points[1].x));
+    const Ay = ((1 - t) * curve.points[0].y) + (t * (curve.points[0].y + curve.points[1].y));
+    const Bx = ((1 - t) * (curve.points[0].x + curve.points[1].x)) + (t * (curve.points[3].x + curve.points[2].x));
+    const By = ((1 - t) * (curve.points[0].y + curve.points[1].y)) + (t * (curve.points[3].y + curve.points[2].y));
+    const Cx = ((1 - t) * (curve.points[3].x + curve.points[2].x)) + (t * curve.points[3].x);
+    const Cy = ((1 - t) * (curve.points[3].y + curve.points[2].y)) + (t * curve.points[3].y);
+
+    // Step 2
+    const Dx = ((1 - t) * Ax) + (t * Bx);
+    const Dy = ((1 - t) * Ay) + (t * By);
+    const Ex = ((1 - t) * Bx) + (t * Cx);
+    const Ey = ((1 - t) * By) + (t * Cy);
+
+    // Step 3
+    const Px = ((1 - t) * Dx) + (t * Ex);
+    const Py = ((1 - t) * Dy) + (t * Ey);
+    return new THREE.Vector2(Px, Py);
+}
+
 // Inverse of casteljau's algorithem, takes in a curve and a distance from the back
 // of the boat and Returns the t value for use in the casteljauPoint function.
 export function casteljauFromY(curve, distFromBack) {
@@ -97,6 +119,35 @@ export function casteljauFromY(curve, distFromBack) {
         }
     }
     return t;
+}
+
+export function findLocation(boat, frame) {
+    let beamCurve;
+    let chineCurve;
+    let keelCurve;
+    let t1;
+    let t2;
+    let t3;
+    if (frame.distanceFromBack < boat.length) {
+        beamCurve = boat.aftBeam;
+        chineCurve = boat.aftChine;
+        keelCurve = boat.aftKeel;
+        t1 = casteljauFromY(beamCurve, boat.length - frame.distanceFromBack);
+        t2 = casteljauFromY(chineCurve, boat.length - frame.distanceFromBack);
+        t3 = casteljauFromY(keelCurve, boat.length - frame.distanceFromBack);
+    } else {
+        beamCurve = boat.foreBeam;
+        chineCurve = boat.foreChine;
+        keelCurve = boat.foreKeel;
+        t1 = casteljauFromY(beamCurve, frame.distanceFromBack - boat.length);
+        t2 = casteljauFromY(chineCurve, frame.distanceFromBack - boat.length);
+        t3 = casteljauFromY(keelCurve, frame.distanceFromBack - boat.length);
+    }
+
+    const locationA = casteljauPoint(beamCurve, t1);
+    const locationB = casteljauPoint(chineCurve, t2);
+    const locationC = casteljauPoint(keelCurve, t3);
+    return {locationA, locationB, locationC};
 }
 
 export function conver3dTo2dCoordinates() {}
