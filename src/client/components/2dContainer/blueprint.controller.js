@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {casteljauFromY, casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -51,10 +51,10 @@ export default class BlueprintEditor {
     // Deal with this shit later as well. Does not update as boat changes for some reason
     getReference(curve) {
         const refPoints = {};
-        // const t = casteljauFromY(boat.foreBeam, boat.length * 0.75);
+      //  const t = casteljauFromY(boat.foreBeam, 75);
         // console.log(curve.beamFore);
-        refPoints.foreKeel = casteljauPoint2D(curve.forChine, 0.25);
-        // console.log(refPoints.foreKeel);
+        refPoints.foreKeel = casteljauPoint2D(curve.beamFore, 0.25);
+        console.log(refPoints.foreKeel);
         refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1));
         refPoints.foreKeel.y = Number(Math.abs(refPoints.foreKeel.y).toFixed(1));
         // console.log(refPoints.forePoint);
@@ -460,7 +460,7 @@ export default class BlueprintEditor {
         const yMaths = {};
         const xMaths = {};
 
-        // const refPoints = this.getReference(boat);
+        //const refPoints = this.getReference(boat);
         const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
 
         // Coordinates for first panel
@@ -918,7 +918,7 @@ export default class BlueprintEditor {
 
         };
 
-        /*        const ref = this.getReference(struct);
+        const ref = this.getReference(struct);
 
         struct.refPoint1 = {
             line: true,
@@ -927,19 +927,19 @@ export default class BlueprintEditor {
             text: false,
             variable: 'refPoint1',
             points: [
-                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: yMaths.y7},
-            ]}; */
+                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: yMaths.y1},
+            ]};
         return struct;
     }
 
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
         const frames = this.getFrameCoords(boat, coords.gunForeEdge.points[2].y);
-        const ref = this.getReference(coords, boat);
-        console.log(ref);
+         const ref = this.getReference(coords);
+        // console.log(ref);
 
         // console.log(ref);
-        // const refPoints = this.getReference(boat);
+         // const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
