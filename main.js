@@ -1,6 +1,7 @@
 const url = require('url');
 const path = require('path');
 const {app, BrowserWindow, Menu} = require('electron');
+import {loadJson} from './src/components/controls.....'
 
 let win = null;
 let check = null;
@@ -73,6 +74,9 @@ const mainMenuTemplate = [
 
         {type: 'separator'},
         {label: 'Save json'},
+        () => {
+          loadJson();
+        }
         {label: 'Load json'},
         {type: 'separator'},
         {label: 'Save stl'},
