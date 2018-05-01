@@ -98,9 +98,10 @@ export default class BlueprintEditor {
     getFrameCoords(boat, lastY) {
 
         // Structure containing the info required to print the frames
-        const frames = {
-            frame1: {
-                count: 1, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
+        const frames = {}
+        for (let i = 1; i <= 15; i++) {
+            frames[`frame${i}`] = {
+                count: i, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
                     {}, {}, {}, {}, {},
                 ],
                 pointsTop: [
@@ -108,312 +109,18 @@ export default class BlueprintEditor {
                 ],
             },
 
-            frame1Top: {
-                count: 1, empty: true, line: true, color: 'invisible', width: 2, text: true, size: 0, variable: 'frameTop', points: [
+            frames[`frame${i}Top`] = {
+                count: i, empty: true, line: true, color: 'invisible', width: 2, text: true, size: 0, variable: 'frameTop', points: [
                     {}, {},
                 ],
             },
 
-            frame1Side: {
-                count: 1, empty: true, line: true, color: 'invisible', width: 2, text: true, size: 0, variable: 'frameSide', size: 0, points: [
+            frames[`frame${i}Side`] = {
+                count: i, empty: true, line: true, color: 'invisible', width: 2, text: true, size: 0, variable: 'frameSide', size: 0, points: [
                     {}, {},
                 ],
-            },
-
-            frame2: {
-                count: 2, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame2Top: {
-                count: 2, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame2Side: {
-                count: 2, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame3: {
-                count: 3, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame3Top: {
-                count: 3, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame3Side: {
-                count: 3, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame4: {
-                count: 4, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame4Top: {
-                count: 4, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame4Side: {
-                count: 4, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame5: {
-                count: 5, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame5Top: {
-                count: 5, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame5Side: {
-                count: 5, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame6: {
-                count: 6, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame6Top: {
-                count: 6, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame6Side: {
-                count: 6, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame7: {
-                count: 7, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame7Top: {
-                count: 7, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame7Side: {
-                count: 7, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame8: {
-                count: 8, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            fram8eTop: {
-                count: 8, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame8Side: {
-                count: 8, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame9: {
-                count: 9, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame9Top: {
-                count: 9, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame9Side: {
-                count: 9, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame10: {
-                count: 10, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame10Top: {
-                count: 10, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame10Side: {
-                count: 10, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame11: {
-                count: 11, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame11Top: {
-                count: 11, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame11Side: {
-                count: 11, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame12: {
-                count: 12, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame12Top: {
-                count: 12, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame12Side: {
-                count: 12, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame13: {
-                count: 13, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame13Top: {
-                count: 13, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame13Side: {
-                count: 13, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame14: {
-                count: 14, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame14Top: {
-                count: 14, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame14Side: {
-                count: 14, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-
-            frame15: {
-                count: 15, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
-                    {}, {}, {}, {}, {},
-                ],
-                pointsTop: [
-                    {}, {},
-                ],
-            },
-
-            frame15Top: {
-                count: 15, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameTop', points: [
-                    {}, {},
-                ],
-            },
-
-            frame15Side: {
-                count: 15, empty: true, line: true, color: 'invisible', width: 2, text: false, size: 0, variable: 'frameSide', size: 0, points: [
-                    {}, {},
-                ],
-            },
-        };
+            }
+          }
 
         // Find the location of each frame and insert their offsets into the structure
         let currY = lastY;
@@ -1217,6 +924,9 @@ export default class BlueprintEditor {
         Object.keys(frames).forEach((key) => {
             if (frames[key].color === 'invisible') {
                 if (frames[key].line === true && frames[key].text === true) {
+                    if (Object.keys(frames[key].points[0]).length === 0) {
+                        return;
+                    }
                     this.canvas.append('path')
                         .attr('id', key)
                         .attr('d', lineFunction(frames[key].points))
@@ -1248,6 +958,127 @@ export default class BlueprintEditor {
             }
 
         });
+
+        this.drawLegend(this.canvas, elem);
+    }
+
+    drawLegend(canvas, elem) {
+        const legend = canvas.append('g');
+
+        const borderMargin = 20;
+        const origin = [elem.clientWidth - borderMargin, elem.clientHeight - borderMargin];
+
+        const legendWidth = 280;
+        const legendHeight = 180;
+        // Draw the border box
+        // right side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1])
+            .attr('x2', origin[0])
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // top side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1] - legendHeight)
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // left side
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth)
+            .attr('y1', origin[1])
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // bottom side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1])
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1])
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+
+        const borderPad = 30;
+        const lineHeight = 30;
+        const lineLength = 60;
+        const textMargin = 20;
+
+        // Title
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth / 2 - 30)
+            .attr('y', origin[1] - legendHeight + lineHeight)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Legend');
+
+        // Draw line elements
+
+        // panel edge
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 2)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 2)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'red');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight * 2 + 5)
+            .attr('fill', 'red')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Panel Edge');
+
+        // bounding box
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 3)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 3)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'blue');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight * 3 + 5)
+            .attr('fill', 'blue')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Bounding Box');
+
+        // Guide line
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 4)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 4)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'black');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight * 4 + 5)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Guide Line');
+
+        // Note about units
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad)
+            .attr('y', origin[1] - legendHeight + lineHeight * 5 + 5)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('(All units are in inches)');
     }
 
     update() {
