@@ -1,14 +1,11 @@
-const url = require('url');
-const path = require('path');
+import {saveJson, loadJson} from './src/client/components/controlsContainer/controls.controller.js';
+//
 const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
-import {loadJson} from './src/components/controls.....'
 
 let win = null;
-let check = null;
 
-
-child = exec('nodemon --ignore /client/ --exec babel-node src/server',
+child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
     (error, stdout, stderr) => {
         console.log(`stdout: ${ stdout}`);
         console.log(`stderr: ${ stderr}`);
@@ -28,12 +25,6 @@ function createWindow() {
 
     // Specify entry point
     win.loadURL('http://localhost:3000');
-
-    /* win.loadURL(url.format({
-        pathname: path.join(__dirname, 'electron.html'),
-        protocol: 'file:',
-        slashes: true,
-    })); */
 
     // build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
@@ -71,29 +62,17 @@ app.on('activate', () => {
 const mainMenuTemplate = [
     {label: 'File',
         submenu: [{label: 'New Project', click() {
-            check = new BrowserWindow({
-                width: 500,
-                height: 100,
-            });
-
-            check.loadURL(url.format({
-                pathname: path.join(__dirname, 'saveCheck.html'),
-                protocol: 'file:',
-                slashes: true,
-            }));
-
-            check.setMenu(null);
-
-            check.show();
+            win.reload();
         }},
 
 
         {type: 'separator'},
-        {label: 'Save json'},
-        () => {
-          loadJson();
-        }
-        {label: 'Load json'},
+        {label: 'Save json', click() {
+            saveJson();
+        }},
+        {label: 'Load json', click() {
+            loadJson();
+        }},
         {type: 'separator'},
         {label: 'Save stl'},
         {label: 'Save pdf'},
@@ -134,7 +113,3 @@ const mainMenuTemplate = [
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
         }}]},
 ];
-
-// build menu from template
-const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-Menu.setApplicationMenu(mainMenu);

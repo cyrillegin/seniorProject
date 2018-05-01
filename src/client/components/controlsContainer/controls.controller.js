@@ -108,22 +108,22 @@ export default class controlsContainer {
     }
 
     saveJson() {
-      const data = JSON.stringify(this.$scope.data);
-      const file = new Blob([data], {type: 'JSON'});
-      const a = document.createElement('a');
-      const url = URL.createObjectURL(file);
-      a.href = url;
-      a.download = 'boat.json';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-      }, 0);
+        const data = JSON.stringify(this.$scope.data);
+        const file = new Blob([data], {type: 'JSON'});
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = 'boat.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 
     loadJson() {
-      document.querySelector('#json-file-input').click();
+        document.querySelector('#json-file-input').click();
     }
 
     savePDF() {

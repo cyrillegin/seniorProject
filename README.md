@@ -16,6 +16,7 @@ Change into directory: `cd seniorProject`
 Run setup command: `npm run setup`
 
 ##### Run Electron
+install electron: `npm install electron`  
 Start server: `npm run start-server`  
 Start electron: `npm run electron`  
 
