@@ -28,6 +28,9 @@
         "tests": "mocha --require babel-register tests/test.js",
         "cover": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- tests/test.js",
         "electron": "electron .",
+        "asar-osx": "asar pack Boat-darwin-x64/resources/app Boat-darwin-x64/resources/app.asar",
+        "asar-linux": "asar pack Boat-linux-x64/resources/app Boat-linux-x64/resources/app.asar",
+        "asar-win32": "asar pack Boat-win32-x64/resources/app Boat-win32-x64/resources/app.asar",
         "build-osx": "electron-packager . Boat Builder --platform darwin --overwrite",
         "build-linux": "electron-packager . Boat Builder --platform linux --overwrite",
         "build-win32": "electron-packager . Boat Builder --platform win32 --overwrite"

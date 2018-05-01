@@ -1,12 +1,13 @@
-// import {saveJson, loadJson} from './src/client/components/controlsContainer/controls.controller.js';
+// import {saveJson} from './src/client/components/controlsContainer/controls.controller.js';
 //
 //
 const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
-// const {save, load} = require('./src/client/components/controlsContainer/controls.controller.js').exec;
+// const {save, load} = require('./src/client/components/controlsContainer/controls.controller.js');
 
 
 let win = null;
+
 
 child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
     (error, stdout, stderr) => {
@@ -19,12 +20,35 @@ child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
 
 
 function createWindow() {
-    // Initialize the window to our specified dimensions
-    win = new BrowserWindow({
-        width: 1200,
-        height: 800,
-    });
 
+
+    // Initialize the window to our specified dimensions
+    if (process.platform === 'darwin') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/mac/icon.icns',
+        });
+    }
+
+    if (process.platform === 'win32') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/windows/icon.ico',
+        });
+    }
+
+    if (process.platform === 'linux') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/linux/icon.png',
+        });
+
+    }
+
+    // win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
 
     // Specify entry point
     win.loadURL('http://localhost:3000');
@@ -69,16 +93,16 @@ const mainMenuTemplate = [
         }},
 
 
-        {type: 'separator'},
+            /*  {type: 'separator'},
         {label: 'Save json', click() {
-            save.saveJson();
+            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
         }},
         {label: 'Load json', click() {
-            load.loadJson();
+            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#load-obj).click();}, 1000;)');
         }},
         {type: 'separator'},
         {label: 'Save stl'},
-        {label: 'Save pdf'},
+        {label: 'Save pdf'}, */
         {type: 'separator'},
         {label: 'Exit',
             accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',

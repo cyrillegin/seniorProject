@@ -107,6 +107,7 @@ export default class controlsContainer {
         };
     }
 
+
     saveJson() {
         const data = JSON.stringify(this.$scope.data);
         const file = new Blob([data], {type: 'JSON'});

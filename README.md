@@ -27,6 +27,11 @@ To create a development build:
 To view the site, you can navigate to localhost:3000 in the web browser of your choosing.  
 To run the application in electron, open a new terminal and run `npm run electron`.
 
+### Package Project
+To package the project choose one of the following:  
+`npm run build-osx`  
+`npm run build-linux`  
+`npm run build-win32`  
 
 ### Development build
 `npm run start` - This will transpile the project and start a development server running on port 3000. Automatic rebuilding will also be enabled so that you don't need to retranspile the entire project on every save.
