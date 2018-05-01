@@ -14,8 +14,8 @@ export default class MeshController {
         const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
         this.mesh = new THREE.Mesh(uvedGeometry, material);
+        this.mesh.name = 'boat-mesh';
 
-        app.mesh = this.mesh;
         app.scene.add(this.mesh);
         this.setupIO();
         return app;
@@ -105,7 +105,7 @@ export default class MeshController {
         mirror.mergeVertices();
         mirror.uvsNeedUpdate = true;
         initialFace.merge(mirror);
-
+        initialFace.name = 'boat-mesh';
         return initialFace;
     }
 
@@ -194,6 +194,12 @@ export default class MeshController {
 
     showMesh(show) {
         this.mesh.visible = show;
+    }
+
+    deleteMesh(app) {
+        const mesh = app.scene.getObjectByName(this.mesh.name);
+        app.scene.remove(mesh);
+        return app;
     }
 
     setupIO() {
