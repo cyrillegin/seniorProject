@@ -964,17 +964,102 @@ export default class BlueprintEditor {
 
     drawLegend(canvas, elem) {
         const legend = canvas.append('g');
-        console.log(canvas)
-        console.log(elem.clientWidth)
-        console.log(elem.clientHeight)
-        const origin = [elem.clientWidth, elem.clientHeight];
-        legend.append("line")
-            .attr("x1", origin[0])
-            .attr("y1", origin[1])
-            .attr("x2", origin[0])
-            .attr("y2", origin[1] - 50)
-            .attr("stroke-width", 2)
-            .attr("stroke", "black");
+
+        const borderMargin = 20;
+        const origin = [elem.clientWidth - borderMargin, elem.clientHeight - borderMargin];
+
+        const legendWidth = 300;
+        const legendHeight = 200;
+        // Draw the border box
+        // right side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1])
+            .attr('x2', origin[0])
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // top side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1] - legendHeight)
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // left side
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth)
+            .attr('y1', origin[1])
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1] - legendHeight)
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+        // bottom side
+        legend.append('line')
+            .attr('x1', origin[0])
+            .attr('y1', origin[1])
+            .attr('x2', origin[0] - legendWidth)
+            .attr('y2', origin[1])
+            .attr('stroke-width', 2)
+            .attr('stroke', 'black');
+
+        // Draw line elements
+        const borderPad = 30;
+        const lineHeight = 30;
+        const lineLength = 60;
+        const textMargin = 20;
+        // panel edge
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'red');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight + 5)
+            .attr('fill', 'red')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Panel Edge');
+
+        // bounding box
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 2)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 2)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'blue');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight * 2 + 5)
+            .attr('fill', 'blue')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Bounding Box');
+
+        // Guide line
+        legend.append('line')
+            .attr('x1', origin[0] - legendWidth + borderPad)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 3)
+            .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 3)
+            .attr('stroke-width', 4)
+            .attr('stroke', 'black');
+
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
+            .attr('y', origin[1] - legendHeight + lineHeight * 3 + 5)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Guide Line')
+
     }
 
     update() {
