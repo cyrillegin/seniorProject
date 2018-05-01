@@ -1,6 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
-import {casteljauFromY, casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
+import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
 const sidePanel = [
@@ -48,16 +48,49 @@ export default class BlueprintEditor {
         console.log(vals);
         return vals;
     } */
-    // Deal with this shit later as well. Does not update as boat changes for some reason
+    // Acquire points to draw reference lines
     getReference(curve) {
         const refPoints = {};
-      //  const t = casteljauFromY(boat.foreBeam, 75);
-        // console.log(curve.beamFore);
-        refPoints.foreKeel = casteljauPoint2D(curve.beamFore, 0.25);
-        console.log(refPoints.foreKeel);
-        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1));
+        // Get foreBeam reference
+        refPoints.foreBeam = casteljauPoint2D(curve.beamFore, 0.25);
+        refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1)) - 1;
+        refPoints.foreBeam.y = Number(Math.abs(refPoints.foreBeam.y).toFixed(1));
+
+        // Get aftBeam reference
+        refPoints.aftBeam = casteljauPoint2D(curve.beamAft, 0.75);
+        refPoints.aftBeam.x = Number(Math.abs(refPoints.aftBeam.x).toFixed(1)) + 1;
+        refPoints.aftBeam.y = Number(Math.abs(refPoints.aftBeam.y).toFixed(1));
+
+        // Get foreChine reference
+        refPoints.foreChine = casteljauPoint2D(curve.chineFor, 0.25);
+        refPoints.foreChine.x = Number(Math.abs(refPoints.foreChine.x).toFixed(1)) - 1;
+        refPoints.foreChine.y = Number(Math.abs(refPoints.foreChine.y).toFixed(1));
+
+        // Get aftChine reference
+        refPoints.aftChine = casteljauPoint2D(curve.chineAf, 0.75);
+        refPoints.aftChine.x = Number(Math.abs(refPoints.aftChine.x).toFixed(1)) + 1;
+        refPoints.aftChine.y = Number(Math.abs(refPoints.aftChine.y).toFixed(1));
+
+        // Get foreKeelChine reference
+        refPoints.foreKeelChine = casteljauPoint2D(curve.forChine, 0.25);
+        refPoints.foreKeelChine.x = Number(Math.abs(refPoints.foreKeelChine.x).toFixed(1)) - 1;
+        refPoints.foreKeelChine.y = Number(Math.abs(refPoints.foreKeelChine.y).toFixed(1));
+
+        // Get aftKeelChine reference
+        refPoints.aftKeelChine = casteljauPoint2D(curve.afChine, 0.75);
+        refPoints.aftKeelChine.x = Number(Math.abs(refPoints.aftKeelChine.x).toFixed(1)) + 1;
+        refPoints.aftKeelChine.y = Number(Math.abs(refPoints.aftKeelChine.y).toFixed(1));
+
+        // Get foreKeel reference
+        refPoints.foreKeel = casteljauPoint2D(curve.forKeel, 0.25);
+        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1)) + 1;
         refPoints.foreKeel.y = Number(Math.abs(refPoints.foreKeel.y).toFixed(1));
-        // console.log(refPoints.forePoint);
+
+        // Get aftKeel reference
+        refPoints.aftKeel = casteljauPoint2D(curve.afKeel, 0.75);
+        refPoints.aftKeel.x = Number(Math.abs(refPoints.aftKeel.x).toFixed(1)) + 1;
+        refPoints.aftKeel.y = Number(Math.abs(refPoints.aftKeel.y).toFixed(1));
+
         return refPoints;
     }
 
@@ -460,7 +493,7 @@ export default class BlueprintEditor {
         const yMaths = {};
         const xMaths = {};
 
-        //const refPoints = this.getReference(boat);
+        // const refPoints = this.getReference(boat);
         const convertedBoat = conver3dTo2dCoordinates(); // eslint-disable-line
 
         // Coordinates for first panel
@@ -568,11 +601,6 @@ export default class BlueprintEditor {
         xMaths.x18 = xMaths.x16 + Math.abs(this.boat.foreBeamEdge.end[0] - this.boat.foreGunEdge.end[0]);
         yMaths.y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + yMaths.y18;
         xMaths.x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + xMaths.x18;
-
-        /*   Get reference points
-        yMaths.y20 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - Math.abs(refPoints.forePoint.x)) - 20);
-        xMaths.x20 = Math.abs(this.boat.foreBeam.start[2] - refPoints.forePoint.z) + 15 - 1.6;
-        console.log(refPoints.forePoint); */
 
         // Coordinates put into usable structures for d3
         const struct = {
@@ -905,19 +933,9 @@ export default class BlueprintEditor {
                 points: [
                     {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
                 ]},
-            /*
-            refPoint1: {
-                line: true,
-                color: 'black',
-                width: 2,
-                text: false,
-                variable: 'refPoint1',
-                points: [
-                    {x: xMaths.x20, y: yMaths.y20}, {x: xMaths.x20, y: yMaths.y1},
-                ]}, */
-
         };
 
+        // Add reference points to coordinates structure
         const ref = this.getReference(struct);
 
         struct.refPoint1 = {
@@ -925,9 +943,151 @@ export default class BlueprintEditor {
             color: 'black',
             width: 2,
             text: false,
-            variable: 'refPoint1',
             points: [
-                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: yMaths.y1},
+                {x: ref.foreBeam.x, y: ref.foreBeam.y}, {x: ref.foreBeam.x, y: yMaths.y1},
+            ]},
+
+        struct.refPoint1Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y1 - ref.foreBeam.y).toFixed(1)),
+            points: [
+                {x: ref.foreBeam.x - 1, y: ref.foreBeam.y}, {x: ref.foreBeam.x - 1, y: yMaths.y1},
+            ]},
+
+        struct.refPoint2 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.aftBeam.x, y: ref.aftBeam.y}, {x: ref.aftBeam.x, y: yMaths.y1},
+            ]},
+
+        struct.refPoint2Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y1 - ref.aftBeam.y).toFixed(1)),
+            points: [
+                {x: ref.aftBeam.x + 1, y: yMaths.y1}, {x: ref.aftBeam.x + 1, y: ref.aftBeam.y},
+            ]},
+
+        struct.refPoint3 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.foreChine.x, y: ref.foreChine.y}, {x: ref.foreChine.x, y: yMaths.y4},
+            ]},
+
+        struct.refPoint3Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y4 - ref.foreChine.y).toFixed(1)),
+            points: [
+                {x: ref.foreChine.x - 1, y: yMaths.y4}, {x: ref.foreChine.x - 1, y: ref.foreChine.y},
+            ]},
+
+        struct.refPoint4 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.aftChine.x, y: ref.aftChine.y}, {x: ref.aftChine.x, y: yMaths.y4},
+            ]},
+
+        struct.refPoint4Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y4 - ref.aftChine.y).toFixed(1)),
+            points: [
+                {x: ref.aftChine.x + 1, y: ref.aftChine.y}, {x: ref.aftChine.x + 1, y: yMaths.y4},
+            ]},
+
+        struct.refPoint5 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.foreKeelChine.x, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x, y: yMaths.y7},
+            ]},
+
+        struct.refPoint5Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y7 - ref.foreKeelChine.y).toFixed(1)),
+            points: [
+                {x: ref.foreKeelChine.x - 1, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x - 1, y: yMaths.y7},
+            ]},
+
+        struct.refPoint6 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.aftKeelChine.x, y: ref.aftKeelChine.y}, {x: ref.aftKeelChine.x, y: yMaths.y7},
+            ]},
+
+        struct.refPoint6Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y7 - ref.aftKeelChine.y).toFixed(1)),
+            points: [
+                {x: ref.aftKeelChine.x + 1, y: yMaths.y7}, {x: ref.aftKeelChine.x + 1, y: ref.aftKeelChine.y},
+            ]},
+
+        struct.refPoint7 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: yMaths.y10},
+            ]},
+
+        struct.refPoint7Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y10 - ref.foreKeel.y).toFixed(1)),
+            points: [
+                {x: ref.foreKeel.x - 1, y: ref.foreKeel.y}, {x: ref.foreKeel.x - 1, y: yMaths.y10},
+            ]},
+
+        struct.refPoint8 = {
+            line: true,
+            color: 'black',
+            width: 2,
+            text: false,
+            points: [
+                {x: ref.aftKeel.x, y: ref.aftKeel.y}, {x: ref.aftKeel.x, y: yMaths.y10},
+            ]},
+
+        struct.refPoint8Size = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            size: Number(Math.abs(yMaths.y10 - ref.aftKeel.y).toFixed(1)),
+            points: [
+                {x: ref.aftKeel.x + 1, y: yMaths.y10}, {x: ref.aftKeel.x + 1, y: ref.aftKeel.y},
             ]};
         return struct;
     }
@@ -935,11 +1095,6 @@ export default class BlueprintEditor {
     drawBlueprints(boat) {
         const coords = this.getCoords(boat);
         const frames = this.getFrameCoords(boat, coords.gunForeEdge.points[2].y);
-         const ref = this.getReference(coords);
-        // console.log(ref);
-
-        // console.log(ref);
-         // const refPoints = this.getReference(boat);
 
         // Acquire dimensions
         const variables = {
@@ -1029,7 +1184,7 @@ export default class BlueprintEditor {
                     }
                     this.canvas.append('text')
                         .append('textPath')
-                        .attr('startOffset', '50%')
+                        .attr('startOffset', '45%')
                         .attr('xlink:href', label)
                         .text(variables[label1]);
                 }
@@ -1050,6 +1205,11 @@ export default class BlueprintEditor {
                             .attr('xlink:href', label)
                             .text('Frames');
                     }
+                } else {
+                    this.canvas.append('text')
+                        .append('textPath')
+                        .attr('xlink:href', label)
+                        .text(coords[key].size);
                 }
             }
         });
@@ -1088,9 +1248,6 @@ export default class BlueprintEditor {
             }
 
         });
-
-        // const test = this.getReference(boat);
-        // console.log(test);
     }
 
     update() {

@@ -67,7 +67,6 @@ export function casteljauPoint(curve, t) {
 // 2D implementation of casteljau's algorithm
 export function casteljauPoint2D(curve, t) {
     // Step 1
-    console.log(curve);
     const Ax = ((1 - t) * curve.points[0].x) + (t * curve.points[1].x);
     const Ay = ((1 - t) * curve.points[0].y) + (t * curve.points[1].y);
     const Bx = ((1 - t) * curve.points[1].x) + (t * curve.points[2].x);
