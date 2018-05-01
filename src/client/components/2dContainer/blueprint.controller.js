@@ -968,8 +968,8 @@ export default class BlueprintEditor {
         const borderMargin = 20;
         const origin = [elem.clientWidth - borderMargin, elem.clientHeight - borderMargin];
 
-        const legendWidth = 300;
-        const legendHeight = 200;
+        const legendWidth = 280;
+        const legendHeight = 180;
         // Draw the border box
         // right side
         legend.append('line')
@@ -1019,7 +1019,7 @@ export default class BlueprintEditor {
             .text('Legend');
 
         // Draw line elements
-        
+
         // panel edge
         legend.append('line')
             .attr('x1', origin[0] - legendWidth + borderPad)
