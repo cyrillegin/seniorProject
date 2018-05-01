@@ -1004,23 +1004,34 @@ export default class BlueprintEditor {
             .attr('stroke-width', 2)
             .attr('stroke', 'black');
 
-        // Draw line elements
         const borderPad = 30;
         const lineHeight = 30;
         const lineLength = 60;
         const textMargin = 20;
+
+        // Title
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth / 2 - 30)
+            .attr('y', origin[1] - legendHeight + lineHeight)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('Legend');
+
+        // Draw line elements
+        
         // panel edge
         legend.append('line')
             .attr('x1', origin[0] - legendWidth + borderPad)
-            .attr('y1', origin[1] - legendHeight + lineHeight)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 2)
             .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
-            .attr('y2', origin[1] - legendHeight + lineHeight)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 2)
             .attr('stroke-width', 4)
             .attr('stroke', 'red');
 
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
-            .attr('y', origin[1] - legendHeight + lineHeight + 5)
+            .attr('y', origin[1] - legendHeight + lineHeight * 2 + 5)
             .attr('fill', 'red')
             .attr('font-size', '20px')
             .attr('font-family', 'sans-serif')
@@ -1029,15 +1040,15 @@ export default class BlueprintEditor {
         // bounding box
         legend.append('line')
             .attr('x1', origin[0] - legendWidth + borderPad)
-            .attr('y1', origin[1] - legendHeight + lineHeight * 2)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 3)
             .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
-            .attr('y2', origin[1] - legendHeight + lineHeight * 2)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 3)
             .attr('stroke-width', 4)
             .attr('stroke', 'blue');
 
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
-            .attr('y', origin[1] - legendHeight + lineHeight * 2 + 5)
+            .attr('y', origin[1] - legendHeight + lineHeight * 3 + 5)
             .attr('fill', 'blue')
             .attr('font-size', '20px')
             .attr('font-family', 'sans-serif')
@@ -1046,20 +1057,28 @@ export default class BlueprintEditor {
         // Guide line
         legend.append('line')
             .attr('x1', origin[0] - legendWidth + borderPad)
-            .attr('y1', origin[1] - legendHeight + lineHeight * 3)
+            .attr('y1', origin[1] - legendHeight + lineHeight * 4)
             .attr('x2', origin[0] - legendWidth + borderPad + lineLength)
-            .attr('y2', origin[1] - legendHeight + lineHeight * 3)
+            .attr('y2', origin[1] - legendHeight + lineHeight * 4)
             .attr('stroke-width', 4)
             .attr('stroke', 'black');
 
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad + lineLength + textMargin)
-            .attr('y', origin[1] - legendHeight + lineHeight * 3 + 5)
+            .attr('y', origin[1] - legendHeight + lineHeight * 4 + 5)
             .attr('fill', 'black')
             .attr('font-size', '20px')
             .attr('font-family', 'sans-serif')
-            .text('Guide Line')
+            .text('Guide Line');
 
+        // Note about units
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad)
+            .attr('y', origin[1] - legendHeight + lineHeight * 5 + 5)
+            .attr('fill', 'black')
+            .attr('font-size', '20px')
+            .attr('font-family', 'sans-serif')
+            .text('(All units are in inches)');
     }
 
     update() {
