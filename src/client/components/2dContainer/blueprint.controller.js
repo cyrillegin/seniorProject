@@ -1,5 +1,6 @@
 // Global imports
 import * as d3 from 'd3';
+import {saveAs} from 'file-saver';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
@@ -98,7 +99,7 @@ export default class BlueprintEditor {
     getFrameCoords(boat, lastY) {
 
         // Structure containing the info required to print the frames
-        const frames = {}
+        const frames = {};
         for (let i = 1; i <= 15; i++) {
             frames[`frame${i}`] = {
                 count: i, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
@@ -119,8 +120,8 @@ export default class BlueprintEditor {
                 count: i, empty: true, line: true, color: 'invisible', width: 2, text: true, size: 0, variable: 'frameSide', size: 0, points: [
                     {}, {},
                 ],
-            }
-          }
+            };
+        }
 
         // Find the location of each frame and insert their offsets into the structure
         let currY = lastY;
@@ -960,6 +961,128 @@ export default class BlueprintEditor {
         });
 
         this.drawLegend(this.canvas, elem);
+        this.setupImageExport(this.canvas);
+    }
+
+    setupImageExport(canvas) {
+        // Adapted from http://bl.ocks.org/Rokotyan/0556f8facbaf344507cdc45dc3622177
+        const savePNG = () => {
+
+            const width = canvas.node().clientWidth;
+            const height = canvas.node().clientHeight;
+
+            function save(dataBlob, filesize) {
+                saveAs(dataBlob, 'D3 vis exported to PNG.png'); // FileSaver.js function
+            }
+
+            const svgString = getSVGString(canvas.node());
+          	svgString2Image(svgString, 2 * width, 2 * height, 'png', save); // passes Blob and filesize String to the callback
+
+            // Below are the functions that handle actual exporting:
+            // getSVGString ( svgNode ) and svgString2Image( svgString, width, height, format, callback )
+            function getSVGString(svgNode) {
+                svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+                const cssStyleText = getCSSStyles(svgNode);
+                appendCSS(cssStyleText, svgNode);
+
+                const serializer = new XMLSerializer();
+                let svgString = serializer.serializeToString(svgNode);
+                svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
+                svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
+
+                return svgString;
+
+                function getCSSStyles(parentElement) {
+            		var selectorTextArr = [];
+
+            		// Add Parent element Id and Classes to the list
+            		selectorTextArr.push( '#'+parentElement.id );
+            		for (var c = 0; c < parentElement.classList.length; c++)
+            				if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
+            					selectorTextArr.push( '.'+parentElement.classList[c] );
+
+            		// Add Children element Ids and Classes to the list
+            		var nodes = parentElement.getElementsByTagName("*");
+            		for (var i = 0; i < nodes.length; i++) {
+            			var id = nodes[i].id;
+            			if ( !contains('#'+id, selectorTextArr) )
+            				selectorTextArr.push( '#'+id );
+
+            			var classes = nodes[i].classList;
+            			for (var c = 0; c < classes.length; c++)
+            				if ( !contains('.'+classes[c], selectorTextArr) )
+            					selectorTextArr.push( '.'+classes[c] );
+            		}
+
+            		// Extract CSS Rules
+            		var extractedCSSText = "";
+            		for (var i = 0; i < document.styleSheets.length; i++) {
+            			var s = document.styleSheets[i];
+            			
+            			try {
+            			    if(!s.cssRules) continue;
+            			} catch( e ) {
+            		    		if(e.name !== 'SecurityError') throw e; // for Firefox
+            		    		continue;
+            		    	}
+
+            			var cssRules = s.cssRules;
+            			for (var r = 0; r < cssRules.length; r++) {
+            				if ( contains( cssRules[r].selectorText, selectorTextArr ) )
+            					extractedCSSText += cssRules[r].cssText;
+            			}
+            		}
+            		
+
+            		return extractedCSSText;
+
+            		function contains(str,arr) {
+            			return arr.indexOf( str ) === -1 ? false : true;
+            		}
+
+            	}
+              
+              function appendCSS(cssText, element) {
+          		var styleElement = document.createElement("style");
+          		styleElement.setAttribute("type","text/css"); 
+          		styleElement.innerHTML = cssText;
+          		var refNode = element.hasChildNodes() ? element.children[0] : null;
+          		element.insertBefore( styleElement, refNode );
+          	}
+          }
+          
+          function svgString2Image( svgString, width, height, format, callback ) {
+          	var format = format ? format : 'png';
+
+          	var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
+
+          	var canvas = document.createElement("canvas");
+          	var context = canvas.getContext("2d");
+
+            	canvas.width = width;
+            	canvas.height = height;
+
+          	var image = new Image();
+          	image.onload = function() {
+          		context.clearRect ( 0, 0, width, height );
+          		context.drawImage(image, 0, 0, width, height);
+
+          		canvas.toBlob( function(blob) {
+          			var filesize = Math.round( blob.length/1024 ) + ' KB';
+          			if ( callback ) callback( blob, filesize );
+          		});
+
+          		
+          	};
+
+          	image.src = imgsrc;
+          }
+        };
+        const oldElement = document.getElementById('save-png');
+        const newElement = oldElement.cloneNode(true);
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+        document.querySelector('#save-png').addEventListener('click', savePNG, true);
+
     }
 
     drawLegend(canvas, elem) {
