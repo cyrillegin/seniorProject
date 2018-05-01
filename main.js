@@ -1,7 +1,10 @@
-import {saveJson, loadJson} from './src/client/components/controlsContainer/controls.controller.js';
+// import {saveJson, loadJson} from './src/client/components/controlsContainer/controls.controller.js';
+//
 //
 const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
+// const {save, load} = require('./src/client/components/controlsContainer/controls.controller.js').exec;
+
 
 let win = null;
 
@@ -68,10 +71,10 @@ const mainMenuTemplate = [
 
         {type: 'separator'},
         {label: 'Save json', click() {
-            saveJson();
+            save.saveJson();
         }},
         {label: 'Load json', click() {
-            loadJson();
+            load.loadJson();
         }},
         {type: 'separator'},
         {label: 'Save stl'},
@@ -90,7 +93,6 @@ const mainMenuTemplate = [
             {role: 'cut'},
             {role: 'copy'},
             {role: 'paste'},
-            {role: 'pasteandmatchstyle'},
             {role: 'delete'},
             {role: 'selectall'}]}, // submenu
 
