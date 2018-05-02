@@ -1089,10 +1089,10 @@ export default class BlueprintEditor {
         oldElement.parentNode.replaceChild(newElement, oldElement);
         document.querySelector('#save-png').addEventListener('click', () => savePNG(saveAs), true);
 
-        oldElement = document.getElementById('save-pdf');
-        newElement = oldElement.cloneNode(true);
-        oldElement.parentNode.replaceChild(newElement, oldElement);
-        document.querySelector('#save-pdf').addEventListener('click', savePDF, true);
+        // oldElement = document.getElementById('save-pdf');
+        // newElement = oldElement.cloneNode(true);
+        // oldElement.parentNode.replaceChild(newElement, oldElement);
+        // document.querySelector('#save-pdf').addEventListener('click', savePDF, true);
 
     }
 

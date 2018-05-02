@@ -87,21 +87,21 @@ const mainMenuTemplate = [{
         type: 'separator',
     }, {
         label: 'Save json', click() {
-            win.webContents.executeJavaScript('document.querySelector(#save-json).click();');
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-json).click();})');
         },
     }, {
         label: 'Load json', click() {
-            win.webContents.executeJavaScript('document.querySelector(#load-json).click();');
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#load-json).click();})');
         },
     }, {
         type: 'separator',
     }, {
         label: 'Save stl', click() {
-            win.webContents.executeJavaScript('document.querySelector(#save-stl).click();');
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-stl).click();})');
         },
     }, {
         label: 'Save obj', click() {
-            win.webContents.executeJavaScript('document.querySelector(#save-obj).click();');
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-obj).click();})');
         },
     }, {
         type: 'separator',
