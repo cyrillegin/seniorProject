@@ -5,10 +5,10 @@ let win = null;
 
 child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
     (error, stdout, stderr) => {
-        console.log(`stdout: ${ stdout}`);
-        console.log(`stderr: ${ stderr}`);
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
         if (error !== null) {
-            console.log(`exec error: ${ error}`);
+            console.log(`exec error: ${error}`);
         }
     });
 
@@ -112,28 +112,27 @@ const mainMenuTemplate = [{
         },
     }],
 }, {
-    label: 'Edit',
-    submenu: [
+    label: 'Edit', submenu: [
         {role: 'cut'},
         {role: 'copy'},
         {role: 'paste'},
         {role: 'delete'},
-        {label: 'View', submenu: [
-            {role: 'reload'},
-            {role: 'forcereload'},
-            {role: 'toggledevtools'},
-            {type: 'separator'},
-            {role: 'resetzoom'},
-            {role: 'zoomin'},
-            {role: 'zoomout'},
-            {type: 'separator'},
-            {role: 'togglefullscreen'},
-        ]},
-
-        {role: 'help', submenu: [{
-            label: 'Learn More', click() {
-                require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
-            }}],
-        },
     ],
+}, {
+    label: 'View', submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
+        {type: 'separator'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
+        {type: 'separator'},
+        {role: 'togglefullscreen'},
+    ],
+}, {
+    role: 'help', submenu: [{
+        label: 'Learn More', click() {
+            require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
+        }}],
 }];
