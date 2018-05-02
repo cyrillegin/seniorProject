@@ -83,6 +83,7 @@ export function casteljauPoint2D(curve, t) {
     // Step 3
     const Px = ((1 - t) * Dx) + (t * Ex);
     const Py = ((1 - t) * Dy) + (t * Ey);
+
     return new THREE.Vector2(Px, Py);
 }
 

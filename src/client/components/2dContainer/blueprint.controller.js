@@ -38,8 +38,8 @@ export default class BlueprintEditor {
         let i;
         for (i = 0; i <= 1.05; i = i + 0.05) {
             const topFore = casteljauPoint2D(coordStruct.beamFore, i);
-            console.log(coordStruct.beamFore);
-            console.log(casteljauPoint2D(coordStruct.beamFore, i));
+            // console.log(coordStruct.beamFore);
+            // console.log(casteljauPoint2D(coordStruct.beamFore, i));
             const bottomFore = casteljauPoint2D(coordStruct.chineFor, i);
             if (topFore.y < vals.miny1) {
                 vals.miny1 = topFore.y;
@@ -147,7 +147,7 @@ export default class BlueprintEditor {
                 }
             }
         }
-        console.log('vals', vals);
+        // console.log('vals', vals);
         return vals;
     }
 
@@ -1197,7 +1197,7 @@ export default class BlueprintEditor {
             points: [
                 {x: ref.aftKeel.x + 1, y: struct.panel2Box.points[2].y}, {x: ref.aftKeel.x + 1, y: ref.aftKeel.y},
             ]};
-        console.log('box1', struct.panel1Box);
+        // console.log('box1', struct.panel1Box);
         return struct;
     }
 
