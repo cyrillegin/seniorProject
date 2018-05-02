@@ -1065,7 +1065,7 @@ export default class BlueprintEditor {
 
                     canvas.toBlob((blob) => {
                         if (callback) {
-                            callback(blob, 'Boat.png');
+                            callback(learn, 'Boat.png');
                         }
                     });
                 };
@@ -1083,17 +1083,17 @@ export default class BlueprintEditor {
                 // img.src = image;
                 // console.log(img)
                 // const canvas = document.createElement("canvas");
-                // 
+                //
                 // canvas.width = img.width;
                 // canvas.height = img.height;
                 // const ctx = canvas.getContext("2d");
-                // 
+                //
                 // ctx.drawImage(img, 0, 0);
-                // 
+                //
                 // const dataURL = canvas.toDataURL("image/jpeg");
 
                 // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                console.log(image)
+                console.log(image);
                 pdf.addImage(image, 'PNG', 0, 0);
                 pdf.save('boat.pdf');
             });
