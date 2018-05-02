@@ -1,6 +1,7 @@
 // Global imports
 import * as d3 from 'd3';
 import {saveAs} from 'file-saver';
+import jsPDF from 'jspdf';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
@@ -966,7 +967,7 @@ export default class BlueprintEditor {
 
     setupImageExport(canvas) {
         // Adapted from http://bl.ocks.org/Rokotyan/0556f8facbaf344507cdc45dc3622177
-        const savePNG = () => {
+        const savePNG = (callback) => {
 
             const width = canvas.node().clientWidth;
             const height = canvas.node().clientHeight;
@@ -1071,12 +1072,42 @@ export default class BlueprintEditor {
                 image.src = imgsrc;
             }
             const svgString = getSVGString(canvas.node());
-          	svgString2Image(svgString, 2 * width, 2 * height, 'png', saveAs);
+
+          	svgString2Image(svgString, 2 * width, 2 * height, 'png', callback);
         };
-        const oldElement = document.getElementById('save-png');
-        const newElement = oldElement.cloneNode(true);
+
+        const savePDF = () => {
+            savePNG((image) => {
+                const pdf = new jsPDF(); // eslint-disable-line
+                // var img = new Image();
+                // img.src = image;
+                // console.log(img)
+                // const canvas = document.createElement("canvas");
+                // 
+                // canvas.width = img.width;
+                // canvas.height = img.height;
+                // const ctx = canvas.getContext("2d");
+                // 
+                // ctx.drawImage(img, 0, 0);
+                // 
+                // const dataURL = canvas.toDataURL("image/jpeg");
+
+                // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+                console.log(image)
+                pdf.addImage(image, 'PNG', 0, 0);
+                pdf.save('boat.pdf');
+            });
+        };
+
+        let oldElement = document.getElementById('save-png');
+        let newElement = oldElement.cloneNode(true);
         oldElement.parentNode.replaceChild(newElement, oldElement);
-        document.querySelector('#save-png').addEventListener('click', savePNG, true);
+        document.querySelector('#save-png').addEventListener('click', () => savePNG(saveAs), true);
+
+        oldElement = document.getElementById('save-pdf');
+        newElement = oldElement.cloneNode(true);
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+        document.querySelector('#save-pdf').addEventListener('click', savePDF, true);
 
     }
 
