@@ -97,11 +97,11 @@ const mainMenuTemplate = [{
         type: 'separator',
     }, {
         label: 'Save stl', click() {
-            win.webContents.executeJavaScript('document.querySelector(#load-stl).click();');
+            win.webContents.executeJavaScript('document.querySelector(#save-stl).click();');
         },
     }, {
         label: 'Save obj', click() {
-            win.webContents.executeJavaScript('document.querySelector(#load-obj).click();');
+            win.webContents.executeJavaScript('document.querySelector(#save-obj).click();');
         },
     }, {
         type: 'separator',
