@@ -1212,7 +1212,7 @@ export default class BlueprintEditor {
         const elem = $('#blueprint-container')[0];
         // Scale for svg window sizing
         const scale = 0.008;
-        const pad = 10;
+        const pad = 13;
 
         let windowHeight = variables.panel1Height + variables.panel2Height + variables.aftHeight + variables.foreHeight;
         windowHeight += (variables.aftHeight + variables.foreHeight) / 2 * boat.frames.length;
