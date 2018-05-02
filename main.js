@@ -1,26 +1,19 @@
-// import {saveJson} from './src/client/components/controlsContainer/controls.controller.js';
-//
-//
 const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
-// const {save, load} = require('./src/client/components/controlsContainer/controls.controller.js');
-
 
 let win = null;
 
-
 child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
     (error, stdout, stderr) => {
-        console.log(`stdout: ${ stdout}`);
-        console.log(`stderr: ${ stderr}`);
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
         if (error !== null) {
-            console.log(`exec error: ${ error}`);
+            console.log(`exec error: ${error}`);
         }
     });
 
 
 function createWindow() {
-
 
     // Initialize the window to our specified dimensions
     if (process.platform === 'darwin') {
@@ -47,8 +40,6 @@ function createWindow() {
         });
 
     }
-
-    // win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
 
     // Specify entry point
     win.loadURL('http://localhost:3000');
@@ -86,56 +77,62 @@ app.on('activate', () => {
 
 // NOTE: Working on the file menu right now
 // create menu template
-const mainMenuTemplate = [
-    {label: 'File',
-        submenu: [{label: 'New Project', click() {
+const mainMenuTemplate = [{
+    label: 'File',
+    submenu: [{
+        label: 'New Project', click() {
             win.reload();
-        }},
-
-
-            /*  {type: 'separator'},
-        {label: 'Save json', click() {
-            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
-        }},
-        {label: 'Load json', click() {
-            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#load-obj).click();}, 1000;)');
-        }},
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Save json', click() {
+            win.webContents.executeJavaScript('document.querySelector(#save-json).click();');
+        },
+    }, {
+        label: 'Load json', click() {
+            win.webContents.executeJavaScript('document.querySelector(#load-json).click();');
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Save stl', click() {
+            win.webContents.executeJavaScript('document.querySelector(#load-stl).click();');
+        },
+    }, {
+        label: 'Save obj', click() {
+            win.webContents.executeJavaScript('document.querySelector(#load-obj).click();');
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Exit',
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q', click() {
+            app.quit();
+        },
+    }],
+}, {
+    label: 'Edit', submenu: [
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'delete'},
+    ],
+}, {
+    label: 'View', submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
         {type: 'separator'},
-        {label: 'Save stl'},
-        {label: 'Save pdf'}, */
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
         {type: 'separator'},
-        {label: 'Exit',
-            accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-            click() {
-                app.quit();
-            },
-        }]}, // submenu
-    {label: 'Edit',
-        submenu: [{role: 'undo'},
-            {role: 'redo'},
-            {type: 'separator'},
-            {role: 'cut'},
-            {role: 'copy'},
-            {role: 'paste'},
-            {role: 'delete'},
-            {role: 'selectall'}]}, // submenu
-
-
-    {label: 'View',
-        submenu: [
-            {role: 'reload'},
-            {role: 'forcereload'},
-            {role: 'toggledevtools'},
-            {type: 'separator'},
-            {role: 'resetzoom'},
-            {role: 'zoomin'},
-            {role: 'zoomout'},
-            {type: 'separator'},
-            {role: 'togglefullscreen'},
-        ]},
-
-    {role: 'help',
-        submenu: [{label: 'Learn More', click() {
+        {role: 'togglefullscreen'},
+    ],
+}, {
+    role: 'help', submenu: [{
+        label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
-        }}]},
-];
+        }}],
+}];
