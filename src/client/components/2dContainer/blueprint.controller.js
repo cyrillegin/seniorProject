@@ -6,11 +6,17 @@ import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} f
 
 /* Original sidepanel coordinates
 const sidePanel = [
-    {x: 1, y: 1}, {x: 500, y: 1},
-    {x: 500, y: 1}, {x: 500, y: 20},
-    {x: 250, y: 150}, {x: 1, y: 170},
-    {x: 1, y: 170}, {x: 1, y: 1},
+    {x: 15, y: 20}, {x: 26, y: 13},
+    {x: 48, y: 65}, {x: 65, y: 7},
 ];
+const sidePanel1 = [
+    {x: 21.6, y: 15.8}, {x: 39.2, y: 44.2},
+    {x: 58.2, y: 30.2},
+];
+const sidePanel2 = [
+    {x: 32.16, y: 32.84}, {x: 50.6, y: 35.8},
+];
+/*
 casteljauPoint, casteljauFromY
 */
 
@@ -24,76 +30,150 @@ export default class BlueprintEditor {
         this.boatParametersService = boatParametersService;
     }
 
-    /* I'll deal with this shit later
-    getBoundingSize(Maths, index0, index1) {
-        const copy = Maths;
-        let maxDiff = 0;
+    // I'll deal with this shit later
+    getBoundingSize(coordStruct) {
         const vals = {
-            minVal: '',
-            maxVal: '',
+            miny1: 1000,
+            minx1: 0,
+            maxy1: 0,
+            maxx1: 0,
+            miny2: 1000,
+            minx2: 0,
+            maxy2: 0,
+            maxx2: 0,
         };
-        Object.keys(Maths).forEach((key) => {
-            Object.keys(copy).forEach((key1) => {
-                if (Math.abs(Maths[key] - copy[key1]) > maxDiff) {
-                    maxDiff = Math.abs(Maths[key] - copy[key1]);
-                    console.log(maxDiff);
-                    if (Maths[key] < Maths[key1]) {
-                        vals.minVal = key;
-                        vals.maxVal = key1;
-                    } else {
-                        vals.minVal = key1;
-                        vals.maxVal = key;
-                    }
+
+        let i;
+        for (i = 0; i <= 1.05; i = i + 0.05) {
+            const topFore = casteljauPoint2D(coordStruct.beamFore, i);
+            const bottomFore = casteljauPoint2D(coordStruct.chineFor, i);
+            if (topFore.y < vals.miny1) {
+                vals.miny1 = topFore.y;
+            }
+
+            if (topFore.y > vals.maxy1) {
+                vals.maxy1 = topFore.y;
+            }
+
+            if (bottomFore.y > vals.maxy1) {
+                vals.maxy1 = bottomFore.y;
+            }
+
+            if (bottomFore.y < vals.miny1) {
+                vals.miny1 = bottomFore.y;
+            }
+
+            if (topFore.x > vals.maxx1) {
+                vals.maxx1 = topFore.x;
+            }
+
+            if (bottomFore.x > vals.maxx1) {
+                vals.maxx1 = bottomFore.x;
+            }
+
+            const topAft = casteljauPoint2D(coordStruct.beamAft, i);
+            const bottomAft = casteljauPoint2D(coordStruct.chineAf, i);
+            if (topAft.y < vals.miny1) {
+                vals.miny1 = topAft.y;
+            }
+
+            if (topAft.y > vals.maxy1) {
+                vals.maxy1 = topAft.y;
+            }
+            if (bottomAft.y > vals.maxy1) {
+                vals.maxy1 = bottomAft.y;
+            }
+
+            if (bottomAft.y < vals.miny1) {
+                vals.miny1 = bottomAft.y;
+            }
+
+            if (topAft.x > vals.maxx1) {
+                vals.maxx1 = topAft.x;
+            }
+
+            if (bottomAft.x > vals.maxx1) {
+                vals.maxx1 = bottomAft.x;
+            }
+
+            if ('forChine' in coordStruct) {
+                const topChineFore = casteljauPoint2D(coordStruct.forChine, i);
+                const bottomKeelFore = casteljauPoint2D(coordStruct.forKeel, i);
+                if (topChineFore.y < vals.miny2) {
+                    vals.miny2 = topChineFore.y;
                 }
-            });
-        });
-        console.log(vals);
+
+                if (topChineFore.y > vals.maxy2) {
+                    vals.maxy2 = topChineFore.y;
+                }
+
+                if (bottomKeelFore.y > vals.maxy2) {
+                    vals.maxy2 = bottomKeelFore.y;
+                }
+
+                if (bottomKeelFore.y < vals.miny2) {
+                    vals.miny2 = bottomKeelFore.y;
+                }
+
+                if (topChineFore.x > vals.maxx2) {
+                    vals.maxx2 = topChineFore.x;
+                }
+
+                if (bottomKeelFore.x > vals.maxx2) {
+                    vals.maxx2 = bottomKeelFore.x;
+                }
+
+                const topChineAft = casteljauPoint2D(coordStruct.afChine, i);
+                const bottomKeelAft = casteljauPoint2D(coordStruct.afKeel, i);
+                if (topChineAft.y < vals.miny2) {
+                    vals.miny2 = topChineAft.y;
+                }
+
+                if (topChineAft.y > vals.maxy2) {
+                    vals.maxy2 = topChineAft.y;
+                }
+
+                if (bottomKeelAft.y > vals.maxy2) {
+                    vals.maxy2 = bottomKeelAft.y;
+                }
+
+                if (bottomKeelAft.y < vals.miny2) {
+                    vals.miny2 = bottomKeelAft.y;
+                }
+
+                if (topChineAft.x > vals.maxx2) {
+                    vals.maxx2 = topChineAft.x;
+                }
+
+                if (bottomKeelAft.x > vals.maxx2) {
+                    vals.maxx2 = bottomKeelAft.x;
+                }
+            }
+        }
+        // console.log('vals', vals);
         return vals;
-    } */
+    }
+
     // Acquire points to draw reference lines
-    getReference(curve) {
-        const refPoints = {};
-        // Get foreBeam reference
-        refPoints.foreBeam = casteljauPoint2D(curve.beamFore, 0.25);
-        refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1)) - 1;
-        refPoints.foreBeam.y = Number(Math.abs(refPoints.foreBeam.y).toFixed(1));
-
-        // Get aftBeam reference
-        refPoints.aftBeam = casteljauPoint2D(curve.beamAft, 0.75);
-        refPoints.aftBeam.x = Number(Math.abs(refPoints.aftBeam.x).toFixed(1)) + 1;
-        refPoints.aftBeam.y = Number(Math.abs(refPoints.aftBeam.y).toFixed(1));
-
-        // Get foreChine reference
-        refPoints.foreChine = casteljauPoint2D(curve.chineFor, 0.25);
-        refPoints.foreChine.x = Number(Math.abs(refPoints.foreChine.x).toFixed(1)) - 1;
-        refPoints.foreChine.y = Number(Math.abs(refPoints.foreChine.y).toFixed(1));
-
-        // Get aftChine reference
-        refPoints.aftChine = casteljauPoint2D(curve.chineAf, 0.75);
-        refPoints.aftChine.x = Number(Math.abs(refPoints.aftChine.x).toFixed(1)) + 1;
-        refPoints.aftChine.y = Number(Math.abs(refPoints.aftChine.y).toFixed(1));
-
-        // Get foreKeelChine reference
-        refPoints.foreKeelChine = casteljauPoint2D(curve.forChine, 0.25);
-        refPoints.foreKeelChine.x = Number(Math.abs(refPoints.foreKeelChine.x).toFixed(1)) - 1;
-        refPoints.foreKeelChine.y = Number(Math.abs(refPoints.foreKeelChine.y).toFixed(1));
-
-        // Get aftKeelChine reference
-        refPoints.aftKeelChine = casteljauPoint2D(curve.afChine, 0.75);
-        refPoints.aftKeelChine.x = Number(Math.abs(refPoints.aftKeelChine.x).toFixed(1)) + 1;
-        refPoints.aftKeelChine.y = Number(Math.abs(refPoints.aftKeelChine.y).toFixed(1));
-
-        // Get foreKeel reference
-        refPoints.foreKeel = casteljauPoint2D(curve.forKeel, 0.25);
-        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1)) + 1;
-        refPoints.foreKeel.y = Number(Math.abs(refPoints.foreKeel.y).toFixed(1));
-
-        // Get aftKeel reference
-        refPoints.aftKeel = casteljauPoint2D(curve.afKeel, 0.75);
-        refPoints.aftKeel.x = Number(Math.abs(refPoints.aftKeel.x).toFixed(1)) + 1;
-        refPoints.aftKeel.y = Number(Math.abs(refPoints.aftKeel.y).toFixed(1));
-
-        return refPoints;
+    getReference(coords) {
+        return {
+            // Get foreBeam reference
+            foreBeam: casteljauPoint2D(coords.beamFore, 0.25),
+            // Get aftBeam reference
+            aftBeam: casteljauPoint2D(coords.beamAft, 0.75),
+            // Get foreChine reference
+            foreChine: casteljauPoint2D(coords.chineFor, 0.25),
+            // Get aftChine reference
+            aftChine: casteljauPoint2D(coords.chineAf, 0.75),
+            // Get foreKeelChine reference
+            foreKeelChine: casteljauPoint2D(coords.forChine, 0.25),
+            // Get aftKeelChine reference
+            aftKeelChine: casteljauPoint2D(coords.afChine, 0.75),
+            // Get foreKeel reference
+            foreKeel: casteljauPoint2D(coords.forKeel, 0.25),
+            // Get aftKeel reference
+            aftKeel: casteljauPoint2D(coords.afKeel, 0.75),
+        };
     }
 
     // Acquire coordinates of frames
@@ -244,217 +324,8 @@ export default class BlueprintEditor {
         yMaths.ecy4 = this.boat.aftChine.endControl[0] + yMaths.y5;
         xMaths.ecx4 = xMaths.x5 - this.boat.aftChine.endControl[2];
 
-        // Get size of bounding panel1Box
-        // this.getBoundingSize(yMaths, 0, 25);
-        // Coordinates for second second panel
-        // Get coordinates for foreChine (mirror along x-asix)
-        yMaths.y6 = yMaths.y4 + 20;
-        xMaths.x6 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
-        yMaths.ecy5 = yMaths.y6 - Math.abs(this.boat.foreChine.endControl[0]);
-        xMaths.ecx5 = Math.abs(this.boat.foreChine.endControl[2]) + xMaths.x6;
-        yMaths.y7 = yMaths.y6 - Math.abs(this.boat.foreChine.end[0] - this.boat.foreChine.start[0]);
-        xMaths.x7 = Math.abs(this.boat.foreChine.end[2] - this.boat.foreChine.start[2]) + xMaths.x6;
-        yMaths.scy5 = yMaths.y7 - this.boat.foreChine.startControl[0];
-        xMaths.scx5 = xMaths.x7 - this.boat.foreChine.startControl[2];
-
-        // Get coordinates for aftChine (mirror along x-axis)
-        yMaths.y8 = Math.abs(this.boat.aftChine.start[0] - this.boat.aftChine.end[0]) + yMaths.y7;
-        xMaths.x8 = Math.abs(this.boat.aftChine.start[2] - this.boat.aftChine.end[2]) + xMaths.x7;
-        yMaths.scy6 = yMaths.y7 - this.boat.aftChine.startControl[0];
-        xMaths.scx6 = Math.abs(this.boat.aftChine.startControl[2]) + xMaths.x7;
-        yMaths.ecy6 = yMaths.y8 - this.boat.aftChine.endControl[0];
-        xMaths.ecx6 = xMaths.x8 - this.boat.aftChine.endControl[2];
-
-        // Get coordinates for foreKeel
-        applyOffsets(this.boat, this.boat.foreKeel, 'foreKeel');
-        yMaths.y9 = Math.abs(this.boat.foreKeel.end[0] - this.boat.foreChine.end[0]) + yMaths.y6;
-        xMaths.x9 = xMaths.x6 - Math.abs(this.boat.foreKeel.end[2] - this.boat.foreChine.end[2]);
-        yMaths.ecy7 = yMaths.y9 - this.boat.foreKeel.endControl[0];
-        xMaths.ecx7 = xMaths.x9 + Math.abs(this.boat.foreKeel.endControl[2]);
-        yMaths.y10 = yMaths.y9 + (this.boat.foreKeel.end[0] - this.boat.foreKeel.start[0]);
-        xMaths.x10 = xMaths.x9 + (this.boat.foreKeel.end[2] - this.boat.foreKeel.start[2]);
-        yMaths.scy7 = yMaths.y9 - Math.abs(this.boat.foreKeel.startControl[0]);
-        xMaths.scx7 = xMaths.x9 + Math.abs(this.boat.foreKeel.startControl[2]);
-
-        // Get coordinates for aftKeel
-        applyOffsets(this.boat, this.boat.aftKeel, 'aftKeel');
-        yMaths.y11 = yMaths.y10 + (this.boat.aftKeel.end[0] - this.boat.aftKeel.start[0]);
-        xMaths.x11 = xMaths.x10 + Math.abs(this.boat.aftKeel.end[2] - this.boat.aftKeel.start[2]);
-        yMaths.ecy8 = yMaths.y11 - this.boat.aftKeel.endControl[0];
-        xMaths.ecx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.endControl[2]);
-        yMaths.scy8 = yMaths.y11 - Math.abs(this.boat.aftKeel.startControl[0]);
-        xMaths.scx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.startControl[2]);
-
-        // Get coordinates for aft panel
-        applyOffsets(this.boat, this.boat.aftBeamEdge, 'aftBeamEdge');
-        yMaths.y12 = yMaths.y11 + 15;
-        xMaths.x12 = 15;
-        yMaths.y13 = Math.abs(this.boat.aftBeamEdge.start[2] - this.boat.aftBeamEdge.end[2]) * 2 + yMaths.y12;
-        xMaths.x13 = Math.abs(this.boat.aftBeamEdge.start[0] - this.boat.aftBeamEdge.end[0]) * 2 + xMaths.x12;
-
-        applyOffsets(this.boat, this.boat.aftGunEdge, 'aftGunEdge');
-        yMaths.y14 = Math.abs(this.boat.aftBeamEdge.end[1] - this.boat.aftGunEdge.end[1]) + yMaths.y12;
-        xMaths.x14 = xMaths.x12 + Math.abs(this.boat.aftBeamEdge.end[0] - this.boat.aftGunEdge.end[0]);
-        yMaths.y15 = Math.abs(this.boat.aftGunEdge.start[2] - this.boat.aftGunEdge.end[2]) * 2 + yMaths.y14;
-        xMaths.x15 = Math.abs(this.boat.aftGunEdge.start[0] - this.boat.aftGunEdge.end[0]) * 2 + xMaths.x14;
-
-        // Get coorindates for fore panel
-        applyOffsets(this.boat, this.boat.foreBeamEdge, 'foreBeamEdge');
-        yMaths.y16 = yMaths.y15 + 15;
-        xMaths.x16 = 15;
-        yMaths.y17 = Math.abs(this.boat.foreBeamEdge.start[2] - this.boat.foreBeamEdge.end[2]) * 2 + yMaths.y16;
-        xMaths.x17 = Math.abs(this.boat.foreBeamEdge.start[0] - this.boat.foreBeamEdge.end[0]) * 2 + xMaths.x16;
-
-        applyOffsets(this.boat, this.boat.foreGunEdge, 'foreGunEdge');
-        yMaths.y18 = Math.abs(this.boat.foreBeamEdge.end[1] - this.boat.foreGunEdge.end[1]) + yMaths.y16;
-        xMaths.x18 = xMaths.x16 + Math.abs(this.boat.foreBeamEdge.end[0] - this.boat.foreGunEdge.end[0]);
-        yMaths.y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + yMaths.y18;
-        xMaths.x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + xMaths.x18;
-
         // Coordinates put into usable structures for d3
         const struct = {
-            panel1Box: {
-                line: true,
-                color: 'blue',
-                width: 1,
-                text: false,
-                points: [
-                    {x: 15, y: yMaths.y1}, {x: xMaths.x2, y: yMaths.y1},
-                    {x: xMaths.x2, y: yMaths.y4}, {x: 15, y: yMaths.y4},
-                    {x: 15, y: yMaths.y1},
-                ]},
-
-            panel2Box: {
-                line: true,
-                color: 'blue',
-                width: 1,
-                text: false,
-                points: [
-                    {x: xMaths.x6, y: yMaths.y7}, {x: xMaths.x8, y: yMaths.y7},
-                    {x: xMaths.x8, y: yMaths.y10}, {x: xMaths.x6, y: yMaths.y10},
-                    {x: xMaths.x6, y: yMaths.y7},
-                ]},
-
-            panel1Label: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'panel1Length',
-                points: [
-                    {x: 15, y: yMaths.y1 - 2}, {x: xMaths.x2, y: yMaths.y1 - 2},
-                ]},
-
-            panel1Line: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'panel1Height',
-                points: [
-                    {x: xMaths.x2 + 2, y: yMaths.y1}, {x: xMaths.x2 + 2, y: yMaths.y4},
-                ]},
-
-            panel2Label: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'panel2Length',
-                points: [
-                    {x: xMaths.x6, y: yMaths.y7 - 2}, {x: xMaths.x8, y: yMaths.y7 - 2},
-                ]},
-
-            panel2Line: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'panel2Height',
-                points: [
-                    {x: xMaths.x8 + 2, y: yMaths.y7}, {x: xMaths.x8 + 2, y: yMaths.y10},
-                ]},
-
-            aftPanelTitle: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'title',
-                points: [
-                    {x: xMaths.x12, y: yMaths.y12 - 5}, {x: xMaths.x13 + 15, y: yMaths.y12 - 5},
-                ]},
-
-            aftPanel: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'aftBeamLength',
-                points: [
-                    {x: xMaths.x12, y: yMaths.y12 - 1}, {x: xMaths.x13, y: yMaths.y12 - 1},
-                ]},
-
-            aftHeightLine: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'aftHeight',
-                points: [
-                    {x: xMaths.x13 + 1, y: yMaths.y13}, {x: xMaths.x15 + 1, y: yMaths.y15},
-                ]},
-
-            aftPanelLine: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'aftGunLength',
-                points: [
-                    {x: xMaths.x14, y: yMaths.y14 - 1}, {x: xMaths.x15, y: yMaths.y15 - 1},
-                ]},
-
-            forePanelTitle: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'title',
-                points: [
-                    {x: xMaths.x16, y: yMaths.y16 - 5}, {x: xMaths.x17 + 15, y: yMaths.y17 - 5},
-                ]},
-
-            forePanel: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'foreBeamLength',
-                points: [
-                    {x: xMaths.x16, y: yMaths.y16 - 1}, {x: xMaths.x17, y: yMaths.y17 - 1},
-                ]},
-
-            foreHeightLine: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'foreHeight',
-                points: [
-                    {x: xMaths.x17 + 1, y: yMaths.y17}, {x: xMaths.x19 + 1, y: yMaths.y19},
-                ]},
-
-            forePanelLine: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'foreGunLength',
-                points: [
-                    {x: xMaths.x18, y: yMaths.y18 - 1}, {x: xMaths.x19, y: yMaths.y19 - 1},
-                ]},
-
             beamFore: {
                 line: false,
                 color: 'red',
@@ -532,117 +403,331 @@ export default class BlueprintEditor {
                 points: [
                     {x: 15 + 1, y: 20}, {x: xMaths.x3 + 1, y: yMaths.y3},
                 ]},
-
-            forChine: {
-                line: false,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.ecx5, y: yMaths.ecy5},
-                    {x: xMaths.scx5, y: yMaths.scy5}, {x: xMaths.x7, y: yMaths.y7},
-                ]},
-
-            afChine: {
-                line: false,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x7, y: yMaths.y7}, {x: xMaths.scx6, y: yMaths.scy6},
-                    {x: xMaths.ecx6, y: yMaths.ecy6}, {x: xMaths.x8, y: yMaths.y8},
-                ]},
-
-            forKeel: {
-                line: false,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x9, y: yMaths.y9}, {x: xMaths.ecx7, y: yMaths.ecy7},
-                    {x: xMaths.scx7, y: yMaths.scy7}, {x: xMaths.x10, y: yMaths.y10},
-                ]},
-
-            afKeel: {
-                line: false,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x10, y: yMaths.y10}, {x: xMaths.scx8, y: yMaths.scy8},
-                    {x: xMaths.ecx8, y: yMaths.ecy8}, {x: xMaths.x11, y: yMaths.y11},
-                ]},
-
-            aftKeelCon: {
-                line: true,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x8, y: yMaths.y8}, {x: xMaths.x11, y: yMaths.y11},
-                ]},
-
-            aftKeelCon0: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'sternConn1',
-                points: [
-                    {x: xMaths.x11 - 1, y: yMaths.y11}, {x: xMaths.x8 - 1, y: yMaths.y8},
-                ]},
-
-            forKeelCon: {
-                line: true,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.x9, y: yMaths.y9},
-                ]},
-
-            forKeelCon0: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'foreConn1',
-                points: [
-                    {x: xMaths.x6 + 1, y: yMaths.y6}, {x: xMaths.x9 + 1, y: yMaths.y9},
-                ]},
-
-            beamAftEdge: {
-                line: true,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x12, y: yMaths.y12}, {x: xMaths.x13, y: yMaths.y13},
-                    {x: xMaths.x15, y: yMaths.y15}, {x: xMaths.x14, y: yMaths.y14},
-                    {x: xMaths.x12, y: yMaths.y12},
-                ]},
-
-            gunForeEdge: {
-                line: true,
-                color: 'red',
-                width: 2,
-                text: false,
-                points: [
-                    {x: xMaths.x16, y: yMaths.y16}, {x: xMaths.x17, y: yMaths.y17},
-                    {x: xMaths.x19, y: yMaths.y19}, {x: xMaths.x18, y: yMaths.y18},
-                    {x: xMaths.x16, y: yMaths.y16},
-                ]},
-
-            frameTitle: {
-                line: true,
-                color: 'invisible',
-                width: 2,
-                text: true,
-                variable: 'title',
-                points: [
-                    {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
-                ]},
         };
+
+            // Get bounding box 1 Coordinates
+        const box1 = this.getBoundingSize(struct);
+
+        struct.panel1Box = {
+            line: true,
+            color: 'blue',
+            width: 1,
+            text: false,
+            points: [
+                {x: 15, y: box1.miny1}, {x: box1.maxx1, y: box1.miny1},
+                {x: box1.maxx1, y: box1.maxy1}, {x: 15, y: box1.maxy1},
+                {x: 15, y: box1.miny1},
+            ]},
+
+        struct.panel1Label = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel1Length',
+            points: [
+                {x: 15, y: box1.miny1 - 2}, {x: box1.maxx1, y: box1.miny1 - 2},
+            ]},
+
+        struct.panel1Line = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel1Height',
+            points: [
+                {x: box1.maxx1 + 2, y: box1.miny1}, {x: box1.maxx1 + 2, y: box1.maxy1},
+            ]};
+
+        // Coordinates for second  panel
+        // Get coordinates for foreChine (mirror along x-asix)
+        yMaths.y6 = struct.panel1Box.points[2].y + 20;
+        xMaths.x6 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
+        yMaths.ecy5 = yMaths.y6 - Math.abs(this.boat.foreChine.endControl[0]);
+        xMaths.ecx5 = Math.abs(this.boat.foreChine.endControl[2]) + xMaths.x6;
+        yMaths.y7 = yMaths.y6 - Math.abs(this.boat.foreChine.end[0] - this.boat.foreChine.start[0]);
+        xMaths.x7 = Math.abs(this.boat.foreChine.end[2] - this.boat.foreChine.start[2]) + xMaths.x6;
+        yMaths.scy5 = yMaths.y7 - this.boat.foreChine.startControl[0];
+        xMaths.scx5 = xMaths.x7 - this.boat.foreChine.startControl[2];
+
+        // Get coordinates for aftChine (mirror along x-axis)
+        yMaths.y8 = Math.abs(this.boat.aftChine.start[0] - this.boat.aftChine.end[0]) + yMaths.y7;
+        xMaths.x8 = Math.abs(this.boat.aftChine.start[2] - this.boat.aftChine.end[2]) + xMaths.x7;
+        yMaths.scy6 = yMaths.y7 - this.boat.aftChine.startControl[0];
+        xMaths.scx6 = Math.abs(this.boat.aftChine.startControl[2]) + xMaths.x7;
+        yMaths.ecy6 = yMaths.y8 - this.boat.aftChine.endControl[0];
+        xMaths.ecx6 = xMaths.x8 - this.boat.aftChine.endControl[2];
+
+        // Get coordinates for foreKeel
+        applyOffsets(this.boat, this.boat.foreKeel, 'foreKeel');
+        yMaths.y9 = Math.abs(this.boat.foreKeel.end[0] - this.boat.foreChine.end[0]) + yMaths.y6;
+        xMaths.x9 = xMaths.x6 - Math.abs(this.boat.foreKeel.end[2] - this.boat.foreChine.end[2]);
+        yMaths.ecy7 = yMaths.y9 - this.boat.foreKeel.endControl[0];
+        xMaths.ecx7 = xMaths.x9 + Math.abs(this.boat.foreKeel.endControl[2]);
+        yMaths.y10 = yMaths.y9 + (this.boat.foreKeel.end[0] - this.boat.foreKeel.start[0]);
+        xMaths.x10 = xMaths.x9 + (this.boat.foreKeel.end[2] - this.boat.foreKeel.start[2]);
+        yMaths.scy7 = yMaths.y9 - Math.abs(this.boat.foreKeel.startControl[0]);
+        xMaths.scx7 = xMaths.x9 + Math.abs(this.boat.foreKeel.startControl[2]);
+
+        // Get coordinates for aftKeel
+        applyOffsets(this.boat, this.boat.aftKeel, 'aftKeel');
+        yMaths.y11 = yMaths.y10 + (this.boat.aftKeel.end[0] - this.boat.aftKeel.start[0]);
+        xMaths.x11 = xMaths.x10 + Math.abs(this.boat.aftKeel.end[2] - this.boat.aftKeel.start[2]);
+        yMaths.ecy8 = yMaths.y11 - this.boat.aftKeel.endControl[0];
+        xMaths.ecx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.endControl[2]);
+        yMaths.scy8 = yMaths.y11 - Math.abs(this.boat.aftKeel.startControl[0]);
+        xMaths.scx8 = xMaths.x11 - Math.abs(this.boat.aftKeel.startControl[2]);
+
+        struct.forChine = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.ecx5, y: yMaths.ecy5},
+                {x: xMaths.scx5, y: yMaths.scy5}, {x: xMaths.x7, y: yMaths.y7},
+            ]},
+
+        struct.afChine = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x7, y: yMaths.y7}, {x: xMaths.scx6, y: yMaths.scy6},
+                {x: xMaths.ecx6, y: yMaths.ecy6}, {x: xMaths.x8, y: yMaths.y8},
+            ]},
+
+        struct.forKeel = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x9, y: yMaths.y9}, {x: xMaths.ecx7, y: yMaths.ecy7},
+                {x: xMaths.scx7, y: yMaths.scy7}, {x: xMaths.x10, y: yMaths.y10},
+            ]},
+
+        struct.afKeel = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x10, y: yMaths.y10}, {x: xMaths.scx8, y: yMaths.scy8},
+                {x: xMaths.ecx8, y: yMaths.ecy8}, {x: xMaths.x11, y: yMaths.y11},
+            ]},
+
+        struct.aftKeelCon = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x8, y: yMaths.y8}, {x: xMaths.x11, y: yMaths.y11},
+            ]},
+
+        struct.aftKeelCon0 = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'sternConn1',
+            points: [
+                {x: xMaths.x11 - 1, y: yMaths.y11}, {x: xMaths.x8 - 1, y: yMaths.y8},
+            ]},
+
+        struct.forKeelCon = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.x9, y: yMaths.y9},
+            ]},
+
+        struct.forKeelCon0 = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'foreConn1',
+            points: [
+                {x: xMaths.x6 + 1, y: yMaths.y6}, {x: xMaths.x9 + 1, y: yMaths.y9},
+            ]};
+
+        // Add bounding points to coordinate structures
+        const box2 = this.getBoundingSize(struct);
+
+        struct.panel2Box = {
+            line: true,
+            color: 'blue',
+            width: 1,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: box2.miny2}, {x: box2.maxx2, y: box2.miny2},
+                {x: box2.maxx2, y: box2.maxy2}, {x: xMaths.x6, y: box2.maxy2},
+                {x: xMaths.x6, y: box2.miny2},
+            ]},
+
+        struct.panel2Label = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel2Length',
+            points: [
+                {x: xMaths.x6, y: box2.miny2 - 2}, {x: box2.maxx2, y: box2.miny2 - 2},
+            ]},
+
+        struct.panel2Line = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel2Height',
+            points: [
+                {x: box2.maxx2 + 2, y: box2.miny2}, {x: box2.maxx2 + 2, y: box2.maxy2},
+            ]};
+
+        // Get coordinates for aft panel
+        applyOffsets(this.boat, this.boat.aftBeamEdge, 'aftBeamEdge');
+        yMaths.y12 = struct.panel2Box.points[2].y + 15;
+        xMaths.x12 = 15;
+        yMaths.y13 = Math.abs(this.boat.aftBeamEdge.start[2] - this.boat.aftBeamEdge.end[2]) * 2 + yMaths.y12;
+        xMaths.x13 = Math.abs(this.boat.aftBeamEdge.start[0] - this.boat.aftBeamEdge.end[0]) * 2 + xMaths.x12;
+
+        applyOffsets(this.boat, this.boat.aftGunEdge, 'aftGunEdge');
+        yMaths.y14 = Math.abs(this.boat.aftBeamEdge.end[1] - this.boat.aftGunEdge.end[1]) + yMaths.y12;
+        xMaths.x14 = xMaths.x12 + Math.abs(this.boat.aftBeamEdge.end[0] - this.boat.aftGunEdge.end[0]);
+        yMaths.y15 = Math.abs(this.boat.aftGunEdge.start[2] - this.boat.aftGunEdge.end[2]) * 2 + yMaths.y14;
+        xMaths.x15 = Math.abs(this.boat.aftGunEdge.start[0] - this.boat.aftGunEdge.end[0]) * 2 + xMaths.x14;
+
+        // Get coorindates for fore panel
+        applyOffsets(this.boat, this.boat.foreBeamEdge, 'foreBeamEdge');
+        yMaths.y16 = yMaths.y15 + 15;
+        xMaths.x16 = 15;
+        yMaths.y17 = Math.abs(this.boat.foreBeamEdge.start[2] - this.boat.foreBeamEdge.end[2]) * 2 + yMaths.y16;
+        xMaths.x17 = Math.abs(this.boat.foreBeamEdge.start[0] - this.boat.foreBeamEdge.end[0]) * 2 + xMaths.x16;
+
+        applyOffsets(this.boat, this.boat.foreGunEdge, 'foreGunEdge');
+        yMaths.y18 = Math.abs(this.boat.foreBeamEdge.end[1] - this.boat.foreGunEdge.end[1]) + yMaths.y16;
+        xMaths.x18 = xMaths.x16 + Math.abs(this.boat.foreBeamEdge.end[0] - this.boat.foreGunEdge.end[0]);
+        yMaths.y19 = Math.abs(this.boat.foreGunEdge.start[2] - this.boat.foreGunEdge.end[2]) * 2 + yMaths.y18;
+        xMaths.x19 = Math.abs(this.boat.foreGunEdge.start[0] - this.boat.foreGunEdge.end[0]) * 2 + xMaths.x18;
+
+        struct.beamAftEdge = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x12, y: yMaths.y12}, {x: xMaths.x13, y: yMaths.y13},
+                {x: xMaths.x15, y: yMaths.y15}, {x: xMaths.x14, y: yMaths.y14},
+                {x: xMaths.x12, y: yMaths.y12},
+            ]},
+
+        struct.gunForeEdge = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x16, y: yMaths.y16}, {x: xMaths.x17, y: yMaths.y17},
+                {x: xMaths.x19, y: yMaths.y19}, {x: xMaths.x18, y: yMaths.y18},
+                {x: xMaths.x16, y: yMaths.y16},
+            ]},
+
+        struct.frameTitle = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'title',
+            points: [
+                {x: xMaths.x16, y: yMaths.y19 + 10}, {x: xMaths.x16 + 30, y: yMaths.y19 + 10},
+            ]},
+
+        struct.aftPanelTitle = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'title',
+            points: [
+                {x: xMaths.x12, y: yMaths.y12 - 5}, {x: xMaths.x13 + 15, y: yMaths.y12 - 5},
+            ]},
+
+        struct.aftPanel = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'aftBeamLength',
+            points: [
+                {x: xMaths.x12, y: yMaths.y12 - 1}, {x: xMaths.x13, y: yMaths.y12 - 1},
+            ]},
+
+        struct.aftHeightLine = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'aftHeight',
+            points: [
+                {x: xMaths.x13 + 1, y: yMaths.y13}, {x: xMaths.x15 + 1, y: yMaths.y15},
+            ]},
+
+        struct.aftPanelLine = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'aftGunLength',
+            points: [
+                {x: xMaths.x14, y: yMaths.y14 - 1}, {x: xMaths.x15, y: yMaths.y15 - 1},
+            ]},
+
+        struct.forePanelTitle = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'title',
+            points: [
+                {x: xMaths.x16, y: yMaths.y16 - 5}, {x: xMaths.x17 + 15, y: yMaths.y17 - 5},
+            ]},
+
+        struct.forePanel = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'foreBeamLength',
+            points: [
+                {x: xMaths.x16, y: yMaths.y16 - 1}, {x: xMaths.x17, y: yMaths.y17 - 1},
+            ]},
+
+        struct.foreHeightLine = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'foreHeight',
+            points: [
+                {x: xMaths.x17 + 1, y: yMaths.y17}, {x: xMaths.x19 + 1, y: yMaths.y19},
+            ]},
+
+        struct.forePanelLine = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'foreGunLength',
+            points: [
+                {x: xMaths.x18, y: yMaths.y18 - 1}, {x: xMaths.x19, y: yMaths.y19 - 1},
+            ]};
+
 
         // Add reference points to coordinates structure
         const ref = this.getReference(struct);
@@ -650,10 +735,11 @@ export default class BlueprintEditor {
         struct.refPoint1 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.foreBeam.x, y: ref.foreBeam.y}, {x: ref.foreBeam.x, y: yMaths.y1},
+                {x: ref.foreBeam.x, y: ref.foreBeam.y}, {x: ref.foreBeam.x, y: struct.panel1Box.points[0].y},
             ]},
 
         struct.refPoint1Size = {
@@ -661,18 +747,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y1 - ref.foreBeam.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel1Box.points[0].y - ref.foreBeam.y).toFixed(1)),
             points: [
-                {x: ref.foreBeam.x - 1, y: ref.foreBeam.y}, {x: ref.foreBeam.x - 1, y: yMaths.y1},
+                {x: ref.foreBeam.x - 1, y: ref.foreBeam.y}, {x: ref.foreBeam.x - 1, y: struct.panel1Box.points[0].y},
             ]},
 
         struct.refPoint2 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.aftBeam.x, y: ref.aftBeam.y}, {x: ref.aftBeam.x, y: yMaths.y1},
+                {x: ref.aftBeam.x, y: ref.aftBeam.y}, {x: ref.aftBeam.x, y: struct.panel1Box.points[0].y},
             ]},
 
         struct.refPoint2Size = {
@@ -688,10 +775,11 @@ export default class BlueprintEditor {
         struct.refPoint3 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.foreChine.x, y: ref.foreChine.y}, {x: ref.foreChine.x, y: yMaths.y4},
+                {x: ref.foreChine.x, y: ref.foreChine.y}, {x: ref.foreChine.x, y: struct.panel1Box.points[2].y},
             ]},
 
         struct.refPoint3Size = {
@@ -699,18 +787,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y4 - ref.foreChine.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel1Box.points[2].y - ref.foreChine.y).toFixed(1)),
             points: [
-                {x: ref.foreChine.x - 1, y: yMaths.y4}, {x: ref.foreChine.x - 1, y: ref.foreChine.y},
+                {x: ref.foreChine.x - 1, y: struct.panel1Box.points[2].y}, {x: ref.foreChine.x - 1, y: ref.foreChine.y},
             ]},
 
         struct.refPoint4 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.aftChine.x, y: ref.aftChine.y}, {x: ref.aftChine.x, y: yMaths.y4},
+                {x: ref.aftChine.x, y: ref.aftChine.y}, {x: ref.aftChine.x, y: struct.panel1Box.points[2].y},
             ]},
 
         struct.refPoint4Size = {
@@ -718,18 +807,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y4 - ref.aftChine.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel1Box.points[2].y - ref.aftChine.y).toFixed(1)),
             points: [
-                {x: ref.aftChine.x + 1, y: ref.aftChine.y}, {x: ref.aftChine.x + 1, y: yMaths.y4},
+                {x: ref.aftChine.x + 1, y: ref.aftChine.y}, {x: ref.aftChine.x + 1, y: struct.panel1Box.points[2].y},
             ]},
 
         struct.refPoint5 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.foreKeelChine.x, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x, y: yMaths.y7},
+                {x: ref.foreKeelChine.x, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x, y: struct.panel2Box.points[0].y},
             ]},
 
         struct.refPoint5Size = {
@@ -737,18 +827,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y7 - ref.foreKeelChine.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel2Box.points[0].y - ref.foreKeelChine.y).toFixed(1)),
             points: [
-                {x: ref.foreKeelChine.x - 1, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x - 1, y: yMaths.y7},
+                {x: ref.foreKeelChine.x - 1, y: ref.foreKeelChine.y}, {x: ref.foreKeelChine.x - 1, y: struct.panel2Box.points[0].y},
             ]},
 
         struct.refPoint6 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.aftKeelChine.x, y: ref.aftKeelChine.y}, {x: ref.aftKeelChine.x, y: yMaths.y7},
+                {x: ref.aftKeelChine.x, y: ref.aftKeelChine.y}, {x: ref.aftKeelChine.x, y: struct.panel2Box.points[0].y},
             ]},
 
         struct.refPoint6Size = {
@@ -756,18 +847,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y7 - ref.aftKeelChine.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel2Box.points[0].y - ref.aftKeelChine.y).toFixed(1)),
             points: [
-                {x: ref.aftKeelChine.x + 1, y: yMaths.y7}, {x: ref.aftKeelChine.x + 1, y: ref.aftKeelChine.y},
+                {x: ref.aftKeelChine.x + 1, y: struct.panel2Box.points[0].y}, {x: ref.aftKeelChine.x + 1, y: ref.aftKeelChine.y},
             ]},
 
         struct.refPoint7 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: yMaths.y10},
+                {x: ref.foreKeel.x, y: ref.foreKeel.y}, {x: ref.foreKeel.x, y: struct.panel2Box.points[2].y},
             ]},
 
         struct.refPoint7Size = {
@@ -775,18 +867,19 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y10 - ref.foreKeel.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel2Box.points[2].y - ref.foreKeel.y).toFixed(1)),
             points: [
-                {x: ref.foreKeel.x - 1, y: ref.foreKeel.y}, {x: ref.foreKeel.x - 1, y: yMaths.y10},
+                {x: ref.foreKeel.x - 1, y: ref.foreKeel.y}, {x: ref.foreKeel.x - 1, y: struct.panel2Box.points[2].y},
             ]},
 
         struct.refPoint8 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
-                {x: ref.aftKeel.x, y: ref.aftKeel.y}, {x: ref.aftKeel.x, y: yMaths.y10},
+                {x: ref.aftKeel.x, y: ref.aftKeel.y}, {x: ref.aftKeel.x, y: struct.panel2Box.points[2].y},
             ]},
 
         struct.refPoint8Size = {
@@ -794,10 +887,11 @@ export default class BlueprintEditor {
             color: 'invisible',
             width: 2,
             text: true,
-            size: Number(Math.abs(yMaths.y10 - ref.aftKeel.y).toFixed(1)),
+            size: Number(Math.abs(struct.panel2Box.points[2].y - ref.aftKeel.y).toFixed(1)),
             points: [
-                {x: ref.aftKeel.x + 1, y: yMaths.y10}, {x: ref.aftKeel.x + 1, y: ref.aftKeel.y},
+                {x: ref.aftKeel.x + 1, y: struct.panel2Box.points[2].y}, {x: ref.aftKeel.x + 1, y: ref.aftKeel.y},
             ]};
+        // console.log('box1', struct.panel1Box);
         return struct;
     }
 
@@ -829,16 +923,22 @@ export default class BlueprintEditor {
                 coords.afChine.points[3].y, coords.afKeel.points[3].y),
             // refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
-        const windowHeight = Math.abs(coords.beamFore.points[3].y - coords.gunForeEdge.points[2].y) * 30;
+
         const elem = $('#blueprint-container')[0];
+        // Scale for svg window sizing
+        const scale = 0.008;
+        const pad = 10;
+
+        let windowHeight = variables.panel1Height + variables.panel2Height + variables.aftHeight + variables.foreHeight;
+        windowHeight += (variables.aftHeight + variables.foreHeight) / 2 * boat.frames.length;
+        windowHeight += pad * 6; // for main blueprint padding
+        windowHeight += pad * boat.frames.length; // pad for frames
+        windowHeight *= elem.clientWidth * scale;
+
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
             .attr('height', windowHeight);
-
-
-        // Scale for svg window sizing
-        const scale = 0.008;
 
         // Function to create Bezier curves
         const lineFunction = d3.line()
@@ -850,9 +950,46 @@ export default class BlueprintEditor {
         const lineFunc = d3.line()
             .x((d) => (d.x) * elem.clientWidth * scale)
             .y((d) => (d.y) * elem.clientWidth * scale)
-            .curve(d3.curveBasis);
+            .curve(d3.curveBundle.beta(0.66));
 
         // Draw blueprints and insert text
+        /*        this.canvas.append('path')
+            .attr('d', lineFunction(sidePanel))
+            .attr('stroke', 'orange')
+            .attr('stroke-width', 2)
+            .attr('fill', 'none');
+
+            this.canvas.append('path')
+                .attr('d', lineFunction(sidePanel1))
+                .attr('stroke', 'green')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+
+                this.canvas.append('path')
+                    .attr('d', lineFunction(sidePanel2))
+                    .attr('stroke', 'purple')
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none');
+
+            this.canvas.append('path')
+                .attr('d', lineFunc(sidePanel))
+                .attr('stroke', 'purple')
+                .attr('stroke-width', 5)
+                .attr('fill', 'none'); */
+
+        this.canvas.append('path')
+            .attr('id', 'panel1Box')
+            .attr('d', lineFunction(coords.panel1Box.points))
+            .attr('stroke', coords.panel1Box.color)
+            .attr('stroke-width', coords.panel1Box.width)
+            .attr('fill', 'none');
+        this.canvas.append('path')
+            .attr('id', 'panel2Box')
+            .attr('d', lineFunction(coords.panel2Box.points))
+            .attr('stroke', coords.panel2Box.color)
+            .attr('stroke-width', coords.panel2Box.width)
+            .attr('fill', 'none');
+
         Object.keys(coords).forEach((key) => {
             if (coords[key].color === 'invisible') {
                 if (coords[key].line === true) {
@@ -863,12 +1000,15 @@ export default class BlueprintEditor {
                         .attr('fill', 'none');
                 }
             } else if (coords[key].line === true) {
-                this.canvas.append('path')
-                    .attr('id', key)
-                    .attr('d', lineFunction(coords[key].points))
-                    .attr('stroke', coords[key].color)
-                    .attr('stroke-width', coords[key].width)
-                    .attr('fill', 'none');
+                if (key !== 'panel1Box' && key !== 'panel2Box') {
+                    this.canvas.append('path')
+                        .attr('id', key)
+                        .attr('d', lineFunction(coords[key].points))
+                        .attr('stroke', coords[key].color)
+                        .attr('stroke-width', coords[key].width)
+                        .attr('fill', 'none')
+                        .attr('stroke-dasharray', coords[key].dash === true ? ('3, 3') : ('3, 0'));
+                }
             } else {
                 this.canvas.append('path')
                     .attr('d', lineFunc(coords[key].points))

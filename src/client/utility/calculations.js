@@ -84,7 +84,11 @@ export function casteljauPoint2D(curve, t) {
     // Step 3
     const Px = ((1 - t) * Dx) + (t * Ex);
     const Py = ((1 - t) * Dy) + (t * Ey);
-    return new THREE.Vector2(Px, Py);
+
+    return new THREE.Vector2(
+        Number(Math.abs(Px).toFixed(1)),
+        Number(Math.abs(Py).toFixed(1)),
+    );
 }
 
 // Inverse of casteljau's algorithem, takes in a curve and a distance from the back
