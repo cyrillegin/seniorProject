@@ -16,7 +16,7 @@
     "controlable": true,
     "start": [0, 0, 0],
     "end": [-13, 0, 0],
-    "startControl": [0, 0, 17],
+    "startControl": [-58, 0, 17],
     "endControl": [7, 0, -11]
   },
   "aftChine": {
