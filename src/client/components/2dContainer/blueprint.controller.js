@@ -1,7 +1,7 @@
 // Global imports
 import * as d3 from 'd3';
 import {saveAs} from 'file-saver';
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
@@ -1076,16 +1076,16 @@ export default class BlueprintEditor {
           	svgString2Image(svgString, 2 * width, 2 * height, 'png', callback);
         };
 
-        const savePDF = () => {
-            savePNG((image) => {
-                const pdf = new jsPDF(); // eslint-disable-line
-                pdf.addImage(image, 'PNG', 0, 0);
-                pdf.save('boat.pdf');
-            });
-        };
+        // const savePDF = () => {
+        //     savePNG((image) => {
+        //         const pdf = new jsPDF(); // eslint-disable-line
+        //         pdf.addImage(image, 'PNG', 0, 0);
+        //         pdf.save('boat.pdf');
+        //     });
+        // };
 
-        let oldElement = document.getElementById('save-png');
-        let newElement = oldElement.cloneNode(true);
+        const oldElement = document.getElementById('save-png');
+        const newElement = oldElement.cloneNode(true);
         oldElement.parentNode.replaceChild(newElement, oldElement);
         document.querySelector('#save-png').addEventListener('click', () => savePNG(saveAs), true);
 
