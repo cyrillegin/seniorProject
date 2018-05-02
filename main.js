@@ -18,8 +18,8 @@ function createWindow() {
     // Initialize the window to our specified dimensions
     if (process.platform === 'darwin') {
         win = new BrowserWindow({
-            width: 1200,
-            height: 800,
+            width: 1450,
+            height: 900,
             icon: './assests/icon/mac/icon.icns',
         });
     }
