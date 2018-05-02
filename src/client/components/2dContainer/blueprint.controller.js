@@ -939,16 +939,25 @@ export default class BlueprintEditor {
                 coords.afChine.points[3].y, coords.afKeel.points[3].y),
             // refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
-        const windowHeight = Math.abs(coords.beamFore.points[3].y - coords.gunForeEdge.points[2].y) * 30;
+        
         const elem = $('#blueprint-container')[0];
+        // Scale for svg window sizing
+        const scale = 0.008;
+        const pad = 10;
+        
+        let windowHeight = variables.panel1Height + variables.panel2Height + variables.aftHeight + variables.foreHeight;
+        windowHeight += (variables.aftHeight + variables.foreHeight) / 2 * boat.frames.length;
+        windowHeight += pad * 6; // for main blueprint padding
+        windowHeight += pad * boat.frames.length; // pad for frames
+        windowHeight *= elem.clientWidth * scale
+        console.log(boat)
+        console.log(variables)
+        console.log(windowHeight)
+        
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
             .attr('height', windowHeight);
-
-
-        // Scale for svg window sizing
-        const scale = 0.008;
 
         // Function to create Bezier curves
         const lineFunction = d3.line()
