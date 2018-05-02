@@ -4,11 +4,17 @@ import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} f
 
 /* Original sidepanel coordinates
 const sidePanel = [
-    {x: 1, y: 1}, {x: 500, y: 1},
-    {x: 500, y: 1}, {x: 500, y: 20},
-    {x: 250, y: 150}, {x: 1, y: 170},
-    {x: 1, y: 170}, {x: 1, y: 1},
+    {x: 15, y: 20}, {x: 26, y: 13},
+    {x: 48, y: 65}, {x: 65, y: 7},
 ];
+const sidePanel1 = [
+    {x: 21.6, y: 15.8}, {x: 39.2, y: 44.2},
+    {x: 58.2, y: 30.2},
+];
+const sidePanel2 = [
+    {x: 32.16, y: 32.84}, {x: 50.6, y: 35.8},
+];
+/*
 casteljauPoint, casteljauFromY
 */
 
@@ -38,7 +44,8 @@ export default class BlueprintEditor {
         let i;
         for (i = 0; i <= 1.05; i = i + 0.05) {
             const topFore = casteljauPoint2D(coordStruct.beamFore, i);
-            // console.log(coordStruct.beamFore);
+            console.log(coordStruct.beamFore);
+            // console.log(topFore);
             // console.log(casteljauPoint2D(coordStruct.beamFore, i));
             const bottomFore = casteljauPoint2D(coordStruct.chineFor, i);
             if (topFore.y < vals.miny1) {
@@ -47,13 +54,10 @@ export default class BlueprintEditor {
 
             if (topFore.y > vals.maxy1) {
                 vals.maxy1 = topFore.y;
-                // console.log('true', topFore.y);
-                // console.log(coordStruct.beamFore.points[2].y);
             }
 
             if (bottomFore.y > vals.maxy1) {
                 vals.maxy1 = bottomFore.y;
-                // console.log('false', vals.maxy1);
             }
 
             if (bottomFore.y < vals.miny1) {
@@ -155,43 +159,44 @@ export default class BlueprintEditor {
     getReference(coords) {
         const refPoints = {};
         // Get foreBeam reference
-        refPoints.foreBeam = casteljauPoint2D(coords.beamFore, 0.6);
-        refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1)) - 1;
+        refPoints.foreBeam = casteljauPoint2D(coords.beamFore, 0.25);
+        console.log(refPoints.foreBeam);
+        refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1));
         refPoints.foreBeam.y = Number(Math.abs(refPoints.foreBeam.y).toFixed(1));
 
         // Get aftBeam reference
         refPoints.aftBeam = casteljauPoint2D(coords.beamAft, 0.75);
-        refPoints.aftBeam.x = Number(Math.abs(refPoints.aftBeam.x).toFixed(1)) + 1;
+        refPoints.aftBeam.x = Number(Math.abs(refPoints.aftBeam.x).toFixed(1));
         refPoints.aftBeam.y = Number(Math.abs(refPoints.aftBeam.y).toFixed(1));
 
         // Get foreChine reference
         refPoints.foreChine = casteljauPoint2D(coords.chineFor, 0.25);
-        refPoints.foreChine.x = Number(Math.abs(refPoints.foreChine.x).toFixed(1)) - 1;
+        refPoints.foreChine.x = Number(Math.abs(refPoints.foreChine.x).toFixed(1));
         refPoints.foreChine.y = Number(Math.abs(refPoints.foreChine.y).toFixed(1));
 
         // Get aftChine reference
         refPoints.aftChine = casteljauPoint2D(coords.chineAf, 0.75);
-        refPoints.aftChine.x = Number(Math.abs(refPoints.aftChine.x).toFixed(1)) + 1;
+        refPoints.aftChine.x = Number(Math.abs(refPoints.aftChine.x).toFixed(1));
         refPoints.aftChine.y = Number(Math.abs(refPoints.aftChine.y).toFixed(1));
 
         // Get foreKeelChine reference
         refPoints.foreKeelChine = casteljauPoint2D(coords.forChine, 0.25);
-        refPoints.foreKeelChine.x = Number(Math.abs(refPoints.foreKeelChine.x).toFixed(1)) - 1;
+        refPoints.foreKeelChine.x = Number(Math.abs(refPoints.foreKeelChine.x).toFixed(1));
         refPoints.foreKeelChine.y = Number(Math.abs(refPoints.foreKeelChine.y).toFixed(1));
 
         // Get aftKeelChine reference
         refPoints.aftKeelChine = casteljauPoint2D(coords.afChine, 0.75);
-        refPoints.aftKeelChine.x = Number(Math.abs(refPoints.aftKeelChine.x).toFixed(1)) + 1;
+        refPoints.aftKeelChine.x = Number(Math.abs(refPoints.aftKeelChine.x).toFixed(1));
         refPoints.aftKeelChine.y = Number(Math.abs(refPoints.aftKeelChine.y).toFixed(1));
 
         // Get foreKeel reference
         refPoints.foreKeel = casteljauPoint2D(coords.forKeel, 0.25);
-        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1)) + 1;
+        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1));
         refPoints.foreKeel.y = Number(Math.abs(refPoints.foreKeel.y).toFixed(1));
 
         // Get aftKeel reference
         refPoints.aftKeel = casteljauPoint2D(coords.afKeel, 0.75);
-        refPoints.aftKeel.x = Number(Math.abs(refPoints.aftKeel.x).toFixed(1)) + 1;
+        refPoints.aftKeel.x = Number(Math.abs(refPoints.aftKeel.x).toFixed(1));
         refPoints.aftKeel.y = Number(Math.abs(refPoints.aftKeel.y).toFixed(1));
 
         return refPoints;
@@ -1250,9 +1255,33 @@ export default class BlueprintEditor {
         const lineFunc = d3.line()
             .x((d) => (d.x) * elem.clientWidth * scale)
             .y((d) => (d.y) * elem.clientWidth * scale)
-            .curve(d3.curveBasis);
+            .curve(d3.curveBundle.beta(0.66));
 
         // Draw blueprints and insert text
+        /*        this.canvas.append('path')
+            .attr('d', lineFunction(sidePanel))
+            .attr('stroke', 'orange')
+            .attr('stroke-width', 2)
+            .attr('fill', 'none');
+
+            this.canvas.append('path')
+                .attr('d', lineFunction(sidePanel1))
+                .attr('stroke', 'green')
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+
+                this.canvas.append('path')
+                    .attr('d', lineFunction(sidePanel2))
+                    .attr('stroke', 'purple')
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none');
+
+            this.canvas.append('path')
+                .attr('d', lineFunc(sidePanel))
+                .attr('stroke', 'purple')
+                .attr('stroke-width', 5)
+                .attr('fill', 'none'); */
+
         this.canvas.append('path')
             .attr('id', 'panel1Box')
             .attr('d', lineFunction(coords.panel1Box.points))
