@@ -759,6 +759,7 @@ export default class BlueprintEditor {
         struct.refPoint1 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -778,6 +779,7 @@ export default class BlueprintEditor {
         struct.refPoint2 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -797,6 +799,7 @@ export default class BlueprintEditor {
         struct.refPoint3 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -816,6 +819,7 @@ export default class BlueprintEditor {
         struct.refPoint4 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -835,6 +839,7 @@ export default class BlueprintEditor {
         struct.refPoint5 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -854,6 +859,7 @@ export default class BlueprintEditor {
         struct.refPoint6 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -873,6 +879,7 @@ export default class BlueprintEditor {
         struct.refPoint7 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -892,6 +899,7 @@ export default class BlueprintEditor {
         struct.refPoint8 = {
             line: true,
             color: 'black',
+            dash: true,
             width: 2,
             text: false,
             points: [
@@ -939,21 +947,18 @@ export default class BlueprintEditor {
                 coords.afChine.points[3].y, coords.afKeel.points[3].y),
             // refPoint1: Number(Math.abs(coords.beamFore.points[3].y - coords.refPoint1.points[0].y).toFixed(1)),
         };
-        
+
         const elem = $('#blueprint-container')[0];
         // Scale for svg window sizing
         const scale = 0.008;
         const pad = 10;
-        
+
         let windowHeight = variables.panel1Height + variables.panel2Height + variables.aftHeight + variables.foreHeight;
         windowHeight += (variables.aftHeight + variables.foreHeight) / 2 * boat.frames.length;
         windowHeight += pad * 6; // for main blueprint padding
         windowHeight += pad * boat.frames.length; // pad for frames
-        windowHeight *= elem.clientWidth * scale
-        console.log(boat)
-        console.log(variables)
-        console.log(windowHeight)
-        
+        windowHeight *= elem.clientWidth * scale;
+
         this.canvas = d3.select('#blueprint-container')
             .append('svg')
             .attr('width', elem.clientWidth)
@@ -1025,7 +1030,8 @@ export default class BlueprintEditor {
                         .attr('d', lineFunction(coords[key].points))
                         .attr('stroke', coords[key].color)
                         .attr('stroke-width', coords[key].width)
-                        .attr('fill', 'none');
+                        .attr('fill', 'none')
+                        .attr('stroke-dasharray', coords[key].dash === true ? ('3, 3') : ('3, 0'));
                 }
             } else {
                 this.canvas.append('path')
