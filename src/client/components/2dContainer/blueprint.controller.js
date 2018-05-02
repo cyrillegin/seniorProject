@@ -2,7 +2,6 @@
 import * as d3 from 'd3';
 import {saveAs} from 'file-saver';
 import jsPDF from 'jspdf';
-import canvg from 'canvg';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
