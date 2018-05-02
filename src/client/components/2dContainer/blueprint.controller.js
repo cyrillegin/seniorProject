@@ -2,6 +2,7 @@
 import * as d3 from 'd3';
 import {saveAs} from 'file-saver';
 import jsPDF from 'jspdf';
+import canvg from 'canvg';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
 /* Original sidepanel coordinates
@@ -1065,7 +1066,7 @@ export default class BlueprintEditor {
 
                     canvas.toBlob((blob) => {
                         if (callback) {
-                            callback(learn, 'Boat.png');
+                            callback(blob, 'Boat.png');
                         }
                     });
                 };
@@ -1079,21 +1080,6 @@ export default class BlueprintEditor {
         const savePDF = () => {
             savePNG((image) => {
                 const pdf = new jsPDF(); // eslint-disable-line
-                // var img = new Image();
-                // img.src = image;
-                // console.log(img)
-                // const canvas = document.createElement("canvas");
-                //
-                // canvas.width = img.width;
-                // canvas.height = img.height;
-                // const ctx = canvas.getContext("2d");
-                //
-                // ctx.drawImage(img, 0, 0);
-                //
-                // const dataURL = canvas.toDataURL("image/jpeg");
-
-                // return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                console.log(image);
                 pdf.addImage(image, 'PNG', 0, 0);
                 pdf.save('boat.pdf');
             });
