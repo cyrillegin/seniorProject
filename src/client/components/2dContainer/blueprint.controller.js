@@ -46,9 +46,6 @@ export default class BlueprintEditor {
         let i;
         for (i = 0; i <= 1.05; i = i + 0.05) {
             const topFore = casteljauPoint2D(coordStruct.beamFore, i);
-            console.log(coordStruct.beamFore);
-            // console.log(topFore);
-            // console.log(casteljauPoint2D(coordStruct.beamFore, i));
             const bottomFore = casteljauPoint2D(coordStruct.chineFor, i);
             if (topFore.y < vals.miny1) {
                 vals.miny1 = topFore.y;
@@ -162,7 +159,6 @@ export default class BlueprintEditor {
         const refPoints = {};
         // Get foreBeam reference
         refPoints.foreBeam = casteljauPoint2D(coords.beamFore, 0.25);
-        console.log(refPoints.foreBeam);
         refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1));
         refPoints.foreBeam.y = Number(Math.abs(refPoints.foreBeam.y).toFixed(1));
 
