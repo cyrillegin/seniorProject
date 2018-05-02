@@ -123,6 +123,16 @@ const mainMenuTemplate = [{
     }, {
         type: 'separator',
     }, {
+        label: 'Save PNG', click() {
+            win.webContents.executeJavaScript(`
+                setTimeout(function() {
+                    document.querySelector('#save-png').click();
+                });
+            `);
+        },
+    },  {
+        type: 'separator',
+    }, {
         label: 'Exit',
         accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q', click() {
             app.quit();
