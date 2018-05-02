@@ -30,7 +30,21 @@ export default class BlueprintEditor {
         this.boatParametersService = boatParametersService;
     }
 
-    // I'll deal with this shit later
+    getStartPadding(box1) {
+        if ((box1.points[0].y - 5) < 0) {
+            return Math.abs(box1.points[0].y - 5) + 1;
+        }
+        return 0;
+    }
+
+    getPadding(box1, box2) {
+        if ((box2.points[0].y - box1.points[2].y) < 6) {
+            return Math.abs(box2.points[0].y - box1.points[2].y) + 10;
+        }
+        return 0;
+    }
+
+    // Get size of bounding boxes
     getBoundingSize(coordStruct) {
         const vals = {
             miny1: 1000,
@@ -288,9 +302,10 @@ export default class BlueprintEditor {
         // Coordinates for first panel
         // Get Coordinates for foreBeam
         applyOffsets(this.boat, this.boat.foreBeam, 'foreBeam');
-        yMaths.y1 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - this.boat.foreBeam.start[0]) - 20);
+        yMaths.y0 = 20;
+        yMaths.y1 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - this.boat.foreBeam.start[0]) - yMaths.y0);
         xMaths.x1 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreBeam.start[2]) + 15;
-        yMaths.scy1 = Math.abs(this.boat.foreBeam.endControl[0] - 20);
+        yMaths.scy1 = Math.abs(this.boat.foreBeam.endControl[0] - yMaths.y0);
         xMaths.scx1 = Math.abs(this.boat.foreBeam.endControl[2] - 15);
         yMaths.ecy1 = Math.abs(this.boat.foreBeam.startControl[0] - yMaths.y1);
         xMaths.ecx1 = Math.abs(this.boat.foreBeam.startControl[2] - xMaths.x1);
@@ -306,7 +321,7 @@ export default class BlueprintEditor {
 
         // Get Coordinates for foreChine
         applyOffsets(this.boat, this.boat.foreChine, 'foreChine');
-        yMaths.y3 = Math.abs(this.boat.foreBeam.end[1] - this.boat.foreChine.end[1]) + 20;
+        yMaths.y3 = Math.abs(this.boat.foreBeam.end[1] - this.boat.foreChine.end[1]) + yMaths.y0;
         xMaths.x3 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
         yMaths.ecy3 = Math.abs(this.boat.foreChine.endControl[0]) + yMaths.y3;
         xMaths.ecx3 = Math.abs(this.boat.foreChine.endControl[2]) + xMaths.x3;
@@ -325,14 +340,14 @@ export default class BlueprintEditor {
         xMaths.ecx4 = xMaths.x5 - this.boat.aftChine.endControl[2];
 
         // Coordinates put into usable structures for d3
-        const struct = {
+        let struct = {
             beamFore: {
                 line: false,
                 color: 'red',
                 width: 2,
                 text: false,
                 points: [
-                    {x: 15, y: 20}, {x: xMaths.scx1, y: yMaths.scy1},
+                    {x: 15, y: yMaths.y0}, {x: xMaths.scx1, y: yMaths.scy1},
                     {x: xMaths.ecx1, y: yMaths.ecy1}, {x: xMaths.x1, y: yMaths.y1},
                 ]},
 
@@ -391,7 +406,7 @@ export default class BlueprintEditor {
                 width: 2,
                 text: false,
                 points: [
-                    {x: 15, y: 20}, {x: xMaths.x3, y: yMaths.y3},
+                    {x: 15, y: yMaths.y0}, {x: xMaths.x3, y: yMaths.y3},
                 ]},
 
             foreCon0: {
@@ -401,12 +416,150 @@ export default class BlueprintEditor {
                 text: true,
                 variable: 'foreConn',
                 points: [
-                    {x: 15 + 1, y: 20}, {x: xMaths.x3 + 1, y: yMaths.y3},
+                    {x: 15 + 1, y: yMaths.y0}, {x: xMaths.x3 + 1, y: yMaths.y3},
                 ]},
         };
 
             // Get bounding box 1 Coordinates
-        const box1 = this.getBoundingSize(struct);
+        let box1 = this.getBoundingSize(struct);
+
+        struct.panel1Box = {
+            line: true,
+            color: 'blue',
+            width: 1,
+            text: false,
+            points: [
+                {x: 15, y: box1.miny1}, {x: box1.maxx1, y: box1.miny1},
+                {x: box1.maxx1, y: box1.maxy1}, {x: 15, y: box1.maxy1},
+                {x: 15, y: box1.miny1},
+            ]},
+
+        struct.panel1Label = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel1Length',
+            points: [
+                {x: 15, y: box1.miny1 - 2}, {x: box1.maxx1, y: box1.miny1 - 2},
+            ]},
+
+        struct.panel1Line = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel1Height',
+            points: [
+                {x: box1.maxx1 + 2, y: box1.miny1}, {x: box1.maxx1 + 2, y: box1.maxy1},
+            ]};
+
+        // Recalculate coordinates to account for padding
+        const startPad = this.getStartPadding(struct.panel1Box);
+        yMaths.y0 = 20 + startPad;
+        yMaths.y1 = Math.abs(Math.abs(this.boat.foreBeam.end[0] - this.boat.foreBeam.start[0]) - yMaths.y0);
+        yMaths.scy1 = Math.abs(this.boat.foreBeam.endControl[0] - yMaths.y0);
+        yMaths.ecy1 = Math.abs(this.boat.foreBeam.startControl[0] - yMaths.y1);
+
+        // Get Coordinates for aftBeam
+        yMaths.y2 = Math.abs(this.boat.aftBeam.start[0] - this.boat.aftBeam.end[0]) + yMaths.y1;
+        yMaths.scy2 = Math.abs(this.boat.aftBeam.startControl[0] - yMaths.y1);
+        yMaths.ecy2 = Math.abs(this.boat.aftBeam.endControl[0] - yMaths.y2);
+
+        // Get Coordinates for foreChine
+        yMaths.y3 = Math.abs(this.boat.foreBeam.end[1] - this.boat.foreChine.end[1]) + yMaths.y0;
+        yMaths.ecy3 = Math.abs(this.boat.foreChine.endControl[0]) + yMaths.y3;
+        yMaths.y4 = Math.abs(this.boat.foreChine.end[0] - this.boat.foreChine.start[0]) + yMaths.y3;
+        yMaths.scy3 = this.boat.foreChine.startControl[0] + yMaths.y4;
+
+        // Get Coordinates for aftChine
+        yMaths.y5 = yMaths.y4 - Math.abs(this.boat.aftChine.start[0] - this.boat.aftChine.end[0]);
+        yMaths.scy4 = this.boat.aftChine.startControl[0] + yMaths.y4;
+        yMaths.ecy4 = this.boat.aftChine.endControl[0] + yMaths.y5;
+
+        // Re-enter coordinates into structure
+        struct = {
+            beamFore: {
+                line: false,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: 15, y: yMaths.y0}, {x: xMaths.scx1, y: yMaths.scy1},
+                    {x: xMaths.ecx1, y: yMaths.ecy1}, {x: xMaths.x1, y: yMaths.y1},
+                ]},
+
+            beamAft: {
+                line: false,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: xMaths.x1, y: yMaths.y1}, {x: xMaths.scx2, y: yMaths.scy2},
+                    {x: xMaths.ecx2, y: yMaths.ecy2}, {x: xMaths.x2, y: yMaths.y2},
+                ]},
+
+            chineFor: {
+                line: false,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: xMaths.x3, y: yMaths.y3}, {x: xMaths.ecx3, y: yMaths.ecy3},
+                    {x: xMaths.scx3, y: yMaths.scy3}, {x: xMaths.x4, y: yMaths.y4},
+                ]},
+
+            chineAf: {
+                line: false,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: xMaths.x4, y: yMaths.y4}, {x: xMaths.scx4, y: yMaths.scy4},
+                    {x: xMaths.ecx4, y: yMaths.ecy4}, {x: xMaths.x5, y: yMaths.y5},
+                ]},
+
+            sternCon: {
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: xMaths.x2, y: yMaths.y2}, {x: xMaths.x5, y: yMaths.y5},
+                ]},
+
+            sternCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'sternConn',
+                points: [
+                    {x: xMaths.x5 - 1, y: yMaths.y5}, {x: xMaths.x2 - 1, y: yMaths.y2},
+                ]},
+
+            foreCon: {
+                line: true,
+                color: 'red',
+                width: 2,
+                text: false,
+                points: [
+                    {x: 15, y: yMaths.y0}, {x: xMaths.x3, y: yMaths.y3},
+                ]},
+
+            foreCon0: {
+                line: true,
+                color: 'invisible',
+                width: 2,
+                text: true,
+                variable: 'foreConn',
+                points: [
+                    {x: 15 + 1, y: yMaths.y0}, {x: xMaths.x3 + 1, y: yMaths.y3},
+                ]},
+        };
+
+        // Get bounding box 1 Coordinates
+        box1 = this.getBoundingSize(struct);
 
         struct.panel1Box = {
             line: true,
@@ -441,7 +594,7 @@ export default class BlueprintEditor {
 
         // Coordinates for second  panel
         // Get coordinates for foreChine (mirror along x-asix)
-        yMaths.y6 = struct.panel1Box.points[2].y + 20;
+        yMaths.y6 = struct.panel1Box.points[2].y;
         xMaths.x6 = Math.abs(this.boat.foreBeam.end[2] - this.boat.foreChine.end[2]) + 15;
         yMaths.ecy5 = yMaths.y6 - Math.abs(this.boat.foreChine.endControl[0]);
         xMaths.ecx5 = Math.abs(this.boat.foreChine.endControl[2]) + xMaths.x6;
@@ -557,7 +710,140 @@ export default class BlueprintEditor {
             ]};
 
         // Add bounding points to coordinate structures
-        const box2 = this.getBoundingSize(struct);
+        let box2 = this.getBoundingSize(struct);
+
+        struct.panel2Box = {
+            line: true,
+            color: 'blue',
+            width: 1,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: box2.miny2}, {x: box2.maxx2, y: box2.miny2},
+                {x: box2.maxx2, y: box2.maxy2}, {x: xMaths.x6, y: box2.maxy2},
+                {x: xMaths.x6, y: box2.miny2},
+            ]},
+
+        struct.panel2Label = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel2Length',
+            points: [
+                {x: xMaths.x6, y: box2.miny2 - 2}, {x: box2.maxx2, y: box2.miny2 - 2},
+            ]},
+
+        struct.panel2Line = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'panel2Height',
+            points: [
+                {x: box2.maxx2 + 2, y: box2.miny2}, {x: box2.maxx2 + 2, y: box2.maxy2},
+            ]};
+
+        // Recalculate y-coordinates of Keel panels to account for padding
+        const pad = this.getPadding(struct.panel1Box, struct.panel2Box);
+        yMaths.y6 = struct.panel1Box.points[2].y + pad;
+        yMaths.ecy5 = yMaths.y6 - Math.abs(this.boat.foreChine.endControl[0]);
+        yMaths.y7 = yMaths.y6 - Math.abs(this.boat.foreChine.end[0] - this.boat.foreChine.start[0]);
+        yMaths.scy5 = yMaths.y7 - this.boat.foreChine.startControl[0];
+
+        yMaths.y8 = Math.abs(this.boat.aftChine.start[0] - this.boat.aftChine.end[0]) + yMaths.y7;
+        yMaths.scy6 = yMaths.y7 - this.boat.aftChine.startControl[0];
+        yMaths.ecy6 = yMaths.y8 - this.boat.aftChine.endControl[0];
+
+        yMaths.y9 = Math.abs(this.boat.foreKeel.end[0] - this.boat.foreChine.end[0]) + yMaths.y6;
+        yMaths.ecy7 = yMaths.y9 - this.boat.foreKeel.endControl[0];
+        yMaths.y10 = yMaths.y9 + (this.boat.foreKeel.end[0] - this.boat.foreKeel.start[0]);
+        yMaths.scy7 = yMaths.y9 - Math.abs(this.boat.foreKeel.startControl[0]);
+
+        yMaths.y11 = yMaths.y10 + (this.boat.aftKeel.end[0] - this.boat.aftKeel.start[0]);
+        yMaths.ecy8 = yMaths.y11 - this.boat.aftKeel.endControl[0];
+        yMaths.scy8 = yMaths.y11 - Math.abs(this.boat.aftKeel.startControl[0]);
+
+        // Re-enter new coordinates into structure
+        struct.forChine = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.ecx5, y: yMaths.ecy5},
+                {x: xMaths.scx5, y: yMaths.scy5}, {x: xMaths.x7, y: yMaths.y7},
+            ]},
+
+        struct.afChine = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x7, y: yMaths.y7}, {x: xMaths.scx6, y: yMaths.scy6},
+                {x: xMaths.ecx6, y: yMaths.ecy6}, {x: xMaths.x8, y: yMaths.y8},
+            ]},
+
+        struct.forKeel = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x9, y: yMaths.y9}, {x: xMaths.ecx7, y: yMaths.ecy7},
+                {x: xMaths.scx7, y: yMaths.scy7}, {x: xMaths.x10, y: yMaths.y10},
+            ]},
+
+        struct.afKeel = {
+            line: false,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x10, y: yMaths.y10}, {x: xMaths.scx8, y: yMaths.scy8},
+                {x: xMaths.ecx8, y: yMaths.ecy8}, {x: xMaths.x11, y: yMaths.y11},
+            ]},
+
+        struct.aftKeelCon = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x8, y: yMaths.y8}, {x: xMaths.x11, y: yMaths.y11},
+            ]},
+
+        struct.aftKeelCon0 = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'sternConn1',
+            points: [
+                {x: xMaths.x11 - 1, y: yMaths.y11}, {x: xMaths.x8 - 1, y: yMaths.y8},
+            ]},
+
+        struct.forKeelCon = {
+            line: true,
+            color: 'red',
+            width: 2,
+            text: false,
+            points: [
+                {x: xMaths.x6, y: yMaths.y6}, {x: xMaths.x9, y: yMaths.y9},
+            ]},
+
+        struct.forKeelCon0 = {
+            line: true,
+            color: 'invisible',
+            width: 2,
+            text: true,
+            variable: 'foreConn1',
+            points: [
+                {x: xMaths.x6 + 1, y: yMaths.y6}, {x: xMaths.x9 + 1, y: yMaths.y9},
+            ]};
+
+        // Re-calculate and enter bounding coordinates for second bounding box
+        box2 = this.getBoundingSize(struct);
 
         struct.panel2Box = {
             line: true,
@@ -869,7 +1155,7 @@ export default class BlueprintEditor {
             text: true,
             size: Number(Math.abs(struct.panel2Box.points[2].y - ref.foreKeel.y).toFixed(1)),
             points: [
-                {x: ref.foreKeel.x - 1, y: ref.foreKeel.y}, {x: ref.foreKeel.x - 1, y: struct.panel2Box.points[2].y},
+                {x: ref.foreKeel.x - 1, y: struct.panel2Box.points[2].y}, {x: ref.foreKeel.x - 1, y: ref.foreKeel.y},
             ]},
 
         struct.refPoint8 = {
@@ -889,9 +1175,8 @@ export default class BlueprintEditor {
             text: true,
             size: Number(Math.abs(struct.panel2Box.points[2].y - ref.aftKeel.y).toFixed(1)),
             points: [
-                {x: ref.aftKeel.x + 1, y: struct.panel2Box.points[2].y}, {x: ref.aftKeel.x + 1, y: ref.aftKeel.y},
+                {x: ref.aftKeel.x + 1, y: ref.aftKeel.y}, {x: ref.aftKeel.x + 1, y: struct.panel2Box.points[2].y},
             ]};
-        // console.log('box1', struct.panel1Box);
         return struct;
     }
 
