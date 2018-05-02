@@ -58,6 +58,7 @@ export default class ThreeContainer {
                         this.meshController.deleteMesh(this.app);
                         const newBoat = this.boatParametersService.getBoat();
                         this.app = this.meshController.initMesh(this.app, newBoat);
+                        this.meshController.showMesh(this.app.displayShaded);
                     });
 
                 this.$scope.$watch(
