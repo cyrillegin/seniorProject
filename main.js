@@ -1,22 +1,48 @@
-const url = require('url');
-const path = require('path');
+const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
 
 let win = null;
-let check = null;
 
-
-function createWindow() {
-    // Initialize the window to our specified dimensions
-    win = new BrowserWindow({
-        width: 1200,
-        height: 800,
+child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
+    (error, stdout, stderr) => {
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        if (error !== null) {
+            console.log(`exec error: ${error}`);
+        }
     });
 
 
+function createWindow() {
+
+    // Initialize the window to our specified dimensions
+    if (process.platform === 'darwin') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/mac/icon.icns',
+        });
+    }
+
+    if (process.platform === 'win32') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/windows/icon.ico',
+        });
+    }
+
+    if (process.platform === 'linux') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/linux/icon.png',
+        });
+
+    }
+
     // Specify entry point
     win.loadURL('http://localhost:3000');
-
 
     // build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
@@ -51,70 +77,62 @@ app.on('activate', () => {
 
 // NOTE: Working on the file menu right now
 // create menu template
-const mainMenuTemplate = [
-    {label: 'File',
-        submenu: [{label: 'New Project', click() {
-            check = new BrowserWindow({
-                width: 500,
-                height: 100,
-            });
-
-            check.loadURL(url.format({
-                pathname: path.join(__dirname, 'saveCheck.html'),
-                protocol: 'file:',
-                slashes: true,
-            }));
-
-            check.setMenu(null);
-
-            check.show();
-        }},
-
-
+const mainMenuTemplate = [{
+    label: 'File',
+    submenu: [{
+        label: 'New Project', click() {
+            win.reload();
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Save json', click() {
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-json).click();})');
+        },
+    }, {
+        label: 'Load json', click() {
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#load-json).click();})');
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Save stl', click() {
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-stl).click();})');
+        },
+    }, {
+        label: 'Save obj', click() {
+            win.webContents.executeJavaScript('setTimeout(function() {document.querySelector(#save-obj).click();})');
+        },
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Exit',
+        accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q', click() {
+            app.quit();
+        },
+    }],
+}, {
+    label: 'Edit', submenu: [
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'delete'},
+    ],
+}, {
+    label: 'View', submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
         {type: 'separator'},
-        {label: 'Save json'},
-        {label: 'Load json'},
+        {role: 'resetzoom'},
+        {role: 'zoomin'},
+        {role: 'zoomout'},
         {type: 'separator'},
-        {label: 'Save stl'},
-        {label: 'Save pdf'},
-        {type: 'separator'},
-        {label: 'Exit',
-            accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-            click() {
-                app.quit();
-            },
-        }]}, // submenu
-    {label: 'Edit',
-        submenu: [{role: 'undo'},
-            {role: 'redo'},
-            {type: 'separator'},
-            {role: 'cut'},
-            {role: 'copy'},
-            {role: 'paste'},
-            {role: 'pasteandmatchstyle'},
-            {role: 'delete'},
-            {role: 'selectall'}]}, // submenu
-
-
-    {label: 'View',
-        submenu: [
-            {role: 'reload'},
-            {role: 'forcereload'},
-            {role: 'toggledevtools'},
-            {type: 'separator'},
-            {role: 'resetzoom'},
-            {role: 'zoomin'},
-            {role: 'zoomout'},
-            {type: 'separator'},
-            {role: 'togglefullscreen'},
-        ]},
-
-    {role: 'help',
-        submenu: [{label: 'Learn More', click() {
+        {role: 'togglefullscreen'},
+    ],
+}, {
+    role: 'help', submenu: [{
+        label: 'Learn More', click() {
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
-        }}]},
-];
-
-// build menu from template
-const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-Menu.setApplicationMenu(mainMenu);
+        }}],
+}];

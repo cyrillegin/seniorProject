@@ -14,8 +14,8 @@ export default class MeshController {
         const uvedGeometry = this.defineUvs(geometry);
         const material = this.defineMaterial();
         this.mesh = new THREE.Mesh(uvedGeometry, material);
+        this.mesh.name = 'boat-mesh';
 
-        app.mesh = this.mesh;
         app.scene.add(this.mesh);
         this.setupIO();
         return app;
@@ -105,7 +105,7 @@ export default class MeshController {
         mirror.mergeVertices();
         mirror.uvsNeedUpdate = true;
         initialFace.merge(mirror);
-
+        initialFace.name = 'boat-mesh';
         return initialFace;
     }
 
@@ -196,18 +196,32 @@ export default class MeshController {
         this.mesh.visible = show;
     }
 
+    deleteMesh(app) {
+        const mesh = app.scene.getObjectByName(this.mesh.name);
+        app.scene.remove(mesh);
+        return app;
+    }
+
     setupIO() {
         // NOTE: due to the nature of face creation, every other face is 'backwards'.
         // In the display, we set double sided to true so that we don't notice.
         // Most 3d applications and 3d printers will also notice this and autocorrect.
-        document.querySelector('#save-obj').addEventListener('click', (e) => {
+        let oldElement = document.getElementById('save-obj');
+        let newElement = oldElement.cloneNode(true);
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+        document.querySelector('#save-obj').addEventListener('click', () => {
             const exporter = new THREE.OBJExporter();
             this.downloadFile(exporter, 'OBJ');
-        });
-        document.querySelector('#save-stl').addEventListener('click', (e) => {
+        }, true);
+
+        oldElement = document.getElementById('save-stl');
+        newElement = oldElement.cloneNode(true);
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+        document.querySelector('#save-stl').addEventListener('click', () => {
             const exporter = new THREE.STLExporter();
             this.downloadFile(exporter, 'STL');
-        });
+        }, true);
+
     }
 
     downloadFile(exporter, type) {
