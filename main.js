@@ -1,13 +1,15 @@
-const url = require('url');
-const path = require('path');
+// import {saveJson} from './src/client/components/controlsContainer/controls.controller.js';
+//
+//
 const exec = require('child_process').exec;
 const {app, BrowserWindow, Menu} = require('electron');
+// const {save, load} = require('./src/client/components/controlsContainer/controls.controller.js');
+
 
 let win = null;
-let check = null;
 
 
-child = exec('nodemon --ignore /client/ --exec babel-node src/server',
+child = exec('nodemon --ignore /client/ --exec babel-node src/server ',
     (error, stdout, stderr) => {
         console.log(`stdout: ${ stdout}`);
         console.log(`stderr: ${ stderr}`);
@@ -18,21 +20,38 @@ child = exec('nodemon --ignore /client/ --exec babel-node src/server',
 
 
 function createWindow() {
-    // Initialize the window to our specified dimensions
-    win = new BrowserWindow({
-        width: 1200,
-        height: 800,
-    });
 
+
+    // Initialize the window to our specified dimensions
+    if (process.platform === 'darwin') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/mac/icon.icns',
+        });
+    }
+
+    if (process.platform === 'win32') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/windows/icon.ico',
+        });
+    }
+
+    if (process.platform === 'linux') {
+        win = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            icon: './assests/icon/linux/icon.png',
+        });
+
+    }
+
+    // win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
 
     // Specify entry point
     win.loadURL('http://localhost:3000');
-
-    /* win.loadURL(url.format({
-        pathname: path.join(__dirname, 'electron.html'),
-        protocol: 'file:',
-        slashes: true,
-    })); */
 
     // build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
@@ -70,29 +89,20 @@ app.on('activate', () => {
 const mainMenuTemplate = [
     {label: 'File',
         submenu: [{label: 'New Project', click() {
-            check = new BrowserWindow({
-                width: 500,
-                height: 100,
-            });
-
-            check.loadURL(url.format({
-                pathname: path.join(__dirname, 'saveCheck.html'),
-                protocol: 'file:',
-                slashes: true,
-            }));
-
-            check.setMenu(null);
-
-            check.show();
+            win.reload();
         }},
 
 
-        {type: 'separator'},
-        {label: 'Save json'},
-        {label: 'Load json'},
+            /*  {type: 'separator'},
+        {label: 'Save json', click() {
+            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#save-obj).click();}, 1000;)');
+        }},
+        {label: 'Load json', click() {
+            win.webContents.executeJavaScript('setTimeout(function(){document.querySelector(#load-obj).click();}, 1000;)');
+        }},
         {type: 'separator'},
         {label: 'Save stl'},
-        {label: 'Save pdf'},
+        {label: 'Save pdf'}, */
         {type: 'separator'},
         {label: 'Exit',
             accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
@@ -107,7 +117,6 @@ const mainMenuTemplate = [
             {role: 'cut'},
             {role: 'copy'},
             {role: 'paste'},
-            {role: 'pasteandmatchstyle'},
             {role: 'delete'},
             {role: 'selectall'}]}, // submenu
 
@@ -130,7 +139,3 @@ const mainMenuTemplate = [
             require('electron').shell.openExternal('https://github.com/cyrillegin/seniorProject');
         }}]},
 ];
-
-// build menu from template
-const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-Menu.setApplicationMenu(mainMenu);
