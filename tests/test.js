@@ -1,4 +1,3 @@
 console.log('running tests');
-
 import './utility.test.js'; //eslint-disable-line
-import './3dContainer.controllers.test.js'; //not required for testing
+import './3dContainer.controllers.test'; // eslint-disable-line

@@ -68,12 +68,12 @@ export function casteljauPoint(curve, t) {
 // 2D implementation of casteljau's algorithm
 export function casteljauPoint2D(curve, t) {
     // Step 1
-    const Ax = ((1 - t) * curve.points[0].x) + (t * (curve.points[0].x + curve.points[1].x));
-    const Ay = ((1 - t) * curve.points[0].y) + (t * (curve.points[0].y + curve.points[1].y));
-    const Bx = ((1 - t) * (curve.points[0].x + curve.points[1].x)) + (t * (curve.points[3].x + curve.points[2].x));
-    const By = ((1 - t) * (curve.points[0].y + curve.points[1].y)) + (t * (curve.points[3].y + curve.points[2].y));
-    const Cx = ((1 - t) * (curve.points[3].x + curve.points[2].x)) + (t * curve.points[3].x);
-    const Cy = ((1 - t) * (curve.points[3].y + curve.points[2].y)) + (t * curve.points[3].y);
+    const Ax = ((1 - t) * curve.points[0].x) + (t * curve.points[1].x);
+    const Ay = ((1 - t) * curve.points[0].y) + (t * curve.points[1].y);
+    const Bx = ((1 - t) * curve.points[1].x) + (t * curve.points[2].x);
+    const By = ((1 - t) * curve.points[1].y) + (t * curve.points[2].y);
+    const Cx = ((1 - t) * curve.points[2].x) + (t * curve.points[3].x);
+    const Cy = ((1 - t) * curve.points[2].y) + (t * curve.points[3].y);
 
     // Step 2
     const Dx = ((1 - t) * Ax) + (t * Bx);
@@ -84,7 +84,11 @@ export function casteljauPoint2D(curve, t) {
     // Step 3
     const Px = ((1 - t) * Dx) + (t * Ex);
     const Py = ((1 - t) * Dy) + (t * Ey);
-    return new THREE.Vector2(Px, Py);
+
+    return new THREE.Vector2(
+        Number(Math.abs(Px).toFixed(1)),
+        Number(Math.abs(Py).toFixed(1)),
+    );
 }
 
 // Inverse of casteljau's algorithem, takes in a curve and a distance from the back

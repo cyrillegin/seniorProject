@@ -1,5 +1,5 @@
 <div class="controls-heading">
-    <h2>Controls</h2>
+    <h1>Controls</h1>
 </div>
 <hr />
 <div class="controls-section">
@@ -45,9 +45,9 @@
 
 <hr />
 
-<input type="checkbox" name="collinearBeam" ng-mousedown="co($event)" id="collinearBeam" /> Collinear Beam Control Points <br />
-<input type="checkbox" name="collinearChine" ng-mousedown="co($event)" id="collinearChine" /> Collinear Chine Control Points <br />
-<input type="checkbox" name="collinearKeel" ng-mousedown="co($event)" id="collinearKeel" /> Collinear Keel Control Points <br />
+<input type="checkbox" aria-label="collinear-beam-control" name="collinearBeam" ng-mousedown="co($event)" id="collinearBeam" /> Collinear Beam Control Points <br />
+<input type="checkbox" aria-label="collinear-chine-control" name="collinearChine" ng-mousedown="co($event)" id="collinearChine" /> Collinear Chine Control Points <br />
+<input type="checkbox" aria-label="collinear-keel-control" name="collinearKeel" ng-mousedown="co($event)" id="collinearKeel" /> Collinear Keel Control Points <br />
 <div class="controls-section">
     <div class="controls-input">
         <div ng-repeat="(key, value) in data">
@@ -141,12 +141,16 @@
 
 <hr />
 
-<button class="mui-button" ng-click="SaveJson()">Save JSON</button>
+<button class="mui-button" id="save-json" ng-click="SaveJson()">Save JSON</button>
 
-<button class="mui-button" ng-click="LoadJson()">Load JSON</button>
+<button class="mui-button" id="load-json" ng-click="LoadJson()">Load JSON</button>
 
 <button class="mui-button" id="save-obj">Save OBJ</button>
 
 <button class="mui-button" id="save-stl">Save STL</button>
+
+<button class="mui-button" id="save-png">Save PNG</button>
+
+<!-- <button class="mui-button" id="save-pdf">Save PDF</button> -->
 
 <input type="file" class="hidden" id="json-file-input" />
