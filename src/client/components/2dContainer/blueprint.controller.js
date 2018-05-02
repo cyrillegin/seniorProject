@@ -156,48 +156,24 @@ export default class BlueprintEditor {
 
     // Acquire points to draw reference lines
     getReference(coords) {
-        const refPoints = {};
-        // Get foreBeam reference
-        refPoints.foreBeam = casteljauPoint2D(coords.beamFore, 0.25);
-        refPoints.foreBeam.x = Number(Math.abs(refPoints.foreBeam.x).toFixed(1));
-        refPoints.foreBeam.y = Number(Math.abs(refPoints.foreBeam.y).toFixed(1));
-
-        // Get aftBeam reference
-        refPoints.aftBeam = casteljauPoint2D(coords.beamAft, 0.75);
-        refPoints.aftBeam.x = Number(Math.abs(refPoints.aftBeam.x).toFixed(1));
-        refPoints.aftBeam.y = Number(Math.abs(refPoints.aftBeam.y).toFixed(1));
-
-        // Get foreChine reference
-        refPoints.foreChine = casteljauPoint2D(coords.chineFor, 0.25);
-        refPoints.foreChine.x = Number(Math.abs(refPoints.foreChine.x).toFixed(1));
-        refPoints.foreChine.y = Number(Math.abs(refPoints.foreChine.y).toFixed(1));
-
-        // Get aftChine reference
-        refPoints.aftChine = casteljauPoint2D(coords.chineAf, 0.75);
-        refPoints.aftChine.x = Number(Math.abs(refPoints.aftChine.x).toFixed(1));
-        refPoints.aftChine.y = Number(Math.abs(refPoints.aftChine.y).toFixed(1));
-
-        // Get foreKeelChine reference
-        refPoints.foreKeelChine = casteljauPoint2D(coords.forChine, 0.25);
-        refPoints.foreKeelChine.x = Number(Math.abs(refPoints.foreKeelChine.x).toFixed(1));
-        refPoints.foreKeelChine.y = Number(Math.abs(refPoints.foreKeelChine.y).toFixed(1));
-
-        // Get aftKeelChine reference
-        refPoints.aftKeelChine = casteljauPoint2D(coords.afChine, 0.75);
-        refPoints.aftKeelChine.x = Number(Math.abs(refPoints.aftKeelChine.x).toFixed(1));
-        refPoints.aftKeelChine.y = Number(Math.abs(refPoints.aftKeelChine.y).toFixed(1));
-
-        // Get foreKeel reference
-        refPoints.foreKeel = casteljauPoint2D(coords.forKeel, 0.25);
-        refPoints.foreKeel.x = Number(Math.abs(refPoints.foreKeel.x).toFixed(1));
-        refPoints.foreKeel.y = Number(Math.abs(refPoints.foreKeel.y).toFixed(1));
-
-        // Get aftKeel reference
-        refPoints.aftKeel = casteljauPoint2D(coords.afKeel, 0.75);
-        refPoints.aftKeel.x = Number(Math.abs(refPoints.aftKeel.x).toFixed(1));
-        refPoints.aftKeel.y = Number(Math.abs(refPoints.aftKeel.y).toFixed(1));
-
-        return refPoints;
+        return {
+            // Get foreBeam reference
+            foreBeam: casteljauPoint2D(coords.beamFore, 0.25),
+            // Get aftBeam reference
+            aftBeam: casteljauPoint2D(coords.beamAft, 0.75),
+            // Get foreChine reference
+            foreChine: casteljauPoint2D(coords.chineFor, 0.25),
+            // Get aftChine reference
+            aftChine: casteljauPoint2D(coords.chineAf, 0.75),
+            // Get foreKeelChine reference
+            foreKeelChine: casteljauPoint2D(coords.forChine, 0.25),
+            // Get aftKeelChine reference
+            aftKeelChine: casteljauPoint2D(coords.afChine, 0.75),
+            // Get foreKeel reference
+            foreKeel: casteljauPoint2D(coords.forKeel, 0.25),
+            // Get aftKeel reference
+            aftKeel: casteljauPoint2D(coords.afKeel, 0.75),
+        };
     }
 
     // Acquire coordinates of frames
