@@ -175,11 +175,8 @@ export default class BlueprintEditor {
 
     // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
-        const sortedFrames = boat.frames.slice().sort((a, b) => {
-          return a.distanceFromBack - b.distanceFromBack
-        });
-        console.log(sortedFrames)
-      
+        const sortedFrames = boat.frames.slice().sort((a, b) => a.distanceFromBack - b.distanceFromBack);
+
         // Structure containing the info required to print the frames
         const frames = {};
         for (let i = 1; i <= sortedFrames.length; i++) {
@@ -211,7 +208,7 @@ export default class BlueprintEditor {
         let i = 1;
         let count = 0;
         let startY;
-        
+
         sortedFrames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             Object.keys(frames).forEach((key) => {
@@ -1311,10 +1308,10 @@ export default class BlueprintEditor {
                 }
             }
         });
-        
+
         this.canvas.append('text')
             .attr('x', 10)
-            .attr('y', frames.frame1.pointsTop[0].y * elem.clientWidth * scale- 40)
+            .attr('y', frames.frame1.pointsTop[0].y * elem.clientWidth * scale - 40)
             .attr('fill', 'black')
             .text('Distance from back.');
 
@@ -1344,18 +1341,15 @@ export default class BlueprintEditor {
                     .attr('stroke', 'blue')
                     .attr('stroke-width', 1)
                     .attr('fill', 'none');
-                
+
                 // top point of the frame plus bottom point of the frame divided by 2
                 // multiplied by the scale of the window and then add half the font size
-                const labelY = (frames[key].pointsTop[0].y + frames[key].points[2].y) / 2 * elem.clientWidth * scale + 10
-                let labelX = 10 //frames[key].pointsTop[0].x > frames[key].pointsTop[1].x ? frames[key].pointsTop[0].x : frames[key].pointsTop[1].x;
-                // labelX += 40;
+                const labelY = (frames[key].pointsTop[0].y + frames[key].points[2].y) / 2 * elem.clientWidth * scale + 10;
                 this.canvas.append('text')
-                    .attr('x', labelX)
+                    .attr('x', 10)
                     .attr('y', labelY)
                     .attr('fill', 'black')
                     .text(`${frames[key].distance} in.`);
-                  
             }
             if (frames[key].text === true) {
                 const label = `#${key}`;
@@ -1611,7 +1605,7 @@ export default class BlueprintEditor {
             .attr('font-size', '20px')
             .attr('font-family', 'sans-serif')
             .text('Guide Line');
-            
+
         // Note about frame ordering
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad)
@@ -1619,15 +1613,15 @@ export default class BlueprintEditor {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('font-family', 'sans-serif')
-            .text('Frames are ordered from ')
-            
+            .text('Frames are ordered from ');
+
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad)
             .attr('y', origin[1] - legendHeight + lineHeight * 5 + 25)
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('font-family', 'sans-serif')
-            .text('distance from the stern.')
+            .text('distance from the stern.');
 
         // Note about units
         legend.append('text')
@@ -1637,7 +1631,6 @@ export default class BlueprintEditor {
             .attr('font-size', '14px')
             .attr('font-family', 'sans-serif')
             .text('All units are in inches');
-            
     }
 
     update() {
