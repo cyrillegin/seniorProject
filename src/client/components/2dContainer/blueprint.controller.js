@@ -175,12 +175,14 @@ export default class BlueprintEditor {
 
     // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
-      console.log(boat.frames)
-
+        const sortedFrames = boat.frames.slice().sort((a, b) => {
+          return a.distanceFromBack - b.distanceFromBack
+        });
+        console.log(sortedFrames)
+      
         // Structure containing the info required to print the frames
         const frames = {};
-        for (let i = 1; i <= boat.frames.length; i++) {
-            console.log(boat.frames[i - 1])
+        for (let i = 1; i <= sortedFrames.length; i++) {
             frames[`frame${i}`] = {
                 count: i, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
                     {}, {}, {}, {}, {},
@@ -188,7 +190,7 @@ export default class BlueprintEditor {
                 pointsTop: [
                     {}, {},
                 ],
-                distance: boat.frames[i - 1].distanceFromBack,
+                distance: sortedFrames[i - 1].distanceFromBack,
             },
 
             frames[`frame${i}Top`] = {
@@ -209,7 +211,8 @@ export default class BlueprintEditor {
         let i = 1;
         let count = 0;
         let startY;
-        boat.frames.forEach((frame, index) => {
+        
+        sortedFrames.forEach((frame, index) => {
             const {locationA, locationB, locationC} = findLocation(boat, frame);
             Object.keys(frames).forEach((key) => {
                 if (frames[key].count === i) {
@@ -268,7 +271,6 @@ export default class BlueprintEditor {
             }
             i++;
         });
-        console.log(frames)
         return frames;
 
     }
