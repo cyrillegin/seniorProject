@@ -4,23 +4,6 @@ import {saveAs} from 'file-saver';
 // import jsPDF from 'jspdf';
 import {casteljauPoint2D, findLocation, applyOffsets, conver3dTo2dCoordinates} from '../../utility/calculations';
 
-/* Original sidepanel coordinates
-const sidePanel = [
-    {x: 15, y: 20}, {x: 26, y: 13},
-    {x: 48, y: 65}, {x: 65, y: 7},
-];
-const sidePanel1 = [
-    {x: 21.6, y: 15.8}, {x: 39.2, y: 44.2},
-    {x: 58.2, y: 30.2},
-];
-const sidePanel2 = [
-    {x: 32.16, y: 32.84}, {x: 50.6, y: 35.8},
-];
-/*
-casteljauPoint, casteljauFromY
-*/
-
-
 export default class BlueprintEditor {
     constructor($scope, $timeout, boatParametersService) {
         'ngInject';
@@ -192,10 +175,12 @@ export default class BlueprintEditor {
 
     // Acquire coordinates of frames
     getFrameCoords(boat, lastY) {
+      console.log(boat.frames)
 
         // Structure containing the info required to print the frames
         const frames = {};
-        for (let i = 1; i <= 15; i++) {
+        for (let i = 1; i <= boat.frames.length; i++) {
+            console.log(boat.frames[i - 1])
             frames[`frame${i}`] = {
                 count: i, empty: true, line: true, color: 'red', width: 2, text: true, size: 0, points: [
                     {}, {}, {}, {}, {},
@@ -203,6 +188,7 @@ export default class BlueprintEditor {
                 pointsTop: [
                     {}, {},
                 ],
+                distance: boat.frames[i - 1].distanceFromBack,
             },
 
             frames[`frame${i}Top`] = {
@@ -219,7 +205,7 @@ export default class BlueprintEditor {
         }
 
         // Find the location of each frame and insert their offsets into the structure
-        let currY = lastY;
+        let currY = lastY + 10;
         let i = 1;
         let count = 0;
         let startY;
@@ -282,6 +268,7 @@ export default class BlueprintEditor {
             }
             i++;
         });
+        console.log(frames)
         return frames;
 
     }
@@ -1237,31 +1224,6 @@ export default class BlueprintEditor {
             .y((d) => (d.y) * elem.clientWidth * scale)
             .curve(d3.curveBundle.beta(0.66));
 
-        // Draw blueprints and insert text
-        /*        this.canvas.append('path')
-            .attr('d', lineFunction(sidePanel))
-            .attr('stroke', 'orange')
-            .attr('stroke-width', 2)
-            .attr('fill', 'none');
-
-            this.canvas.append('path')
-                .attr('d', lineFunction(sidePanel1))
-                .attr('stroke', 'green')
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-
-                this.canvas.append('path')
-                    .attr('d', lineFunction(sidePanel2))
-                    .attr('stroke', 'purple')
-                    .attr('stroke-width', 2)
-                    .attr('fill', 'none');
-
-            this.canvas.append('path')
-                .attr('d', lineFunc(sidePanel))
-                .attr('stroke', 'purple')
-                .attr('stroke-width', 5)
-                .attr('fill', 'none'); */
-
         this.canvas.append('path')
             .attr('id', 'panel1Box')
             .attr('d', lineFunction(coords.panel1Box.points))
@@ -1347,6 +1309,12 @@ export default class BlueprintEditor {
                 }
             }
         });
+        
+        this.canvas.append('text')
+            .attr('x', 10)
+            .attr('y', frames.frame1.pointsTop[0].y * elem.clientWidth * scale- 40)
+            .attr('fill', 'black')
+            .text('Distance from back.');
 
         Object.keys(frames).forEach((key) => {
             if (frames[key].color === 'invisible') {
@@ -1374,6 +1342,18 @@ export default class BlueprintEditor {
                     .attr('stroke', 'blue')
                     .attr('stroke-width', 1)
                     .attr('fill', 'none');
+                
+                // top point of the frame plus bottom point of the frame divided by 2
+                // multiplied by the scale of the window and then add half the font size
+                const labelY = (frames[key].pointsTop[0].y + frames[key].points[2].y) / 2 * elem.clientWidth * scale + 10
+                let labelX = 10 //frames[key].pointsTop[0].x > frames[key].pointsTop[1].x ? frames[key].pointsTop[0].x : frames[key].pointsTop[1].x;
+                // labelX += 40;
+                this.canvas.append('text')
+                    .attr('x', labelX)
+                    .attr('y', labelY)
+                    .attr('fill', 'black')
+                    .text(`${frames[key].distance} in.`);
+                  
             }
             if (frames[key].text === true) {
                 const label = `#${key}`;
