@@ -164,9 +164,11 @@ export default class controlsContainer {
 
             case 'foreBeam-end-x':
                 this.$scope.data.foreBeamEdge.end[0] = this.$scope.data.foreBeam.end[0];
+                this.$scope.data.foreFrame.start[0] = this.$scope.data.foreBeam.end[0];
                 break;
             case 'foreBeam-end-y':
                 this.$scope.data.foreBeamEdge.end[1] = this.$scope.data.foreBeam.end[1];
+                this.$scope.data.foreFrame.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreBeamEdge.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreKeelFrame.start[1] = this.$scope.data.foreBeam.end[1];
                 this.$scope.data.foreBeamEdge.startControl[1] = this.$scope.data.foreBeam.end[1];
@@ -175,6 +177,7 @@ export default class controlsContainer {
             case 'foreBeam-end-z':
                 this.$scope.data.foreBeamEdge.end[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreBeamEdge.start[2] = this.$scope.data.foreBeam.end[2];
+                this.$scope.data.foreFrame.start[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreKeelFrame.start[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreBeamEdge.startControl[2] = this.$scope.data.foreBeam.end[2];
                 this.$scope.data.foreKeelFrame.startControl[2] = this.$scope.data.foreBeam.end[2];
@@ -215,12 +218,15 @@ export default class controlsContainer {
 
             case 'foreChine-end-x':
                 this.$scope.data.foreGunEdge.end[0] = this.$scope.data.foreChine.end[0];
+                this.$scope.data.foreFrame.end[0] = this.$scope.data.foreChine.end[0];
                 break;
             case 'foreChine-end-y':
                 this.$scope.data.foreGunEdge.end[1] = this.$scope.data.foreChine.end[1];
+                this.$scope.data.foreFrame.end[1] = this.$scope.data.foreChine.end[1];
                 break;
             case 'foreChine-end-z':
                 this.$scope.data.foreGunEdge.end[2] = this.$scope.data.foreChine.end[2];
+                this.$scope.data.foreFrame.end[2] = this.$scope.data.foreChine.end[2];
                 break;
 
             case 'aftKeel-start-x':
