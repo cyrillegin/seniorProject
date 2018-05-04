@@ -1510,7 +1510,7 @@ export default class BlueprintEditor {
         const origin = [elem.clientWidth - borderMargin, elem.clientHeight - borderMargin];
 
         const legendWidth = 280;
-        const legendHeight = 180;
+        const legendHeight = 230;
         // Draw the border box
         // right side
         legend.append('line')
@@ -1611,15 +1611,33 @@ export default class BlueprintEditor {
             .attr('font-size', '20px')
             .attr('font-family', 'sans-serif')
             .text('Guide Line');
-
-        // Note about units
+            
+        // Note about frame ordering
         legend.append('text')
             .attr('x', origin[0] - legendWidth + borderPad)
             .attr('y', origin[1] - legendHeight + lineHeight * 5 + 5)
             .attr('fill', 'black')
-            .attr('font-size', '20px')
+            .attr('font-size', '14px')
             .attr('font-family', 'sans-serif')
-            .text('(All units are in inches)');
+            .text('Frames are ordered from ')
+            
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad)
+            .attr('y', origin[1] - legendHeight + lineHeight * 5 + 25)
+            .attr('fill', 'black')
+            .attr('font-size', '14px')
+            .attr('font-family', 'sans-serif')
+            .text('distance from the stern.')
+
+        // Note about units
+        legend.append('text')
+            .attr('x', origin[0] - legendWidth + borderPad)
+            .attr('y', origin[1] - legendHeight + lineHeight * 5 + 45)
+            .attr('fill', 'black')
+            .attr('font-size', '14px')
+            .attr('font-family', 'sans-serif')
+            .text('All units are in inches');
+            
     }
 
     update() {
