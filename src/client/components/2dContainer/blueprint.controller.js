@@ -406,7 +406,7 @@ export default class BlueprintEditor {
                 ]},
         };
 
-            // Get bounding box 1 Coordinates
+        // Get bounding box 1 Coordinates
         let box1 = this.getBoundingSize(struct);
 
         struct.panel1Box = {
