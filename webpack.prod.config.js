@@ -66,7 +66,6 @@ module.exports = {
         }],
     },
     plugins: [
-        // new BundleAnalyzerPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
@@ -81,10 +80,6 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false,
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            filename: 'vendor.bundle.js',
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.NamedModulesPlugin(),

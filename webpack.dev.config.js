@@ -6,13 +6,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
     entry: {
         app: './src/client/index.js',
-        vendor: [
-            'angular',
-            'angular-route',
-            'd3',
-            'jquery',
-            'three',
-        ],
     },
     output: {
         filename: 'bundle.js',
@@ -77,10 +70,6 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false,
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            filename: 'vendor.bundle.js',
         }),
         new webpack.ProvidePlugin({
             'THREE': 'three',
